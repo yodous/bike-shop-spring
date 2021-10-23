@@ -1,4 +1,4 @@
-package com.example.service;
+package com.example.service.impl;
 
 import com.example.dto.ProductCreate;
 import com.example.dto.ProductDTO;
@@ -6,6 +6,7 @@ import com.example.model.Product;
 import com.example.mapper.ProductMapper;
 import com.example.model.ProductUpdate;
 import com.example.repository.ProductRepository;
+import com.example.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
