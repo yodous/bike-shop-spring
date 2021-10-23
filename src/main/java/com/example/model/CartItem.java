@@ -1,14 +1,10 @@
-package com.example.entity;
+package com.example.model;
 
 import javax.persistence.*;
-import java.time.Instant;
 
 @Entity
 @Table(name = "cart_item")
-public class CartItem {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+public class CartItem extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "session_id")
@@ -21,9 +17,4 @@ public class CartItem {
     @Column(name = "quantity")
     private int quantity;
 
-    @Column(name = "created_at")
-    private Instant createdAt;
-
-    @Column(name = "modified_at")
-    private Instant modifiedAt;
 }

@@ -1,21 +1,12 @@
-package com.example.entity;
+package com.example.model;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
-import java.time.Instant;
 
 @Entity
 @Table(name = "users")
-public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private int id;
+public class User extends BaseEntity {
 
     @NotEmpty(message = "Username must not be empty")
     @Max(value = 20, message = "Username must be not longer than 20 characters")
@@ -38,12 +29,6 @@ public class User {
     @Email(message = "Email should be valid")
     @Column(name = "email_address", unique = true)
     private String email;
-
-    @Column(name = "created_at")
-    private Instant createdAt;
-
-    @Column(name = "modified_at")
-    private Instant modifiedAt;
 
     @Embedded
     private Address address;

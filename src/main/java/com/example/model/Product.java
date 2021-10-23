@@ -1,4 +1,4 @@
-package com.example.entity;
+package com.example.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,16 +8,13 @@ import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
-import java.time.Instant;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "product")
-public class Product {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
-    private int id;
+public class Product extends BaseEntity {
 
     @NotEmpty(message = "Product name must not be empty")
     @Max(value = 30, message = "Product name must be not longer than 30 characters")
@@ -37,17 +34,18 @@ public class Product {
     @Column(name = "price")
     private double price;
 
-    @Column(name = "created_at")
-    private Instant createdAt;
-
-    @Column(name = "modified_at")
-    private Instant modifiedAt;
-
 //    @ManyToOne(cascade = CascadeType.REMOVE)
 //    @JoinColumn(name = "seller_id")
 //    private User seller;
 
-    public enum Category {
+    public Product(String name, String description, Category category, double price) {
+        this.name = name;
+        this.description = description;
+        this.category = category;
+        this.price = price;
+    }
 
+    public enum Category {
+        SPORT, GARDEN, MOTORIZATION, HEALTH, HOME, TECH
     }
 }

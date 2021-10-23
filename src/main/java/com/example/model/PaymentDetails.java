@@ -1,14 +1,10 @@
-package com.example.entity;
+package com.example.model;
 
 import javax.persistence.*;
-import java.time.Instant;
 
 @Entity
 @Table(name = "payment_details")
-public class PaymentDetails {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+public class PaymentDetails extends BaseEntity {
 
     @OneToOne
     @JoinColumn(name = "order_id")
@@ -23,9 +19,4 @@ public class PaymentDetails {
     @Column(name = "status")
     private String status;
 
-    @Column(name = "created_at")
-    private Instant createdAt;
-
-    @Column(name = "modified_at")
-    private Instant modifiedAt;
 }
