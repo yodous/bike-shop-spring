@@ -1,6 +1,6 @@
 package com.example.controller;
 
-import com.example.dto.ProductCreate;
+import com.example.dto.ProductCreateRequest;
 import com.example.dto.ProductDTO;
 import com.example.model.ProductUpdate;
 import com.example.service.ProductService;
@@ -24,19 +24,13 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductDTO> getOne(@PathVariable int id) {
-        return new ResponseEntity<>(productService.getOne(id), HttpStatus.OK);
+        return new ResponseEntity<>(productService.get(id), HttpStatus.OK);
     }
 
     @PostMapping
-    public ResponseEntity<String> create(@RequestBody ProductCreate productCreate) {
-        productService.create(productCreate);
+    public ResponseEntity<String> create(@RequestBody ProductCreateRequest productCreateRequest) {
+        productService.create(productCreateRequest);
         return new ResponseEntity<>("Product has been saved", HttpStatus.CREATED);
-    }
-
-    @PatchMapping("/{id}")
-    public ResponseEntity<String> updatePrice(@PathVariable int id, @RequestBody double newPrice) {
-        productService.updatePrice(id, newPrice);
-        return new ResponseEntity<>("Product price has been updated", HttpStatus.NO_CONTENT);
     }
 
     @PutMapping("/{id}")
@@ -46,12 +40,17 @@ public class ProductController {
         return new ResponseEntity<>("Product has been updated", HttpStatus.OK);
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<String> updatePrice(@PathVariable int id, @RequestBody double newPrice) {
+        productService.updatePrice(id, newPrice);
+        return new ResponseEntity<>("Product price has been updated", HttpStatus.NO_CONTENT);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable int id) {
         productService.delete(id);
 
         return new ResponseEntity<>("Product has been deleted", HttpStatus.OK);
-//        return new ResponseEntity<>("Product does not exist", HttpStatus.NOT_FOUND);
     }
 
 }

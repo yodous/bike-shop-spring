@@ -81,7 +81,7 @@ class ProductServiceImplTest {
 
         ProductDTO dto = service.get(1);
 
-        assertThat(dto.getName()).isEqualTo("product dto");
+        assertThat(dto.getName()).contains("product dto");
     }
 
     @Test

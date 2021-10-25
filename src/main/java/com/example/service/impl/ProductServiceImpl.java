@@ -2,6 +2,7 @@ package com.example.service.impl;
 
 import com.example.dto.ProductCreateRequest;
 import com.example.dto.ProductDTO;
+import com.example.exception.ProductNotFoundException;
 import com.example.model.Product;
 import com.example.mapper.ProductMapper;
 import com.example.model.ProductUpdate;
@@ -23,7 +24,7 @@ public class ProductServiceImpl implements ProductService {
     public ProductDTO get(int id) {
         return repository.findById(id).stream()
                 .map(ProductMapper::mapToDTO).findAny()
-                .orElseThrow(() -> new RuntimeException("Could not find product"));
+                .orElseThrow(ProductNotFoundException::new);
     }
 
     @Override
@@ -51,7 +52,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public int update(int id, ProductUpdate productUpd) {
         Product product = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Could not find product"));
+                .orElseThrow(ProductNotFoundException::new);
         product.setName(productUpd.getName());
         product.setDescription(productUpd.getDescription());
         product.setCategory(productUpd.getCategory());
@@ -64,7 +65,7 @@ public class ProductServiceImpl implements ProductService {
     @Transactional
     public int updatePrice(int id, double newPrice) {
         Product product = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Could not find product"));
+                .orElseThrow(ProductNotFoundException::new);
         product.setPrice(newPrice);
 
         return repository.save(product).getId();
@@ -73,6 +74,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     @Transactional
     public void delete(int id) {
-        repository.deleteById(id);
+        Product product = repository.findById(id)
+                .orElseThrow(ProductNotFoundException::new);
+
+        repository.delete(product);
     }
 }
