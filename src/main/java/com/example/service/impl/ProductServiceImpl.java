@@ -1,6 +1,6 @@
 package com.example.service.impl;
 
-import com.example.dto.ProductCreate;
+import com.example.dto.ProductCreateRequest;
 import com.example.dto.ProductDTO;
 import com.example.model.Product;
 import com.example.mapper.ProductMapper;
@@ -20,7 +20,7 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository repository;
 
     @Override
-    public ProductDTO getOne(int id) {
+    public ProductDTO get(int id) {
         return repository.findById(id).stream()
                 .map(ProductMapper::mapToDTO).findAny()
                 .orElseThrow(() -> new RuntimeException("Could not find product"));
@@ -34,33 +34,22 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     @Transactional
-    public void create(ProductCreate productCreate) {
-        Product product = new Product(productCreate.getName(), productCreate.getDescription(),
-                productCreate.getCategory(), productCreate.getPrice());
+    public int create(ProductCreateRequest productCreateRequest) {
+        Product product = new Product(
+                productCreateRequest.getName(),
+                productCreateRequest.getDescription(),
+                productCreateRequest.getCategory(),
+                productCreateRequest.getPrice());
 
         if (repository.save(product).getId() == 0)
             throw new RuntimeException("Could not save product");
+
+        return repository.save(product).getId();
     }
 
     @Override
     @Transactional
-    public void delete(int id) {
-        repository.deleteById(id);
-    }
-
-    @Override
-    @Transactional
-    public void updatePrice(int id, double newPrice) {
-        Product product = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Could not find product"));
-        product.setPrice(newPrice);
-
-        repository.save(product);
-    }
-
-    @Override
-    @Transactional
-    public void update(int id, ProductUpdate productUpd) {
+    public int update(int id, ProductUpdate productUpd) {
         Product product = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Could not find product"));
         product.setName(productUpd.getName());
@@ -68,7 +57,22 @@ public class ProductServiceImpl implements ProductService {
         product.setCategory(productUpd.getCategory());
         product.setPrice(product.getPrice());
 
-        repository.save(product);
+        return repository.save(product).getId();
     }
 
+    @Override
+    @Transactional
+    public int updatePrice(int id, double newPrice) {
+        Product product = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Could not find product"));
+        product.setPrice(newPrice);
+
+        return repository.save(product).getId();
+    }
+
+    @Override
+    @Transactional
+    public void delete(int id) {
+        repository.deleteById(id);
+    }
 }
