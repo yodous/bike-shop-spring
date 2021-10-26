@@ -21,6 +21,18 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository repository;
 
     @Override
+    public List<ProductDTO> getByString(String str) {
+        return repository.findAllByName(str).stream()
+                .map(ProductMapper::mapToDTO).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductDTO> getAllByUsername(String username) {
+        return repository.findAllBySellerUsernameIgnoreCase(username).stream()
+                .map(ProductMapper::mapToDTO).collect(Collectors.toList());
+    }
+
+    @Override
     public ProductDTO get(int id) {
         return repository.findById(id).stream()
                 .map(ProductMapper::mapToDTO).findAny()
@@ -31,6 +43,12 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductDTO> getAll() {
         return repository.findAll().stream().map(ProductMapper::mapToDTO)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductDTO> getByCategory(String category) {
+        return repository.findAllByCategoryNameIgnoreCase(category).stream()
+                .map(ProductMapper::mapToDTO).collect(Collectors.toList());
     }
 
     @Override
