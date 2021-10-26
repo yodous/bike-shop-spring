@@ -8,11 +8,12 @@ import java.time.Instant;
 public class ProductUpdate {
     private String name;
     private String description;
-    private Product.Category category;
+    private ProductCategory category;
     private double price;
     private final Instant modifiedAt = Instant.now();
 
-    public ProductUpdate(String name, String description, Product.Category category, double price) {
+    public ProductUpdate(String name, String description,
+                         ProductCategory category, double price) {
         this.name = name;
         this.description = description;
         this.category = category;

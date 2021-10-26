@@ -1,17 +1,15 @@
 package com.example.dto;
 
-import com.example.model.Product;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Getter
 @AllArgsConstructor
 public class ProductDTO {
     private String name;
-    private Product.Category category;
+    private String category;
     private double price;
-    private LocalDateTime lastModified;
+    private Instant lastModified;
 }

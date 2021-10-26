@@ -8,6 +8,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -26,26 +27,27 @@ public class Product extends BaseEntity {
     @Column(name = "description")
     private String description;
 
+//    @ManyToOne
+//    @JoinColumn(name = "category_id")
+//    private Category category;
+
     @Enumerated(EnumType.STRING)
-    @Column(name = "category")
-    private Category category;
+    private ProductCategory category;
 
     @Min(value = 0, message= "Price cannot be negative")
     @Column(name = "price")
     private double price;
 
-//    @ManyToOne(cascade = CascadeType.REMOVE)
-//    @JoinColumn(name = "seller_id")
-//    private User seller;
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "seller_id")
+    private User seller;
 
-    public Product(String name, String description, Category category, double price) {
+    public Product(String name, String description, ProductCategory category, double price) {
         this.name = name;
         this.description = description;
         this.category = category;
         this.price = price;
     }
 
-    public enum Category {
-        SPORT, GARDEN, MOTORIZATION, HEALTH, HOME, TECH
-    }
 }

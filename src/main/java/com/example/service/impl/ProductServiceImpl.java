@@ -2,10 +2,11 @@ package com.example.service.impl;
 
 import com.example.dto.ProductCreateRequest;
 import com.example.dto.ProductDTO;
+import com.example.dto.ProductUpdate;
 import com.example.exception.ProductNotFoundException;
 import com.example.model.Product;
 import com.example.mapper.ProductMapper;
-import com.example.model.ProductUpdate;
+import com.example.model.ProductCategory;
 import com.example.repository.ProductRepository;
 import com.example.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductDTO> getByString(String str) {
-        return repository.findAllByName(str).stream()
+        return repository.findAllByNameContaining(str).stream()
                 .map(ProductMapper::mapToDTO).collect(Collectors.toList());
     }
 
@@ -46,8 +47,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductDTO> getByCategory(String category) {
-        return repository.findAllByCategoryNameIgnoreCase(category).stream()
+    public List<ProductDTO> getByCategory(String categoryName) {
+        ProductCategory category = ProductCategory.valueOf(categoryName.toUpperCase());
+        return repository.findAllByCategory(category).stream()
                 .map(ProductMapper::mapToDTO).collect(Collectors.toList());
     }
 
@@ -57,7 +59,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = new Product(
                 productCreateRequest.getName(),
                 productCreateRequest.getDescription(),
-                productCreateRequest.getCategory(),
+                ProductCategory.valueOf(productCreateRequest.getCategory().toUpperCase()),
                 productCreateRequest.getPrice());
 
         if (repository.save(product).getId() == 0)
