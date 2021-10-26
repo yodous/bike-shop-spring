@@ -118,7 +118,7 @@ class ProductServiceImplTest {
         product.setId(expectedId);
         when(repository.save(any())).thenReturn(product);
 
-        int actualId = service.create(new ProductCreateRequest());
+        int actualId = service.create(productCreateRequest);
 
         assertThat(actualId).isEqualTo(expectedId);
     }
@@ -129,7 +129,7 @@ class ProductServiceImplTest {
         when(repository.save(any())).thenReturn(productWithoutId);
 
         Exception exception = assertThrows(RuntimeException.class,
-                () -> service.create(new ProductCreateRequest()));
+                () -> service.create(productCreateRequest));
 
         String expectedMessage = "Could not save product";
         String actualMessage = exception.getMessage();
@@ -137,6 +137,10 @@ class ProductServiceImplTest {
         assertThat(exception).isInstanceOf(RuntimeException.class);
         assertThat(actualMessage).contains(expectedMessage);
     }
+
+    static final ProductCreateRequest productCreateRequest = new ProductCreateRequest(
+            "test name", "test description", "sport", 1.2);
+
 
     @Test
     void update_ExistingResource_ThenReturnId() {

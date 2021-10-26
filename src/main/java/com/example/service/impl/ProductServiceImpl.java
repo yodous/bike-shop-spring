@@ -2,11 +2,11 @@ package com.example.service.impl;
 
 import com.example.dto.ProductCreateRequest;
 import com.example.dto.ProductDTO;
+import com.example.dto.ProductUpdate;
 import com.example.exception.ProductNotFoundException;
 import com.example.model.Product;
 import com.example.mapper.ProductMapper;
 import com.example.model.ProductCategory;
-import com.example.dto.ProductUpdate;
 import com.example.repository.ProductRepository;
 import com.example.service.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -59,7 +59,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = new Product(
                 productCreateRequest.getName(),
                 productCreateRequest.getDescription(),
-                productCreateRequest.getCategory(),
+                ProductCategory.valueOf(productCreateRequest.getCategory().toUpperCase()),
                 productCreateRequest.getPrice());
 
         if (repository.save(product).getId() == 0)
