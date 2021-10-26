@@ -1,5 +1,6 @@
-package com.example.model;
+package com.example.dto;
 
+import com.example.model.ProductCategory;
 import lombok.Getter;
 
 import java.time.Instant;

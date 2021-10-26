@@ -1,9 +1,16 @@
 package com.example.model;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 import javax.persistence.*;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "cart_item")
+@NoArgsConstructor
 public class CartItem extends BaseEntity {
 
     @ManyToOne
@@ -17,4 +24,9 @@ public class CartItem extends BaseEntity {
     @Column(name = "quantity")
     private int quantity;
 
+    public CartItem(ShoppingSession session, Product product, int quantity) {
+        this.session = session;
+        this.product = product;
+        this.quantity = quantity;
+    }
 }

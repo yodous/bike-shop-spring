@@ -2,10 +2,10 @@ package com.example.service.impl;
 
 import com.example.dto.ProductCreateRequest;
 import com.example.dto.ProductDTO;
+import com.example.dto.ProductUpdate;
 import com.example.exception.ProductNotFoundException;
 import com.example.model.Product;
 import com.example.model.ProductCategory;
-import com.example.dto.ProductUpdate;
 import com.example.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

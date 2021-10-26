@@ -7,4 +7,7 @@ public class ProductNotFoundException extends RuntimeException{
         super(MESSAGE);
     }
 
+    public ProductNotFoundException(int productId) {
+        super(MESSAGE + "with id=" + productId);
+    }
 }
