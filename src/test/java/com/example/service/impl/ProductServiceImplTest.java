@@ -3,9 +3,9 @@ package com.example.service.impl;
 import com.example.dto.ProductCreateRequest;
 import com.example.dto.ProductDTO;
 import com.example.exception.ProductNotFoundException;
-import com.example.model.Category;
 import com.example.model.Product;
-import com.example.model.ProductUpdate;
+import com.example.model.ProductCategory;
+import com.example.dto.ProductUpdate;
 import com.example.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,6 +35,22 @@ class ProductServiceImplTest {
     }
 
     @Test
+    void getByString_WhenSuccess_ThenReturnListOfProductsContainingStringInTheirName() {
+        when(repository.findAllByNameContaining(anyString())).thenReturn(mockedProductsByName());
+
+        List<ProductDTO> products = service.getByString("fridge");
+
+        assertThat(products).isNotNull();
+        assertThat(products).hasSize(2);
+    }
+
+    private List<Product> mockedProductsByName() {
+        return List.of(
+                new Product("fridge x", "description with > 10 characters#0", ProductCategory.HOUSE, 999.99),
+                new Product("ffridgee", "description with > 10 characters#0", ProductCategory.HOUSE, 999.99));
+    }
+
+    @Test
     void getAll_WhenSuccess_ThenReturnListOfProductDTOs() {
         when(repository.findAll()).thenReturn(mockedData());
 
@@ -47,15 +63,15 @@ class ProductServiceImplTest {
 
     private List<Product> mockedData() {
         return Arrays.asList(
-                new Product("test product 0", "description with > 10 characters#0", new Category(Category.HOUSE), 1.11),
-                new Product("test product 1", "description with > 10 characters#1", new Category(Category.SPORT), 2.22),
-                new Product("test product 2", "description with > 10 characters#2", new Category(Category.HEALTH), 3.33));
+                new Product("test product 0", "description with > 10 characters#0", ProductCategory.ELECTRONICS, 1.11),
+                new Product("test product 1", "description with > 10 characters#1", ProductCategory.SPORT, 2.22),
+                new Product("test product 2", "description with > 10 characters#2", ProductCategory.HEALTH, 3.33));
     }
 
     @Test
     void get_WithValidId_ThenReturnProductDTO() {
         Product product = new Product("product dto",
-                "description with more than 10 characters", new Category(Category.SPORT), 1.23);
+                "description with more than 10 characters", ProductCategory.SPORT, 1.23);
         when(repository.findById(anyInt())).thenReturn(Optional.of(product));
 
         ProductDTO dto = service.get(1);
@@ -75,23 +91,22 @@ class ProductServiceImplTest {
 
     @Test
     void getByCategory_WhenSuccess_ThenReturnListOfDTOs() {
-        when(repository.findAllByCategoryNameIgnoreCase(anyString()))
+        when(repository.findAllByCategory(any()))
                 .thenReturn(productsByCategoriesMock());
 
         List<ProductDTO> products = service.getByCategory("electronics");
 
         assertThat(products).isNotNull();
         assertThat(products).hasSize(4);
-        assertThat(products.get(0).getCategory().getName()).isEqualTo(Category.ELECTRONICS);
+        assertThat(products.get(0).getCategory()).isEqualTo(ProductCategory.ELECTRONICS.getName());
     }
 
     private List<Product> productsByCategoriesMock() {
-        Category electronics = new Category(Category.ELECTRONICS);
         return Arrays.asList(
-                new Product("name0", "description", electronics, 1.23),
-                new Product("name1", "description", electronics, 2.34),
-                new Product("name2", "description", electronics, 3.45),
-                new Product("name3", "description", electronics, 4.56));
+                new Product("name0", "description", ProductCategory.ELECTRONICS, 1.23),
+                new Product("name1", "description", ProductCategory.ELECTRONICS, 2.34),
+                new Product("name2", "description", ProductCategory.ELECTRONICS, 3.45),
+                new Product("name3", "description", ProductCategory.ELECTRONICS, 4.56));
     }
 
     @Test
@@ -99,7 +114,7 @@ class ProductServiceImplTest {
         int expectedId = 1;
         Product product = new Product("test_name",
                 "description with more then 10 characters",
-                new Category(Category.HEALTH), 123.45);
+                ProductCategory.HEALTH, 123.45);
         product.setId(expectedId);
         when(repository.save(any())).thenReturn(product);
 
@@ -131,7 +146,7 @@ class ProductServiceImplTest {
         when(repository.save(any())).thenReturn(product);
 
         int updId = service.update(1, new ProductUpdate(
-                "new name", "new description", new Category(Category.SPORT), 100));
+                "new name", "new description", ProductCategory.SPORT, 100));
 
         assertThat(updId).isNotEqualTo(0);
     }
@@ -140,7 +155,7 @@ class ProductServiceImplTest {
     void update_NonExistingResource_ThenThrowException() {
         when(repository.findById(anyInt())).thenReturn(Optional.empty());
         ProductUpdate productUpdate = new ProductUpdate(
-                "new name", "new description", new Category(Category.SPORT), 100);
+                "new name", "new description", ProductCategory.SPORT, 100);
 
         Exception exception = assertThrows(RuntimeException.class,
                 () -> service.update(1, productUpdate));
