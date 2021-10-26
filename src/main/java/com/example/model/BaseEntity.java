@@ -1,13 +1,15 @@
 package com.example.model;
 
 import lombok.Getter;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import lombok.Setter;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Getter
+@Setter
 @MappedSuperclass
 public abstract class BaseEntity {
 
@@ -16,12 +18,12 @@ public abstract class BaseEntity {
     @Column(name = "id")
     private int id;
 
-    @CreationTimestamp
+    @CreatedDate
     @Column(name = "created_at")
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
-    @UpdateTimestamp
+    @LastModifiedDate
     @Column(name = "modified_at")
-    private LocalDateTime modifiedAt;
+    private Instant modifiedAt;
 
 }

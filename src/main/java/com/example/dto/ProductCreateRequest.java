@@ -1,12 +1,13 @@
 package com.example.dto;
 
-import com.example.model.Product;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
-public class ProductCreate {
+@AllArgsConstructor
+public class ProductCreateRequest {
     private String name;
     private String description;
-    private Product.Category category;
+    private String category;
     private double price;
 }
