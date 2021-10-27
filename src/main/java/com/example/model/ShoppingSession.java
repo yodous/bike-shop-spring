@@ -1,7 +1,10 @@
 package com.example.model;
 
+import lombok.Getter;
+
 import javax.persistence.*;
 
+@Getter
 @Entity
 @Table(name = "shopping_session")
 public class ShoppingSession extends BaseEntity {

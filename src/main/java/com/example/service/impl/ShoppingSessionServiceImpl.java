@@ -4,7 +4,6 @@ import com.example.exception.ProductNotFoundException;
 import com.example.model.CartItem;
 import com.example.model.Product;
 import com.example.model.ShoppingSession;
-import com.example.model.User;
 import com.example.repository.CartItemRepository;
 import com.example.repository.ProductRepository;
 import com.example.repository.ShoppingSessionRepository;
@@ -39,5 +38,12 @@ public class ShoppingSessionServiceImpl implements ShoppingSessionService {
 
     @Override
     public void remove(int userId, int productId) {
+        ShoppingSession cart = sessionRepository.findByUserId(userId)
+                .orElseThrow(() -> new RuntimeException(
+                        "Could not find shopping session with userId=" + userId));
+        CartItem cartItem = cartItemRepository.findBySessionAndProductId(cart, productId)
+                .orElseThrow(ProductNotFoundException::new);
+
+        cartItemRepository.delete(cartItem);
     }
 }
