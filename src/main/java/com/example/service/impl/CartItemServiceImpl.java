@@ -4,10 +4,9 @@ import com.example.exception.ProductNotFoundException;
 import com.example.model.CartItem;
 import com.example.model.Product;
 import com.example.model.ShoppingSession;
-import com.example.repository.CartItemRepository;
 import com.example.repository.ProductRepository;
 import com.example.repository.ShoppingSessionRepository;
-import com.example.service.ShoppingSessionService;
+import com.example.service.CartItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,9 +14,9 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class ShoppingSessionServiceImpl implements ShoppingSessionService {
+public class CartItemServiceImpl implements CartItemService {
     private final ShoppingSessionRepository sessionRepository;
-    private final CartItemRepository cartItemRepository;
+    private final com.example.repository.CartItemRepository cartItemRepository;
     private final ProductRepository productRepository;
 
     @Override
