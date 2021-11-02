@@ -6,7 +6,7 @@ import com.example.exception.InvalidAddressEmailException;
 import com.example.model.Address;
 import com.example.model.User;
 import com.example.repository.UserRepository;
-import com.example.service.UserService;
+import com.example.service.AuthService;
 import com.example.validation.PasswordValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class AuthServiceImpl implements AuthService {
     private final UserRepository repository;
 
     @Value(value = "regex.email")
