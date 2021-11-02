@@ -1,11 +1,13 @@
 package com.example.model;
 
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
 @Entity
 @Table(name = "users")
+@NoArgsConstructor
 public class User extends BaseEntity {
 
     @NotEmpty(message = "Username must not be empty")
@@ -33,4 +35,12 @@ public class User extends BaseEntity {
     @Embedded
     private Address address;
 
+    public User(String username, String password, String firstName, String lastName, String email, Address address) {
+        this.username = username;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.address = address;
+    }
 }
