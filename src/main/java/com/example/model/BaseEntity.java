@@ -19,12 +19,4 @@ public abstract class BaseEntity extends Auditable {
     @Column(name = "id")
     private int id;
 
-    @CreatedDate
-    @Column(name = "created_at")
-    private Instant createdAt;
-
-    @LastModifiedDate
-    @Column(name = "modified_at")
-    private Instant modifiedAt;
-
 }

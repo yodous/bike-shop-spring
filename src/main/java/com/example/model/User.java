@@ -1,12 +1,16 @@
 package com.example.model;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
 @Entity
 @Table(name = "users")
+@Getter
+@Setter
 @NoArgsConstructor
 public class User extends BaseEntity {
 
@@ -32,15 +36,24 @@ public class User extends BaseEntity {
     @Column(name = "email_address", unique = true)
     private String email;
 
+    @NotNull(message = "Account number is required")
+    @Column(name = "acc_number")
+    private String accountNumber;
+
+    @Column(name = "is_enabled")
+    private boolean enabled;
+
     @Embedded
     private Address address;
 
-    public User(String username, String password, String firstName, String lastName, String email, Address address) {
+    public User(String username, String password, String firstName, String lastName,
+                String email, String accountNumber, Address address) {
         this.username = username;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.accountNumber = accountNumber;
         this.address = address;
     }
 }
