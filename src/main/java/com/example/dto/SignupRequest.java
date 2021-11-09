@@ -16,4 +16,5 @@ public class SignupRequest {
     private String city;
     private String street;
     private String postalCode;
+    private String role;
 }

@@ -1,13 +1,9 @@
-package com.example.model;
+package com.example.model.abstracts;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-
-import java.time.Instant;
 
 @Getter
 @Setter

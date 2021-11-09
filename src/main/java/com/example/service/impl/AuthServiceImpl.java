@@ -5,10 +5,7 @@ import com.example.dto.LoginRequest;
 import com.example.dto.SignupRequest;
 import com.example.exception.InvalidPasswordException;
 import com.example.exception.TokenNotFoundException;
-import com.example.model.ActivationEmail;
-import com.example.model.Address;
-import com.example.model.AccountActivationToken;
-import com.example.model.User;
+import com.example.model.*;
 import com.example.repository.AccountActivationTokenRepository;
 import com.example.repository.UserRepository;
 import com.example.service.AuthService;
@@ -44,7 +41,18 @@ public class AuthServiceImpl implements AuthService {
     public void signup(SignupRequest signupRequest) {
         signupValidator.validate(signupRequest);
 
-        User user = new User(signupRequest.getUsername(),
+        User user = mapToUser(signupRequest);
+        userRepository.save(user);
+
+        ActivationEmail activationEmail = new ActivationEmail(
+                user.getEmail(), generateActivationToken(user));
+        emailService.sendMessage(activationEmail);
+
+        log.info("email has been sent\n" + activationEmail.getText());
+    }
+
+    private User mapToUser(SignupRequest signupRequest) {
+        return new User(signupRequest.getUsername(),
                 passwordEncoder.encode(signupRequest.getPassword()),
                 signupRequest.getFirstName(),
                 signupRequest.getLastName(),
@@ -52,19 +60,21 @@ public class AuthServiceImpl implements AuthService {
                 signupRequest.getAccNumber(),
                 new Address(signupRequest.getCity(),
                         signupRequest.getStreet(),
-                        signupRequest.getPostalCode()));
-        userRepository.save(user);
-        ActivationEmail activationEmail = new ActivationEmail(
-                user.getEmail(), generateActivationToken(user));
-
-        emailService.sendMessage(activationEmail);
-        log.info("email has been sent\n" + activationEmail.getText());
+                        signupRequest.getPostalCode()),
+                signupRequest.getRole());
     }
 
     @Override
     public AuthenticationResponse login(LoginRequest loginRequest) {
+        String username = loginRequest.getUsername();
+        User user = userRepository.findByUsername(username).orElseThrow(
+                () -> new UsernameNotFoundException(
+                        "Could not find user with username=" + username));
 
-        return null;
+        if (!loginRequest.getPassword().equals(user.getPassword()))
+            throw new InvalidPasswordException("Wrong password");
+
+        return new AuthenticationResponse(null, user);
     }
 
     @Override
@@ -88,7 +98,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private void tokenExpired(AccountActivationToken authToken) {
-        long expirationDate = authToken.getCreatedAt().toEpochMilli() + tokenExpiration;
+        long expirationDate = authToken.getExpiresAt().toEpochMilli();
         long currentDate = Instant.now().toEpochMilli();
 
         if (expirationDate - currentDate < 0) {

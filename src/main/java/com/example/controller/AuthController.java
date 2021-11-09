@@ -3,8 +3,6 @@ package com.example.controller;
 import com.example.dto.SignupRequest;
 import com.example.service.AuthService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

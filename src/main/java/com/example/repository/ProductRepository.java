@@ -1,7 +1,7 @@
 package com.example.repository;
 
 import com.example.model.Product;
-import com.example.model.ProductCategory;
+import com.example.model.enums.ProductCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

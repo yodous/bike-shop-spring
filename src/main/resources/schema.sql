@@ -7,6 +7,7 @@ CREATE TABLE users
     last_name     VARCHAR(50)        NOT NULL,
     email_address VARCHAR(50) UNIQUE NOT NULL,
     acc_number    VARCHAR(19) UNIQUE NOT NULL,
+    role          VARCHAR(10)        NOT NULL,
     is_enabled    BOOL DEFAULT FALSE,
     city          VARCHAR(30)        NOT NULL,
     street        VARCHAR(50)        NOT NULL,
@@ -15,6 +16,21 @@ CREATE TABLE users
     modified_at   DATETIME           NOT NULL,
     PRIMARY KEY (id)
 );
+
+-- CREATE TABLE user_role
+-- (
+-- id   INT,
+--     role VARCHAR(10) NOT NULL,
+-- PRIMARY KEY (id)
+-- );
+
+--  CREATE TABLE user_authorities
+--  (
+--      username VARCHAR_IGNORECASE(50) NOT NULL,
+--    authority VARCHAR_IGNORECASE(50) NOT NULL,
+--     CONSTRAINT fk_authorities_users FOREIGN KEY (username) REFERENCES users (username)
+-- );
+-- CREATE UNIQUE INDEX ix_auth_username ON authorities (username, authority);
 
 CREATE TABLE acc_activation_token
 (

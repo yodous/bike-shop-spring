@@ -1,6 +1,6 @@
 package com.example.service.impl;
 
-import com.example.model.Message;
+import com.example.model.abstracts.Message;
 import com.example.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;

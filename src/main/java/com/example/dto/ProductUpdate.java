@@ -1,6 +1,6 @@
 package com.example.dto;
 
-import com.example.model.ProductCategory;
+import com.example.model.enums.ProductCategory;
 import lombok.Getter;
 
 import java.time.Instant;

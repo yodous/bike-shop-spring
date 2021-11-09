@@ -1,18 +1,24 @@
 package com.example.model;
 
+import com.example.model.abstracts.BaseEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
+import java.util.*;
 
-@Entity
-@Table(name = "users")
+
 @Getter
 @Setter
 @NoArgsConstructor
-public class User extends BaseEntity {
+@Entity
+@Table(name = "users")
+public class User extends BaseEntity implements UserDetails {
 
     @NotEmpty(message = "Username must not be empty")
     @Max(value = 20, message = "Username must be not longer than 20 characters")
@@ -46,8 +52,12 @@ public class User extends BaseEntity {
     @Embedded
     private Address address;
 
+    @Column(name = "role")
+    private String role;
+
+
     public User(String username, String password, String firstName, String lastName,
-                String email, String accountNumber, Address address) {
+                String email, String accountNumber, Address address, String role) {
         this.username = username;
         this.password = password;
         this.firstName = firstName;
@@ -55,5 +65,26 @@ public class User extends BaseEntity {
         this.email = email;
         this.accountNumber = accountNumber;
         this.address = address;
+        this.role = role;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singleton(new SimpleGrantedAuthority(role));
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return enabled;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return enabled;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return enabled;
     }
 }

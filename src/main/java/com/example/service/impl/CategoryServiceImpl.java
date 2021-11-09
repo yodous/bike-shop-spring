@@ -1,6 +1,6 @@
 package com.example.service.impl;
 
-import com.example.model.ProductCategory;
+import com.example.model.enums.ProductCategory;
 import com.example.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
