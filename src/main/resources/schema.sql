@@ -6,7 +6,9 @@ CREATE TABLE users
     first_name    VARCHAR(50)        NOT NULL,
     last_name     VARCHAR(50)        NOT NULL,
     email_address VARCHAR(50) UNIQUE NOT NULL,
-    acc_number    VARCHAR(17) UNIQUE NOT NULL,
+    acc_number    VARCHAR(19) UNIQUE NOT NULL,
+    role          VARCHAR(10)        NOT NULL,
+    is_enabled    BOOL DEFAULT FALSE,
     city          VARCHAR(30)        NOT NULL,
     street        VARCHAR(50)        NOT NULL,
     postal_code   VARCHAR(6)         NOT NULL,
@@ -15,13 +17,43 @@ CREATE TABLE users
     PRIMARY KEY (id)
 );
 
+-- CREATE TABLE user_role
+-- (
+-- id   INT,
+--     role VARCHAR(10) NOT NULL,
+-- PRIMARY KEY (id)
+-- );
+
+--  CREATE TABLE user_authorities
+--  (
+--      username VARCHAR_IGNORECASE(50) NOT NULL,
+--    authority VARCHAR_IGNORECASE(50) NOT NULL,
+--     CONSTRAINT fk_authorities_users FOREIGN KEY (username) REFERENCES users (username)
+-- );
+-- CREATE UNIQUE INDEX ix_auth_username ON authorities (username, authority);
+
+CREATE TABLE acc_activation_token
+(
+    id          INT(10) AUTO_INCREMENT,
+    user_id     INT UNIQUE          NOT NULL,
+    token       VARCHAR(255) UNIQUE NOT NULL,
+    expires_at  DATETIME,
+    created_at  DATETIME            NOT NULL,
+    modified_at DATETIME            NOT NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT fk_auth_token_user_id
+        FOREIGN KEY (user_id)
+            REFERENCES users (id)
+            ON DELETE CASCADE
+);
+
 CREATE TABLE product
 (
     id          INT(10) AUTO_INCREMENT,
     seller_id   INT                 NOT NULL,
     name        VARCHAR(100) UNIQUE NOT NULL,
     description VARCHAR(1000)       NOT NULL,
-    category    VARCHAR             NOT NULL,
+    category    VARCHAR(50)         NOT NULL,
     price       DECIMAL(11, 2)      NOT NULL,
     created_at  DATETIME            NOT NULL,
     modified_at DATETIME            NOT NULL,

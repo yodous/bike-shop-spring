@@ -1,10 +1,15 @@
 package com.example.model;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
 @Embeddable
+@NoArgsConstructor
+@AllArgsConstructor
 public class Address {
     @NotEmpty(message = "City must not be empty")
     @Column(name = "city")

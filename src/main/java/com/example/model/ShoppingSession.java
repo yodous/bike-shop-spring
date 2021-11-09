@@ -1,5 +1,6 @@
 package com.example.model;
 
+import com.example.model.abstracts.BaseEntity;
 import lombok.Getter;
 
 import javax.persistence.*;

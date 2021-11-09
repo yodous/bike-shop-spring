@@ -1,5 +1,7 @@
 package com.example.model;
 
+import com.example.model.abstracts.BaseEntity;
+
 import javax.persistence.*;
 
 @Entity

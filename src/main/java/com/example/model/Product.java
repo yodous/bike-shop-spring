@@ -1,5 +1,7 @@
 package com.example.model;
 
+import com.example.model.abstracts.BaseEntity;
+import com.example.model.enums.ProductCategory;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

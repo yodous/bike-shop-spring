@@ -6,7 +6,7 @@ import com.example.dto.ProductUpdate;
 import com.example.exception.ProductNotFoundException;
 import com.example.model.Product;
 import com.example.mapper.ProductMapper;
-import com.example.model.ProductCategory;
+import com.example.model.enums.ProductCategory;
 import com.example.repository.ProductRepository;
 import com.example.service.ProductService;
 import lombok.RequiredArgsConstructor;

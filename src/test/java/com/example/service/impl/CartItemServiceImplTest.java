@@ -3,7 +3,7 @@ package com.example.service.impl;
 import com.example.exception.ProductNotFoundException;
 import com.example.model.CartItem;
 import com.example.model.Product;
-import com.example.model.ProductCategory;
+import com.example.model.enums.ProductCategory;
 import com.example.model.ShoppingSession;
 import com.example.repository.ProductRepository;
 import com.example.repository.ShoppingSessionRepository;
