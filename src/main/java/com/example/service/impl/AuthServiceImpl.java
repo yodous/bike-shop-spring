@@ -3,17 +3,21 @@ package com.example.service.impl;
 import com.example.dto.AuthenticationResponse;
 import com.example.dto.LoginRequest;
 import com.example.dto.SignupRequest;
-import com.example.exception.InvalidPasswordException;
 import com.example.exception.TokenNotFoundException;
+import com.example.mapper.UserViewMapper;
 import com.example.model.*;
 import com.example.repository.AccountActivationTokenRepository;
 import com.example.repository.UserRepository;
+import com.example.security.JwtTokenUtil;
 import com.example.service.AuthService;
 import com.example.service.EmailService;
 import com.example.validation.SignupValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,11 +31,13 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
-    private final UserRepository userRepository;
     private final AccountActivationTokenRepository authTokenRepository;
+    private final UserRepository userRepository;
     private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
     private final SignupValidator signupValidator;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenUtil jwtTokenUtil;
 
     @Value("${token.expiration}")
     private int tokenExpiration;
@@ -41,7 +47,7 @@ public class AuthServiceImpl implements AuthService {
     public void signup(SignupRequest signupRequest) {
         signupValidator.validate(signupRequest);
 
-        User user = mapToUser(signupRequest);
+        User user = mapSignupRequestToUser(signupRequest);
         userRepository.save(user);
 
         ActivationEmail activationEmail = new ActivationEmail(
@@ -51,7 +57,7 @@ public class AuthServiceImpl implements AuthService {
         log.info("email has been sent\n" + activationEmail.getText());
     }
 
-    private User mapToUser(SignupRequest signupRequest) {
+    private  User mapSignupRequestToUser(SignupRequest signupRequest) {
         return new User(signupRequest.getUsername(),
                 passwordEncoder.encode(signupRequest.getPassword()),
                 signupRequest.getFirstName(),
@@ -64,17 +70,28 @@ public class AuthServiceImpl implements AuthService {
                 signupRequest.getRole());
     }
 
+    private String generateActivationToken(User user) {
+        String token = UUID.randomUUID().toString();
+        AccountActivationToken accountActivationToken = new AccountActivationToken(
+                user, token, Instant.now().plus(tokenExpiration, ChronoUnit.MILLIS));
+        authTokenRepository.save(accountActivationToken);
+
+        return token;
+    }
+
     @Override
     public AuthenticationResponse login(LoginRequest loginRequest) {
-        String username = loginRequest.getUsername();
-        User user = userRepository.findByUsername(username).orElseThrow(
-                () -> new UsernameNotFoundException(
-                        "Could not find user with username=" + username));
+        Authentication authenticate = authenticationManager
+                .authenticate(
+                        new UsernamePasswordAuthenticationToken(
+                                loginRequest.getUsername(), loginRequest.getPassword()
+                        )
+                );
 
-        if (!loginRequest.getPassword().equals(user.getPassword()))
-            throw new InvalidPasswordException("Wrong password");
+        User principal = (User) authenticate.getPrincipal();
+        String token = jwtTokenUtil.generateAccessToken(principal);
 
-        return new AuthenticationResponse(null, user);
+        return new AuthenticationResponse(token, UserViewMapper.mapToView(principal));
     }
 
     @Override
@@ -98,7 +115,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private void tokenExpired(AccountActivationToken authToken) {
-        long expirationDate = authToken.getExpiresAt().toEpochMilli();
+        long expirationDate = authToken.getCreatedAt().toEpochMilli() + tokenExpiration;
         long currentDate = Instant.now().toEpochMilli();
 
         if (expirationDate - currentDate < 0) {
@@ -109,12 +126,4 @@ public class AuthServiceImpl implements AuthService {
         }
     }
 
-    private String generateActivationToken(User user) {
-        String token = UUID.randomUUID().toString();
-        AccountActivationToken accountActivationToken = new AccountActivationToken(
-                user, token, Instant.now().plus(tokenExpiration, ChronoUnit.MILLIS));
-        authTokenRepository.save(accountActivationToken);
-
-        return token;
-    }
 }
