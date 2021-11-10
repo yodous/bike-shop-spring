@@ -6,23 +6,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-
-import javax.servlet.http.HttpServletResponse;
 
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+    private final UserRepository userRepository;
 
     @Override
     @Bean
@@ -34,35 +29,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                .exceptionHandling(e -> e
-                        .authenticationEntryPoint(
-                                (request, response, ex) -> {
-                                    response.sendError(
-                                            HttpServletResponse.SC_UNAUTHORIZED,
-                                            ex.getMessage()
-                                    );
-                                }
-                        ))
                 .authorizeRequests(r -> r
                         .mvcMatchers(HttpMethod.GET, "/").permitAll() // get method of product, categories etc.
-                        .antMatchers("/api/public/**").permitAll()
-                        .antMatchers("/", "/h2-console/**", "/auth/**").permitAll()
+                        .antMatchers("/", "/h2-console/**", "/api/auth/**").permitAll()
                         .anyRequest().authenticated())
-                .headers(h -> h
-                        .frameOptions()
-                        .disable());
+                .headers().frameOptions().disable();
     }
 
-//
-//    @Override
-//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(
-//                username -> userRepository.findByUsername(username).orElseThrow(
-//                        () -> new UsernameNotFoundException(
-//                                String.format("User: %s, not found", username)
-//                        )
-//                ));
-//    }
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(
+                        username -> userRepository.findByUsername(username).orElseThrow(
+                                () -> new UsernameNotFoundException(
+                                        String.format("User: %s, not found", username)))
+                )
+                .passwordEncoder(passwordEncoder());
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
