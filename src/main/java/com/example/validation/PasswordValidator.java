@@ -2,16 +2,14 @@ package com.example.validation;
 
 import com.example.exception.InvalidPasswordException;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import static java.lang.Character.*;
+import static java.lang.Character.isSpaceChar;
 
-public class PasswordValidator {
-    private static final String UPPER_CASE_REGEX = ".*[A-Z].*";
-    private static final String AT_LEAST_ONE_DIGIT = ".*\\d.*";
-    private static final String AT_LEAST_ONE_SPECIAL_CHARACTER = ".*[`~!@#$%^&*()\\-_=+\\\\|\\[{\\]};:'\",<.>/?].*";
+public abstract class PasswordValidator {
 
-    public static void isValid(String password, String confirmPassword) {
+    public static void isValid(char[] password, char[] confirmPassword) {
         containsDigit(password);
+        containsLowerCaseLetter(password);
         containsUpperCaseLetter(password);
         containsSpecialChar(password);
         longEnough(password);
@@ -19,48 +17,70 @@ public class PasswordValidator {
         passwordsTheSame(password, confirmPassword);
     }
 
-    private static void longEnough(String password) {
-        if (password.length() < 6)
+    private static void longEnough(char[] password) {
+        if (password.length < 6)
             throw new InvalidPasswordException(
                     "Password must be at least 6 characters long");
     }
 
-    private static void noSpaces(String password) {
-        if (password.contains(" "))
-            throw new InvalidPasswordException(
+    private static void noSpaces(char[] password) {
+        for (char c : password)
+            if (isSpaceChar(c))
+                throw new InvalidPasswordException(
                     "Password must not contain any spaces");
     }
 
-    private static void containsDigit(String password) {
-        Pattern digitPattern = Pattern.compile(AT_LEAST_ONE_DIGIT);
-        Matcher digitMatcher = digitPattern.matcher(password);
+    private static void containsDigit(char[] password) {
+        boolean hasDigit = false;
+        for (char c : password)
+            if (isDigit(c))
+                hasDigit = true;
 
-        if (!digitMatcher.matches())
+        if (!hasDigit)
             throw new InvalidPasswordException(
                     "Password must consist of at least one digit");
     }
 
-    private static void containsUpperCaseLetter(String password) {
-        Pattern upperPattern = Pattern.compile(UPPER_CASE_REGEX);
-        Matcher upperCaseMatcher = upperPattern.matcher(password);
+    private static void containsLowerCaseLetter(char[] password) {
+        boolean hasLowerCase = false;
 
-        if (!upperCaseMatcher.matches())
-            throw new InvalidPasswordException(
+        for (char c : password)
+            if (isLowerCase(c))
+                hasLowerCase = true;
+
+        if (!hasLowerCase)
+            throw new InvalidPasswordException
+                    ("Password must consist of at least one lower case letter");
+    }
+
+    private static void containsUpperCaseLetter(char[] password) {
+        boolean hasUpperCase = false;
+
+        for (char c : password)
+            if (isUpperCase(c))
+                hasUpperCase = true;
+
+        if (!hasUpperCase)
+               throw new InvalidPasswordException(
                     "Password must consist of at least one upper case letter");
     }
 
-    private static void containsSpecialChar(String password) {
-        Pattern specialCharPattern = Pattern.compile(AT_LEAST_ONE_SPECIAL_CHARACTER);
-        Matcher specialCharMatcher = specialCharPattern.matcher(password);
+    private static void containsSpecialChar(char[] password) {
+        boolean hasSpecialChar = false;
 
-        if (!specialCharMatcher.matches())
+        for (char c : password)
+            if (!(isLetter(c) && isDigit(c) && isSpaceChar(c)))
+                hasSpecialChar = true;
+
+        if (!hasSpecialChar)
             throw new InvalidPasswordException(
                     "Password must contain at least one special character");
     }
 
-    public static void passwordsTheSame(String password0, String password1) {
-        if (!password0.equals(password1))
-            throw new InvalidPasswordException("Passwords are not the same");
+    public static void passwordsTheSame(char[] password0, char[] password1) {
+        for (int i = 0; i < password1.length; i++)
+            if (password0[i] != password1[i])
+                throw new InvalidPasswordException("Passwords are not the same");
     }
 
 }

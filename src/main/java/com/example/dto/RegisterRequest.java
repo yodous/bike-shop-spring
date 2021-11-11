@@ -5,10 +5,10 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class SignupRequest {
+public class RegisterRequest {
     private String username;
-    private String password;
-    private String confirmPassword;
+    private char[] password;
+    private char[] confirmPassword;
     private String firstName;
     private String lastName;
     private String email;

@@ -2,7 +2,7 @@ package com.example.controller;
 
 import com.example.dto.AuthenticationResponse;
 import com.example.dto.LoginRequest;
-import com.example.dto.SignupRequest;
+import com.example.dto.RegisterRequest;
 import com.example.security.JwtTokenService;
 import com.example.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -28,8 +28,8 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<String> signup(@RequestBody SignupRequest signupRequest) {
-        authService.registration(signupRequest);
+    public ResponseEntity<String> register(@RequestBody RegisterRequest registerRequest) {
+        authService.register(registerRequest);
         return ResponseEntity.ok("Activation email has been sent");
     }
 

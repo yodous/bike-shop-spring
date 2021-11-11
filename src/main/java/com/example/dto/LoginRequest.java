@@ -7,5 +7,5 @@ import lombok.Getter;
 @AllArgsConstructor
 public class LoginRequest {
     private String username;
-    private String password;
+    private char[] password;
 }

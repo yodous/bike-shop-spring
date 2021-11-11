@@ -1,7 +1,7 @@
 package com.example.exception;
 
 public class TokenNotFoundException extends RuntimeException {
-    private static final String MESSAGE = "Could not found token";
+    private static final String MESSAGE = "Could not find token";
 
     public TokenNotFoundException() {
         super(MESSAGE);

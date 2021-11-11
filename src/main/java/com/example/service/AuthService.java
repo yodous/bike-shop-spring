@@ -2,11 +2,11 @@ package com.example.service;
 
 import com.example.dto.AuthenticationResponse;
 import com.example.dto.LoginRequest;
-import com.example.dto.SignupRequest;
+import com.example.dto.RegisterRequest;
 
 public interface AuthService {
     AuthenticationResponse login(LoginRequest loginRequest);
 
-    void registration(SignupRequest signupRequest);
+    void register(RegisterRequest registerRequest);
 
 }
