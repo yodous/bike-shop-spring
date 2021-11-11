@@ -1,7 +1,7 @@
 package com.example.service.impl;
 
 import com.example.dto.ProductCreateRequest;
-import com.example.dto.ProductDTO;
+import com.example.dto.ProductView;
 import com.example.dto.ProductUpdate;
 import com.example.exception.ProductNotFoundException;
 import com.example.model.Product;
@@ -22,32 +22,32 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository repository;
 
     @Override
-    public List<ProductDTO> getByString(String str) {
+    public List<ProductView> getByString(String str) {
         return repository.findAllByNameContaining(str).stream()
                 .map(ProductMapper::mapToDTO).collect(Collectors.toList());
     }
 
     @Override
-    public List<ProductDTO> getAllByUsername(String username) {
+    public List<ProductView> getAllByUsername(String username) {
         return repository.findAllBySellerUsernameIgnoreCase(username).stream()
                 .map(ProductMapper::mapToDTO).collect(Collectors.toList());
     }
 
     @Override
-    public ProductDTO get(int id) {
+    public ProductView get(int id) {
         return repository.findById(id).stream()
                 .map(ProductMapper::mapToDTO).findAny()
                 .orElseThrow(ProductNotFoundException::new);
     }
 
     @Override
-    public List<ProductDTO> getAll() {
+    public List<ProductView> getAll() {
         return repository.findAll().stream().map(ProductMapper::mapToDTO)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ProductDTO> getByCategory(String categoryName) {
+    public List<ProductView> getByCategory(String categoryName) {
         ProductCategory category = ProductCategory.valueOf(categoryName.toUpperCase());
         return repository.findAllByCategory(category).stream()
                 .map(ProductMapper::mapToDTO).collect(Collectors.toList());

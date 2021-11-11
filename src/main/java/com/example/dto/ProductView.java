@@ -7,7 +7,7 @@ import java.time.Instant;
 
 @Getter
 @AllArgsConstructor
-public class ProductDTO {
+public class ProductView {
     private String name;
     private String category;
     private double price;

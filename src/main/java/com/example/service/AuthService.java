@@ -7,7 +7,6 @@ import com.example.dto.SignupRequest;
 public interface AuthService {
     AuthenticationResponse login(LoginRequest loginRequest);
 
-    void signup(SignupRequest signupRequest);
+    void registration(SignupRequest signupRequest);
 
-    void enableUser(String token);
 }
