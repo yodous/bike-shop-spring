@@ -38,6 +38,24 @@ public class JwtTokenService {
     @Value("${token.expiration}")
     private int tokenExpiration;
 
+    public boolean validate(String token) {
+        try {
+            Jwts.parser()
+                    .setSigningKey(jwtSecret)
+                    .parseClaimsJws(token);
+            return true;
+        } catch (MalformedJwtException ex) {
+            log.error("Invalid JWT token - {}", ex.getMessage());
+        } catch (ExpiredJwtException ex) {
+            log.error("Expired JWT token - {}", ex.getMessage());
+        } catch (UnsupportedJwtException ex) {
+            log.error("Unsupported JWT token - {}", ex.getMessage());
+        } catch (IllegalArgumentException ex) {
+            log.error("JWT claims string is empty - {}", ex.getMessage());
+        }
+        return false;
+    }
+
     public String generateAccountActivationToken(User user) {
         String token = UUID.randomUUID().toString();
         AccountActivationToken accountActivationToken = new AccountActivationToken(
@@ -91,4 +109,14 @@ public class JwtTokenService {
             throw new TokenNotFoundException("Token expired");
         }
     }
+
+    public String getUsername(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(jwtSecret)
+                .parseClaimsJws(token)
+                .getBody();
+
+        return claims.getSubject().split(",")[1];
+    }
+
 }
