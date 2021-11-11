@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class SignupValidator {
+public class RegisterValidator {
     private final UserRepository userRepository;
 
     public void validate(RegisterRequest registerRequest) {
@@ -18,7 +18,6 @@ public class SignupValidator {
         EmailValidator.isValid(registerRequest.getEmail());
     }
 
-    // todo: change exception message to something less specific, status code 409 v 422
     private void isUsernameTaken(RegisterRequest registerRequest) {
         userRepository.findByUsername(registerRequest.getUsername())
                 .ifPresent(u -> {

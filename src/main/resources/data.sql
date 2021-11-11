@@ -1,26 +1,23 @@
 -- INSERT INTO user_role(id, role) VALUES(1, 'ADMIN');
 -- INSERT INTO user_role(id, role) VALUES(2, 'USER');
 
-INSERT INTO USERS(ID, USERNAME, PASSWORD, FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, ACC_NUMBER, CITY, STREET, ROLE,
-    POSTAL_CODE, CREATED_AT, MODIFIED_AT)
-VALUES (1, 'seller', 'password', 'firstName0', 'lastName0', 'seller@email.com', 'account number 0', 1, 'city0',
-        'street0', '50-123', NOW(), NOW());
-INSERT INTO USERS(ID, USERNAME, PASSWORD, FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, ACC_NUMBER, CITY, STREET, ROLE,
-    POSTAL_CODE,
-                  CREATED_AT, MODIFIED_AT)
+INSERT INTO USERS(ID, USERNAME, PASSWORD, FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, ACC_NUMBER, CITY, STREET,
+    POSTAL_CODE, ROLE, CREATED_AT, MODIFIED_AT)
+VALUES (1, 'seller', 'password', 'firstName0', 'lastName0', 'seller@email.com', 'account number 0', 'city0',
+        'street0', '50-123', 'USER', NOW(), NOW());
+INSERT INTO USERS(ID, USERNAME, PASSWORD, FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, ACC_NUMBER, CITY, STREET,
+                  POSTAL_CODE, ROLE, CREATED_AT, MODIFIED_AT)
 VALUES (2, 'seller1', 'password', 'firstName1Seller', 'sellerlastName0', 'seller1@email.com', 'account number 12',
-        1, 'city5', 'street6', '70-123', NOW(), NOW());
+        'city5', 'street6', '70-123', 'USER', NOW(), NOW());
 
-INSERT INTO USERS(ID, USERNAME, PASSWORD, FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, ACC_NUMBER, CITY, STREET, ROLE,
-    POSTAL_CODE,
-                  CREATED_AT, MODIFIED_AT)
-VALUES (3, 'consumer0', 'password', 'consumerName0', 'consumerlastName0', 'cons0@email.com', 'account number 1', 1,
-        'city1', 'street1', '11-123', NOW(), NOW());
-INSERT INTO USERS(ID, USERNAME, PASSWORD, FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, ACC_NUMBER, CITY, STREET, ROLE,
-    POSTAL_CODE,
-                  CREATED_AT, MODIFIED_AT)
-VALUES (4, 'consumer1', 'password', 'consumer1Name', 'conslastName1', 'cons1@email.com', 'account number 2', 1,
-        'city2', 'street2', '22-123', NOW(), NOW());
+INSERT INTO USERS(ID, USERNAME, PASSWORD, FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, ACC_NUMBER, CITY, STREET,
+                  POSTAL_CODE, ROLE, CREATED_AT, MODIFIED_AT)
+VALUES (3, 'consumer0', 'password', 'consumerName0', 'consumerlastName0', 'cons0@email.com', 'account number 1',
+        'city1', 'street1', '11-123', 'USER', NOW(), NOW());
+INSERT INTO USERS(ID, USERNAME, PASSWORD, FIRST_NAME, LAST_NAME, EMAIL_ADDRESS, ACC_NUMBER, CITY, STREET,
+                  POSTAL_CODE, ROLE, CREATED_AT, MODIFIED_AT)
+VALUES (4, 'consumer1', 'password', 'consumer1Name', 'conslastName1', 'cons1@email.com', 'account number 2',
+        'city2', 'street2', '22-123', 'USER', NOW(), NOW());
 
 INSERT INTO product
 VALUES (1, 1, 'product 0', 'descriptionnnnnnnnnn000', 'BEAUTY', 1.50, NOW(), NOW());

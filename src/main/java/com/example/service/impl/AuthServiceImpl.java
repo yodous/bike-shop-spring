@@ -17,7 +17,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import static java.nio.CharBuffer.wrap;
+import java.nio.CharBuffer;
 
 @Slf4j
 @Service
@@ -49,13 +49,11 @@ public class AuthServiceImpl implements AuthService {
         Authentication authenticate = authenticationManager
                 .authenticate(
                         new UsernamePasswordAuthenticationToken(
-                                loginRequest.getUsername(), wrap(loginRequest.getPassword())
-                        )
-                );
+                                loginRequest.getUsername(),
+                                CharBuffer.wrap(loginRequest.getPassword())
+                        ));
 
         User principal = (User) authenticate.getPrincipal();
-        log.info("PASSWORD=" + principal.getPassword());
-
         String token = jwtTokenService.generateAccessToken(principal);
 
         return new AuthenticationResponse(token, userMapper.mapToView(principal));

@@ -1,17 +1,16 @@
 package com.example.model;
 
 import com.example.model.abstracts.BaseEntity;
+import com.example.model.enums.Role;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import java.util.*;
-
 
 @Getter
 @Setter
@@ -43,8 +42,12 @@ public class User extends BaseEntity implements UserDetails {
     private String email;
 
     @NotNull(message = "Account number is required")
-    @Column(name = "acc_number")
+    @Column(name = "acc_number", unique = true)
     private String accountNumber;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    private Role role;
 
     @Column(name = "is_enabled")
     private boolean enabled;
@@ -52,12 +55,8 @@ public class User extends BaseEntity implements UserDetails {
     @Embedded
     private Address address;
 
-    @Column(name = "role")
-    private String role;
-
-
     public User(String username, String password, String firstName, String lastName,
-                String email, String accountNumber, Address address, String role) {
+                String email, String accountNumber, Role role, Address address) {
         this.username = username;
         this.password = password;
         this.firstName = firstName;
@@ -70,7 +69,7 @@ public class User extends BaseEntity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singleton(new SimpleGrantedAuthority(role));
+        return Collections.singleton(role);
     }
 
     @Override
