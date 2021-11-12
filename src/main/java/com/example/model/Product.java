@@ -32,7 +32,7 @@ public class Product extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ProductCategory category;
 
-    @Min(value = 0, message= "Price cannot be negative")
+    @Min(value = 0, message = "Price cannot be negative")
     @Column(name = "price")
     private double price;
 

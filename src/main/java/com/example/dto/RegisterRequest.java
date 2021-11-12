@@ -12,7 +12,7 @@ public class RegisterRequest {
     private String firstName;
     private String lastName;
     private String email;
-    private String accNumber;
+    private String accountNumber;
     private String city;
     private String street;
     private String postalCode;

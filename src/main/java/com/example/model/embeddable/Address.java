@@ -1,13 +1,17 @@
-package com.example.model;
+package com.example.model.embeddable;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
 @Embeddable
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Address {

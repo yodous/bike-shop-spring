@@ -1,6 +1,7 @@
 package com.example.model;
 
 import com.example.model.abstracts.BaseEntity;
+import com.example.model.embeddable.Address;
 import com.example.model.enums.Role;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
