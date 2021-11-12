@@ -19,8 +19,7 @@ public abstract class UserViewMapper {
                     expression = "java(passwordEncoder.encode(fromCharArray(registerRequest.getPassword())))"),
             @Mapping(target = "address.city", source = "city"),
             @Mapping(target = "address.street", source = "street"),
-            @Mapping(target = "address.postalCode", source = "postalCode")
-    })
+            @Mapping(target = "address.postalCode", source = "postalCode")})
     public abstract User mapRegisterRequestToUser(RegisterRequest registerRequest);
 
     public abstract UserView mapToView(User user);

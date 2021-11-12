@@ -32,7 +32,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
         String token = getTokenFromRequest(request);
 
-        if (!token.isEmpty() && jwtTokenService.validate(token)) {
+        if (jwtTokenService.validate(token)) {
             UserDetails userDetails = userRepository
                     .findByUsername(jwtTokenService.getUsername(token))
                     .orElseThrow();

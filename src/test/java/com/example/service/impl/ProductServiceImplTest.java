@@ -1,7 +1,7 @@
 package com.example.service.impl;
 
 import com.example.dto.ProductCreateRequest;
-import com.example.dto.ProductDTO;
+import com.example.dto.ProductView;
 import com.example.dto.ProductUpdate;
 import com.example.exception.ProductNotFoundException;
 import com.example.model.Product;
@@ -38,7 +38,7 @@ class ProductServiceImplTest {
     void getByString_WhenSuccess_ThenReturnListOfProductsContainingStringInTheirName() {
         when(repository.findAllByNameContaining(anyString())).thenReturn(mockedProductsByName());
 
-        List<ProductDTO> products = service.getByString("fridge");
+        List<ProductView> products = service.getByString("fridge");
 
         assertThat(products).isNotNull();
         assertThat(products).hasSize(2);
@@ -54,11 +54,11 @@ class ProductServiceImplTest {
     void getAll_WhenSuccess_ThenReturnListOfProductDTOs() {
         when(repository.findAll()).thenReturn(mockedData());
 
-        List<ProductDTO> products = service.getAll();
+        List<ProductView> products = service.getAll();
 
         assertThat(products).isNotNull();
         assertThat(products).hasSize(3);
-        assertThat(products.get(1)).isInstanceOf(ProductDTO.class);
+        assertThat(products.get(1)).isInstanceOf(ProductView.class);
     }
 
     private List<Product> mockedData() {
@@ -74,7 +74,7 @@ class ProductServiceImplTest {
                 "description with more than 10 characters", ProductCategory.SPORT, 1.23);
         when(repository.findById(anyInt())).thenReturn(Optional.of(product));
 
-        ProductDTO dto = service.get(1);
+        ProductView dto = service.get(1);
 
         assertThat(dto.getName()).contains("product dto");
     }
@@ -94,7 +94,7 @@ class ProductServiceImplTest {
         when(repository.findAllByCategory(any()))
                 .thenReturn(productsByCategoriesMock());
 
-        List<ProductDTO> products = service.getByCategory("electronics");
+        List<ProductView> products = service.getByCategory("electronics");
 
         assertThat(products).isNotNull();
         assertThat(products).hasSize(4);
@@ -152,7 +152,7 @@ class ProductServiceImplTest {
         int updId = service.update(1, new ProductUpdate(
                 "new name", "new description", ProductCategory.SPORT, 100));
 
-        assertThat(updId).isNotEqualTo(0);
+        assertThat(updId).isNotZero();
     }
 
     @Test
@@ -179,7 +179,7 @@ class ProductServiceImplTest {
 
         int updId = service.updatePrice(1, 999);
 
-        assertThat(updId).isNotEqualTo(0);
+        assertThat(updId).isNotZero();
     }
 
     @Test

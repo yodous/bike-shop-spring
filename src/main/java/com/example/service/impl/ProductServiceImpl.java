@@ -5,7 +5,7 @@ import com.example.dto.ProductView;
 import com.example.dto.ProductUpdate;
 import com.example.exception.ProductNotFoundException;
 import com.example.model.Product;
-import com.example.mapper.ProductMapper;
+import com.example.mapper.ProductViewMapper;
 import com.example.model.enums.ProductCategory;
 import com.example.repository.ProductRepository;
 import com.example.service.ProductService;
@@ -20,29 +20,30 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository repository;
+    private final ProductViewMapper productViewMapper;
 
     @Override
     public List<ProductView> getByString(String str) {
         return repository.findAllByNameContaining(str).stream()
-                .map(ProductMapper::mapToDTO).collect(Collectors.toList());
+                .map(productViewMapper::mapSourceToView).collect(Collectors.toList());
     }
 
     @Override
     public List<ProductView> getAllByUsername(String username) {
         return repository.findAllBySellerUsernameIgnoreCase(username).stream()
-                .map(ProductMapper::mapToDTO).collect(Collectors.toList());
+                .map(productViewMapper::mapSourceToView).collect(Collectors.toList());
     }
 
     @Override
     public ProductView get(int id) {
         return repository.findById(id).stream()
-                .map(ProductMapper::mapToDTO).findAny()
+                .map(productViewMapper::mapSourceToView).findAny()
                 .orElseThrow(ProductNotFoundException::new);
     }
 
     @Override
     public List<ProductView> getAll() {
-        return repository.findAll().stream().map(ProductMapper::mapToDTO)
+        return repository.findAll().stream().map(productViewMapper::mapSourceToView)
                 .collect(Collectors.toList());
     }
 
@@ -50,7 +51,7 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductView> getByCategory(String categoryName) {
         ProductCategory category = ProductCategory.valueOf(categoryName.toUpperCase());
         return repository.findAllByCategory(category).stream()
-                .map(ProductMapper::mapToDTO).collect(Collectors.toList());
+                .map(productViewMapper::mapSourceToView).collect(Collectors.toList());
     }
 
     @Override

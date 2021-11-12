@@ -3,7 +3,7 @@ package com.example.service.impl;
 import com.example.dto.AuthenticationResponse;
 import com.example.dto.LoginRequest;
 import com.example.dto.RegisterRequest;
-import com.example.mapper.UserMapper;
+import com.example.mapper.UserViewMapper;
 import com.example.model.*;
 import com.example.repository.UserRepository;
 import com.example.security.JwtTokenService;
@@ -28,13 +28,13 @@ public class AuthServiceImpl implements AuthService {
     private final RegisterValidator registerValidator;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenService jwtTokenService;
-    private final UserMapper userMapper;
+    private final UserViewMapper userViewMapper;
 
     @Override
     public void register(RegisterRequest registerRequest) {
         registerValidator.validate(registerRequest);
 
-        User user = userMapper.mapSignupRequestToUser(registerRequest);
+        User user = userViewMapper.mapRegisterRequestToUser(registerRequest);
         userRepository.save(user);
 
         ActivationEmail activationEmail = new ActivationEmail(
@@ -56,7 +56,7 @@ public class AuthServiceImpl implements AuthService {
         User principal = (User) authenticate.getPrincipal();
         String token = jwtTokenService.generateAccessToken(principal);
 
-        return new AuthenticationResponse(token, userMapper.mapToView(principal));
+        return new AuthenticationResponse(token, userViewMapper.mapToView(principal));
     }
 
 }

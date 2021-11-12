@@ -1,6 +1,6 @@
 package com.example.security;
 
-import com.example.exception.TokenNotFoundException;
+import com.example.exception.InvalidTokenException;
 import com.example.model.AccountActivationToken;
 import com.example.model.User;
 import com.example.repository.AccountActivationTokenRepository;
@@ -64,7 +64,7 @@ public class JwtTokenService {
     public void enableUser(String token) {
         AccountActivationToken authToken = authTokenRepository.findAll().stream()
                 .filter(t -> t.getToken().equals(token)).findAny()
-                .orElseThrow(TokenNotFoundException::new);
+                .orElseThrow(InvalidTokenException::new);
         tokenExpired(authToken);
 
         User user = authToken.getUser();
@@ -86,14 +86,15 @@ public class JwtTokenService {
             authTokenRepository.delete(authToken);
             userRepository.delete(authToken.getUser());
 
-            throw new TokenNotFoundException("Token expired");
+            throw new InvalidTokenException("Token expired");
         }
     }
 
     public boolean validate(String token) {
         try {
-            Jwts.parser()
+            Jwts.parserBuilder()
                     .setSigningKey(jwtSecret)
+                    .build()
                     .parseClaimsJws(token);
             return true;
         } catch (MalformedJwtException ex) {
@@ -109,8 +110,9 @@ public class JwtTokenService {
     }
 
     public String getUsername(String token) {
-        Claims claims = Jwts.parser()
+        Claims claims = Jwts.parserBuilder()
                 .setSigningKey(jwtSecret)
+                .build()
                 .parseClaimsJws(token)
                 .getBody();
 
