@@ -1,13 +1,14 @@
 package com.example.validation;
 
 import com.example.exception.InvalidPasswordException;
+import org.springframework.stereotype.Component;
 
 import static java.lang.Character.*;
-import static java.lang.Character.isSpaceChar;
 
-public abstract class PasswordValidator {
+@Component
+public class PasswordValidator {
 
-    public static void isValid(char[] password, char[] confirmPassword) {
+    public void isValid(char[] password, char[] confirmPassword) {
         containsDigit(password);
         containsLowerCaseLetter(password);
         containsUpperCaseLetter(password);
@@ -17,20 +18,20 @@ public abstract class PasswordValidator {
         passwordsTheSame(password, confirmPassword);
     }
 
-    private static void longEnough(char[] password) {
+    private void longEnough(char[] password) {
         if (password.length < 6)
             throw new InvalidPasswordException(
                     "Password must be at least 6 characters long");
     }
 
-    private static void noSpaces(char[] password) {
+    private void noSpaces(char[] password) {
         for (char c : password)
             if (isSpaceChar(c))
                 throw new InvalidPasswordException(
-                    "Password must not contain any spaces");
+                        "Password must not contain any spaces");
     }
 
-    private static void containsDigit(char[] password) {
+    private void containsDigit(char[] password) {
         boolean hasDigit = false;
         for (char c : password)
             if (isDigit(c))
@@ -41,7 +42,7 @@ public abstract class PasswordValidator {
                     "Password must consist of at least one digit");
     }
 
-    private static void containsLowerCaseLetter(char[] password) {
+    private void containsLowerCaseLetter(char[] password) {
         boolean hasLowerCase = false;
 
         for (char c : password)
@@ -53,7 +54,7 @@ public abstract class PasswordValidator {
                     ("Password must consist of at least one lower case letter");
     }
 
-    private static void containsUpperCaseLetter(char[] password) {
+    private void containsUpperCaseLetter(char[] password) {
         boolean hasUpperCase = false;
 
         for (char c : password)
@@ -61,11 +62,11 @@ public abstract class PasswordValidator {
                 hasUpperCase = true;
 
         if (!hasUpperCase)
-               throw new InvalidPasswordException(
+            throw new InvalidPasswordException(
                     "Password must consist of at least one upper case letter");
     }
 
-    private static void containsSpecialChar(char[] password) {
+    private void containsSpecialChar(char[] password) {
         boolean hasSpecialChar = false;
 
         for (char c : password)
@@ -77,7 +78,7 @@ public abstract class PasswordValidator {
                     "Password must contain at least one special character");
     }
 
-    public static void passwordsTheSame(char[] password0, char[] password1) {
+    private void passwordsTheSame(char[] password0, char[] password1) {
         for (int i = 0; i < password1.length; i++)
             if (password0[i] != password1[i])
                 throw new InvalidPasswordException("Passwords are not the same");

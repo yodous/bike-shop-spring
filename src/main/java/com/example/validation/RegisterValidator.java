@@ -10,12 +10,14 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class RegisterValidator {
     private final UserRepository userRepository;
+    private final PasswordValidator passwordValidator;
+    private final EmailValidator emailValidator;
 
     public void validate(RegisterRequest registerRequest) {
         isUsernameTaken(registerRequest);
-        PasswordValidator.isValid(registerRequest.getPassword(),
+        passwordValidator.isValid(registerRequest.getPassword(),
                 registerRequest.getConfirmPassword());
-        EmailValidator.isValid(registerRequest.getEmail());
+        emailValidator.isValid(registerRequest.getEmail());
     }
 
     private void isUsernameTaken(RegisterRequest registerRequest) {
