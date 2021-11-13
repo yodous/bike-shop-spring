@@ -70,12 +70,23 @@ public class PasswordValidator {
         boolean hasSpecialChar = false;
 
         for (char c : password)
-            if (!(isLetter(c) && isDigit(c) && isSpaceChar(c)))
-                hasSpecialChar = true;
+            for (char cs : specialChars())
+                if (c == cs) {
+                    hasSpecialChar = true;
+                    break;
+                }
 
         if (!hasSpecialChar)
             throw new InvalidPasswordException(
                     "Password must contain at least one special character");
+    }
+
+    private char[] specialChars() {
+        return new char[] {
+                '~', '!', '@', '#', '$', '%', '^', '&', '*', '(', ')',
+                '-', '_', '=', '+', '[', '{', ']', '}', '\\', '|', '\'',
+                '\"', ';', ':', '/', '?', '.', '>', ',', '<'
+        };
     }
 
     private void passwordsTheSame(char[] password0, char[] password1) {
