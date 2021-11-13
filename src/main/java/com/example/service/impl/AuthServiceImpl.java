@@ -8,7 +8,7 @@ import com.example.model.*;
 import com.example.repository.UserRepository;
 import com.example.security.JwtTokenService;
 import com.example.service.AuthService;
-import com.example.service.EmailService;
+import com.example.service.MessageSender;
 import com.example.validation.RegisterValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +24,7 @@ import java.nio.CharBuffer;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
-    private final EmailService emailService;
+    private final MessageSender messageSender;
     private final RegisterValidator registerValidator;
     private final AuthenticationManager authenticationManager;
     private final JwtTokenService jwtTokenService;
@@ -39,7 +39,7 @@ public class AuthServiceImpl implements AuthService {
 
         ActivationEmail activationEmail = new ActivationEmail(
                 user.getEmail(), jwtTokenService.generateAccountActivationToken(user));
-        emailService.sendMessage(activationEmail);
+        messageSender.sendMessage(activationEmail);
 
         log.info("email has been sent\n" + activationEmail.getText());
     }

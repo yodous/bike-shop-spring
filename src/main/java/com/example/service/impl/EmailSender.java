@@ -1,7 +1,7 @@
 package com.example.service.impl;
 
 import com.example.model.abstracts.Message;
-import com.example.service.EmailService;
+import com.example.service.MessageSender;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class EmailServiceImpl implements EmailService {
+public class EmailSender implements MessageSender {
     private final JavaMailSender mailSender;
 
     @Override
