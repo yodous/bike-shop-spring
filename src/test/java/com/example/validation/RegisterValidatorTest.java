@@ -17,6 +17,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 class RegisterValidatorTest {
@@ -38,7 +39,7 @@ class RegisterValidatorTest {
 
     @Test
     void registerWithValidRequest_ThenOk() {
-        when(userRepository.findByUsername(anyString())).thenReturn(Optional.empty());
+        given(userRepository.findByUsername(anyString())).willReturn(Optional.empty());
 
         assertDoesNotThrow(() -> validator.validate(request),
                 "Should not throw any exception, because request is valid");
@@ -48,24 +49,40 @@ class RegisterValidatorTest {
 
     @Test
     void registerWithUsernameTaken_ThenThrowUsernameTakenException() {
-        when(userRepository.findByUsername(any())).thenReturn(Optional.of(new User()));
+        given(userRepository.findByUsername(any())).willReturn(Optional.of(new User()));
 
         Exception exception = assertThrows(UsernameTakenException.class,
                 () -> validator.validate(request),
                 "Should throw UsernameTakenException, because username is taken");
+
         assertThat(exception).isInstanceOf(UsernameTakenException.class);
         verify(passwordValidator, never()).isValid(request.getPassword(), request.getConfirmPassword());
         verify(emailValidator, never()).isValid(request.getEmail());
     }
 
     @Test
+    void registerWithEmailTaken_ThenThrowInvalidAddressEmailException() {
+        given(userRepository.findByUsername(any())).willReturn(Optional.empty());
+        given(userRepository.findByEmail(any())).willReturn(Optional.of(new User()));
+
+        Exception exception = assertThrows(InvalidAddressEmailException.class,
+                () -> validator.validate(request),
+                "Should throw InvalidAddressEmailException, because address email is taken");
+
+        assertThat(exception).isInstanceOf(InvalidAddressEmailException.class);
+        verify(passwordValidator).isValid(request.getPassword(), request.getConfirmPassword());
+        verify(emailValidator, never()).isValid(request.getEmail());
+    }
+
+    @Test
     void registerWithInvalidPassword_ThenThrowInvalidPasswordException() {
-        when(userRepository.findByUsername(anyString())).thenReturn(Optional.empty());
+        given(userRepository.findByUsername(anyString())).willReturn(Optional.empty());
         doThrow(InvalidPasswordException.class).when(passwordValidator).isValid(any(), any());
 
         Exception exception = assertThrows(InvalidPasswordException.class,
                 () -> validator.validate(request),
                 "Should throw InvalidPasswordException, because password is not valid");
+
         assertThat(exception).isInstanceOf(InvalidPasswordException.class);
         verify(passwordValidator).isValid(request.getPassword(), request.getConfirmPassword());
         verify(emailValidator, never()).isValid(request.getEmail());
@@ -73,13 +90,14 @@ class RegisterValidatorTest {
 
     @Test
     void invalidAddressEmail_ThenThrowInvalidAddressEmailException() {
-        when(userRepository.findByUsername(anyString())).thenReturn(Optional.empty());
+        given(userRepository.findByUsername(anyString())).willReturn(Optional.empty());
         doThrow(InvalidAddressEmailException.class).when(emailValidator).isValid(any());
 
         Exception exception = assertThrows(InvalidAddressEmailException.class,
                 () -> validator.validate(request),
                 "Should throw InvalidAddressEmailException, " +
                         "because address email is not valid");
+
         assertThat(exception).isInstanceOf(InvalidAddressEmailException.class);
         verify(passwordValidator).isValid(request.getPassword(), request.getConfirmPassword());
         verify(emailValidator).isValid(request.getEmail());
