@@ -4,39 +4,44 @@ import com.example.dto.ProductCreateRequest;
 import com.example.dto.ProductUpdate;
 import com.example.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
-@RequestMapping("/offers")
+@RequestMapping("/products")
 @RequiredArgsConstructor
 public class ProductMgmtController {
     private final ProductService productService;
+    @Value("${server.port}")
+    private int serverPort;
 
     @PostMapping
     public ResponseEntity<String> create(@RequestBody ProductCreateRequest productCreateRequest) {
-        productService.create(productCreateRequest);
-        return new ResponseEntity<>("Product has been saved", HttpStatus.CREATED);
+        int productId = productService.create(productCreateRequest);
+        String url = "localhost:" + serverPort + "/products/" + productId;
+
+        return new ResponseEntity<>("Product has been saved with.\n" +
+                "You can find your product at this address: " + url, HttpStatus.CREATED);
     }
 
-    @PutMapping("/offers/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<String> update(@PathVariable int id, @RequestBody ProductUpdate product) {
         productService.update(id, product);
-
-        return new ResponseEntity<>("Product has been updated", HttpStatus.OK);
+        return new ResponseEntity<>("Product has been updated", HttpStatus.NO_CONTENT);
     }
 
-    @PatchMapping("/offers/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<String> updatePrice(@PathVariable int id, @RequestBody double newPrice) {
         productService.updatePrice(id, newPrice);
         return new ResponseEntity<>("Product price has been updated", HttpStatus.NO_CONTENT);
     }
 
-    @DeleteMapping("/offers/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable int id) {
         productService.delete(id);
-
         return new ResponseEntity<>("Product has been deleted", HttpStatus.NO_CONTENT);
     }
 }

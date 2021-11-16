@@ -15,24 +15,23 @@ public class RegisterValidator {
     private final EmailValidator emailValidator;
 
     public void validate(RegisterRequest registerRequest) {
-        isUsernameTaken(registerRequest.getUsername());
+        if (isUsernameTaken(registerRequest.getUsername()))
+            throw new UsernameTakenException();
+
         passwordValidator.isValid(registerRequest.getPassword(),
                 registerRequest.getConfirmPassword());
-        isAddressEmailTaken(registerRequest.getEmail());
+
+        if (isAddressEmailTaken(registerRequest.getEmail()))
+            throw new InvalidAddressEmailException();
+
         emailValidator.isValid(registerRequest.getEmail());
     }
 
-    private void isUsernameTaken(String username) {
-        userRepository.findByUsername(username)
-                .ifPresent(u -> {
-                    throw new UsernameTakenException();
-                });
+    private boolean isUsernameTaken(String username) {
+        return userRepository.findByUsername(username).isPresent();
     }
 
-    private void isAddressEmailTaken(String email) {
-        userRepository.findByEmail(email)
-                .ifPresent(u -> {
-                    throw new InvalidAddressEmailException();
-                });
+    private boolean isAddressEmailTaken(String email) {
+        return userRepository.findByEmail(email).isPresent();
     }
 }

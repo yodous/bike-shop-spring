@@ -2,10 +2,12 @@ package com.example.dto;
 
 import com.example.model.enums.ProductCategory;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.Instant;
 
 @Getter
+@NoArgsConstructor
 public class ProductUpdate {
     private String name;
     private String description;
