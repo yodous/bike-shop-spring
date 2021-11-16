@@ -86,7 +86,7 @@ public class JwtTokenService {
             authTokenRepository.delete(authToken);
             userRepository.delete(authToken.getUser());
 
-            throw new InvalidTokenException("Token expired");
+            throw new InvalidTokenException("Token expired"); //todo: JwtTokenException
         }
     }
 

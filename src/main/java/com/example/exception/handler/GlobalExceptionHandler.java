@@ -1,9 +1,7 @@
 package com.example.exception.handler;
 
-import com.example.exception.InvalidPasswordException;
-import com.example.exception.InvalidTokenException;
-import com.example.exception.ProductNotFoundException;
-import com.example.exception.UsernameTakenException;
+import com.example.exception.*;
+import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
@@ -12,19 +10,30 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    
+
+    //todo: I don't need you, right?
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<Object> handleAuthenticationException(AuthenticationException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.FORBIDDEN);
     }
 
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<Object> handleJwtException(JwtException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.UNAUTHORIZED);
+    }
+
     @ExceptionHandler(UsernameTakenException.class)
     public ResponseEntity<Object> handleUsernameTakenException(UsernameTakenException exception) {
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(InvalidPasswordException.class)
     public ResponseEntity<Object> handleInvalidPasswordException(InvalidPasswordException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
+    }
+
+    @ExceptionHandler(InvalidAddressEmailException.class)
+    public ResponseEntity<Object> handleInvalidAddressEmailException(InvalidAddressEmailException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
     }
 
@@ -37,4 +46,5 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> handleProductNotFoundException(ProductNotFoundException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
+
 }

@@ -6,21 +6,27 @@ import com.example.dto.ProductUpdate;
 import com.example.exception.ProductNotFoundException;
 import com.example.model.Product;
 import com.example.mapper.ProductViewMapper;
+import com.example.model.User;
 import com.example.model.enums.ProductCategory;
 import com.example.repository.ProductRepository;
+import com.example.service.AuthService;
 import com.example.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.security.Principal;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository repository;
     private final ProductViewMapper productViewMapper;
+    private final AuthService authService;
 
     @Override
     public List<ProductView> getByString(String str) {
@@ -55,18 +61,21 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @Transactional
     public int create(ProductCreateRequest productCreateRequest) {
+        User user = authService.getCurrentUser();
+
         Product product = new Product(
                 productCreateRequest.getName(),
                 productCreateRequest.getDescription(),
                 ProductCategory.valueOf(productCreateRequest.getCategory().toUpperCase()),
-                productCreateRequest.getPrice());
+                productCreateRequest.getPrice(),
+                user);
 
-        if (repository.save(product).getId() == 0)
-            throw new RuntimeException("Could not save product");
+        Product savedProduct = repository.save(product);
+        if (savedProduct.getId() == 0)
+            throw new RuntimeException("Could not save product"); //todo: make custom exception for this scenario
 
-        return repository.save(product).getId();
+        return savedProduct.getId();
     }
 
     @Override

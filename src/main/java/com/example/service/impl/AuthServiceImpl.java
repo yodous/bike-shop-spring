@@ -3,6 +3,7 @@ package com.example.service.impl;
 import com.example.dto.AuthenticationResponse;
 import com.example.dto.LoginRequest;
 import com.example.dto.RegisterRequest;
+import com.example.exception.InvalidAddressEmailException;
 import com.example.mapper.UserViewMapper;
 import com.example.model.*;
 import com.example.repository.UserRepository;
@@ -15,9 +16,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.nio.CharBuffer;
+import java.security.Principal;
 
 @Slf4j
 @Service
@@ -31,6 +37,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserViewMapper userViewMapper;
 
     @Override
+    @Transactional
     public void register(RegisterRequest registerRequest) {
         registerValidator.validate(registerRequest);
 
@@ -57,6 +64,12 @@ public class AuthServiceImpl implements AuthService {
         String token = jwtTokenService.generateAccessToken(principal);
 
         return new AuthenticationResponse(token, userViewMapper.mapToView(principal));
+    }
+
+    @Override
+    public User getCurrentUser() {
+        return (User) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
     }
 
 }

@@ -21,6 +21,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
@@ -108,4 +109,8 @@ class AuthServiceImplTest {
         assertThat(response.getToken()).isEqualTo(generatedToken);
     }
 
+    @Test
+    void loginWithInvalidUsername_thenStatus403() {
+        fail("napisz test dla logowania z nieistniejącą nazwą użytkownika");
+    }
 }
