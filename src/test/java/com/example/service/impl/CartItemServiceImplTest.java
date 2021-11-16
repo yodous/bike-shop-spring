@@ -7,6 +7,7 @@ import com.example.model.enums.ProductCategory;
 import com.example.model.ShoppingSession;
 import com.example.repository.ProductRepository;
 import com.example.repository.ShoppingSessionRepository;
+import com.example.repository.CartItemRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -19,14 +20,14 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 class CartItemServiceImplTest {
     @Mock
     ShoppingSessionRepository sessionRepository;
     @Mock
-    com.example.repository.CartItemRepository cartItemRepository;
+    CartItemRepository cartItemRepository;
     @Mock
     ProductRepository productRepository;
 
@@ -44,9 +45,9 @@ class CartItemServiceImplTest {
         product = new Product("test product", "test description", ProductCategory.ELECTRONICS, 1.23);
         cart = new ShoppingSession();
         cartItem = new CartItem(cart, product, 1);
-        when(sessionRepository.findByUserId(anyInt())).thenReturn(Optional.of(cart));
-        when(productRepository.findById(anyInt())).thenReturn(Optional.of(product));
-        when(cartItemRepository.save(any())).thenReturn(cartItem);
+        given(sessionRepository.findByUserId(anyInt())).willReturn(Optional.of(cart));
+        given(productRepository.findById(anyInt())).willReturn(Optional.of(product));
+        given(cartItemRepository.save(any())).willReturn(cartItem);
     }
 
     @Test
@@ -60,8 +61,8 @@ class CartItemServiceImplTest {
 
     @Test
     void remove_FromNotEmptyShoppingSession_ThenOk() {
-        when(cartItemRepository.findBySessionAndProductId(any(), anyInt()))
-                .thenReturn(Optional.of(cartItem));
+        given(cartItemRepository.findBySessionAndProductId(any(), anyInt()))
+                .willReturn(Optional.of(cartItem));
 
         service.remove(1, 1);
 

@@ -4,84 +4,74 @@ import com.example.dto.ProductCreateRequest;
 import com.example.dto.ProductView;
 import com.example.dto.ProductUpdate;
 import com.example.exception.ProductNotFoundException;
+import com.example.mapper.ProductViewMapper;
 import com.example.model.Product;
-import com.example.model.enums.ProductCategory;
 import com.example.repository.ProductRepository;
+import com.example.service.AuthService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
 
 class ProductServiceImplTest {
     @Mock
-    ProductRepository repository;
+    private ProductRepository repository;
+    @Mock
+    private ProductViewMapper mapper;
+    @Mock
+    private AuthService authService;
 
     @InjectMocks
-    ProductServiceImpl service;
+    private ProductServiceImpl service;
 
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
+        given(mapper.mapSourceToView(any())).willReturn(new ProductView());
     }
 
     @Test
-    void getByString_WhenSuccess_ThenReturnListOfProductsContainingStringInTheirName() {
-        when(repository.findAllByNameContaining(anyString())).thenReturn(mockedProductsByName());
+    void getByString_WhenSuccess_ThenReturnListOfProductViews() {
+        given(repository.findAllByNameContaining(anyString())).willReturn(mockedData());
 
-        List<ProductView> products = service.getByString("fridge");
+        List<ProductView> products = service.getByString("test product");
 
-        assertThat(products).isNotNull();
-        assertThat(products).hasSize(2);
-    }
-
-    private List<Product> mockedProductsByName() {
-        return List.of(
-                new Product("fridge x", "description with > 10 characters#0", ProductCategory.HOUSE, 999.99),
-                new Product("ffridgee", "description with > 10 characters#0", ProductCategory.HOUSE, 999.99));
+        assertThat(products).hasSize(3);
     }
 
     @Test
     void getAll_WhenSuccess_ThenReturnListOfProductDTOs() {
-        when(repository.findAll()).thenReturn(mockedData());
+        given(repository.findAll()).willReturn(mockedData());
 
         List<ProductView> products = service.getAll();
 
-        assertThat(products).isNotNull();
         assertThat(products).hasSize(3);
         assertThat(products.get(1)).isInstanceOf(ProductView.class);
     }
 
     private List<Product> mockedData() {
-        return Arrays.asList(
-                new Product("test product 0", "description with > 10 characters#0", ProductCategory.ELECTRONICS, 1.11),
-                new Product("test product 1", "description with > 10 characters#1", ProductCategory.SPORT, 2.22),
-                new Product("test product 2", "description with > 10 characters#2", ProductCategory.HEALTH, 3.33));
+        return List.of(new Product(), new Product(), new Product());
     }
 
     @Test
     void get_WithValidId_ThenReturnProductDTO() {
-        Product product = new Product("product dto",
-                "description with more than 10 characters", ProductCategory.SPORT, 1.23);
-        when(repository.findById(anyInt())).thenReturn(Optional.of(product));
+        given(repository.findById(anyInt())).willReturn(Optional.of(new Product()));
 
-        ProductView dto = service.get(1);
-
-        assertThat(dto.getName()).contains("product dto");
+        assertThat(service.get(1)).isInstanceOf(ProductView.class);
     }
 
     @Test
     void get_WithInvalidId_ThenThrowProductNotFoundException() {
-        when(repository.findById(anyInt())).thenReturn(Optional.empty());
+        given(repository.findById(anyInt())).willReturn(Optional.empty());
 
         Exception exception = assertThrows(ProductNotFoundException.class,
                 () -> service.get(1));
@@ -91,32 +81,20 @@ class ProductServiceImplTest {
 
     @Test
     void getByCategory_WhenSuccess_ThenReturnListOfDTOs() {
-        when(repository.findAllByCategory(any()))
-                .thenReturn(productsByCategoriesMock());
+        given(repository.findAllByCategory(any()))
+                .willReturn(mockedData());
 
         List<ProductView> products = service.getByCategory("electronics");
 
-        assertThat(products).isNotNull();
-        assertThat(products).hasSize(4);
-        assertThat(products.get(0).getCategory()).isEqualTo(ProductCategory.ELECTRONICS.getName());
-    }
-
-    private List<Product> productsByCategoriesMock() {
-        return Arrays.asList(
-                new Product("name0", "description", ProductCategory.ELECTRONICS, 1.23),
-                new Product("name1", "description", ProductCategory.ELECTRONICS, 2.34),
-                new Product("name2", "description", ProductCategory.ELECTRONICS, 3.45),
-                new Product("name3", "description", ProductCategory.ELECTRONICS, 4.56));
+        assertThat(products).hasSize(3);
     }
 
     @Test
     void create_WhenSuccess_ThenReturnId() {
         int expectedId = 1;
-        Product product = new Product("test_name",
-                "description with more then 10 characters",
-                ProductCategory.HEALTH, 123.45);
+        Product product = new Product();
         product.setId(expectedId);
-        when(repository.save(any())).thenReturn(product);
+        given(repository.save(any())).willReturn(product);
 
         int actualId = service.create(productCreateRequest);
 
@@ -126,7 +104,7 @@ class ProductServiceImplTest {
     @Test
     void create_WhenFailure_ThenThrowException() {
         Product productWithoutId = new Product();
-        when(repository.save(any())).thenReturn(productWithoutId);
+        given(repository.save(any())).willReturn(productWithoutId);
 
         Exception exception = assertThrows(RuntimeException.class,
                 () -> service.create(productCreateRequest));
@@ -141,25 +119,23 @@ class ProductServiceImplTest {
     static final ProductCreateRequest productCreateRequest = new ProductCreateRequest(
             "test name", "test description", "sport", 1.2);
 
-
     @Test
     void update_ExistingResource_ThenReturnId() {
         Product product = new Product();
-        when(repository.findById(anyInt())).thenReturn(Optional.of(product));
         product.setId(1);
-        when(repository.save(any())).thenReturn(product);
 
-        int updId = service.update(1, new ProductUpdate(
-                "new name", "new description", ProductCategory.SPORT, 100));
+        given(repository.findById(anyInt())).willReturn(Optional.of(product));
+        given(repository.save(any())).willReturn(product);
+
+        int updId = service.update(1, new ProductUpdate());
 
         assertThat(updId).isNotZero();
     }
 
     @Test
     void update_NonExistingResource_ThenThrowException() {
-        when(repository.findById(anyInt())).thenReturn(Optional.empty());
-        ProductUpdate productUpdate = new ProductUpdate(
-                "new name", "new description", ProductCategory.SPORT, 100);
+        given(repository.findById(anyInt())).willReturn(Optional.empty());
+        ProductUpdate productUpdate = new ProductUpdate();
 
         Exception exception = assertThrows(RuntimeException.class,
                 () -> service.update(1, productUpdate));
@@ -173,9 +149,10 @@ class ProductServiceImplTest {
     @Test
     void updatePrice_WhenSuccess_ThenReturnId() {
         Product product = new Product();
-        when(repository.findById(anyInt())).thenReturn(Optional.of(product));
         product.setId(1);
-        when(repository.save(any())).thenReturn(product);
+
+        given(repository.findById(anyInt())).willReturn(Optional.of(product));
+        given(repository.save(any())).willReturn(product);
 
         int updId = service.updatePrice(1, 999);
 
@@ -184,7 +161,7 @@ class ProductServiceImplTest {
 
     @Test
     void updatePrice_WhenFailure_ThenThrowException() {
-        when(repository.findById(anyInt())).thenReturn(Optional.empty());
+        given(repository.findById(anyInt())).willReturn(Optional.empty());
 
         Exception exception = assertThrows(RuntimeException.class,
                 () -> service.updatePrice(1, 100));
