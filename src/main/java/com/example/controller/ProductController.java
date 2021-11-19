@@ -15,8 +15,8 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping
-    public ResponseEntity<List<ProductView>> getByString(@RequestParam String string) {
-        return ResponseEntity.ok(productService.getByString(string));
+    public ResponseEntity<List<ProductView>> getByString(@RequestParam String name) {
+        return ResponseEntity.ok(productService.getByString(name));
     }
 
     @GetMapping("/{id}")

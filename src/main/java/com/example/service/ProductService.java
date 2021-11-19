@@ -1,8 +1,7 @@
 package com.example.service;
 
-import com.example.dto.ProductCreateRequest;
+import com.example.dto.ProductRequest;
 import com.example.dto.ProductView;
-import com.example.dto.ProductUpdate;
 
 import java.util.List;
 
@@ -17,9 +16,9 @@ public interface ProductService {
 
     List<ProductView> getByString(String str);
 
-    int create(ProductCreateRequest product);
+    int save(ProductRequest product);
 
-    int update(int productId, ProductUpdate product);
+    int update(int id, ProductRequest productRequest);
 
     int updatePrice(int productId, double newPrice);
 

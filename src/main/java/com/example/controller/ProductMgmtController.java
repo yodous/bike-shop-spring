@@ -1,7 +1,6 @@
 package com.example.controller;
 
-import com.example.dto.ProductCreateRequest;
-import com.example.dto.ProductUpdate;
+import com.example.dto.ProductRequest;
 import com.example.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,8 +18,8 @@ public class ProductMgmtController {
     private int serverPort;
 
     @PostMapping
-    public ResponseEntity<String> create(@RequestBody ProductCreateRequest productCreateRequest) {
-        int productId = productService.create(productCreateRequest);
+    public ResponseEntity<String> create(@RequestBody ProductRequest productRequest) {
+        int productId = productService.save(productRequest);
         String url = "localhost:" + serverPort + "/products/" + productId;
 
         return new ResponseEntity<>("Product has been saved with.\n" +
@@ -28,7 +27,7 @@ public class ProductMgmtController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> update(@PathVariable int id, @RequestBody ProductUpdate product) {
+    public ResponseEntity<String> update(@PathVariable int id, @RequestBody ProductRequest product) {
         productService.update(id, product);
         return new ResponseEntity<>("Product has been updated", HttpStatus.NO_CONTENT);
     }

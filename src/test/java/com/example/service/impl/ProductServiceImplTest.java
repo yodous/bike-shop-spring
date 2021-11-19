@@ -1,11 +1,9 @@
 package com.example.service.impl;
 
-import com.example.dto.ProductCreateRequest;
 import com.example.dto.ProductView;
-import com.example.dto.ProductUpdate;
-import com.example.exception.ProductNotFoundException;
 import com.example.mapper.ProductViewMapper;
 import com.example.model.Product;
+import com.example.model.enums.ProductCategory;
 import com.example.repository.ProductRepository;
 import com.example.service.AuthService;
 import org.junit.jupiter.api.BeforeEach;
@@ -41,109 +39,56 @@ class ProductServiceImplTest {
 
     @Test
     void getByString_WhenSuccess_ThenReturnListOfProductViews() {
-        given(repository.findAllByNameContaining(anyString())).willReturn(mockedData());
+        String spaceBefore = " keyboard";
+        String spaceAfter = "keyboard ";
+        String spaceInside = "key board";
 
-        List<ProductView> products = service.getByString("test product");
+        given(repository.findAllByNameContaining("keyboard")).willReturn(mockedData());
 
-        assertThat(products).hasSize(3);
-    }
+        List<ProductView> products1 = service.getByString(spaceAfter);
+        List<ProductView> products2 = service.getByString(spaceBefore);
+        List<ProductView> noProducts = service.getByString(spaceInside);
 
-    @Test
-    void getAll_WhenSuccess_ThenReturnListOfProductDTOs() {
-        given(repository.findAll()).willReturn(mockedData());
-
-        List<ProductView> products = service.getAll();
-
-        assertThat(products).hasSize(3);
-        assertThat(products.get(1)).isInstanceOf(ProductView.class);
+        assertThat(products1).hasSize(3);
+        assertThat(products1).containsAll(products2);
+        assertThat(noProducts).isEmpty();
     }
 
     private List<Product> mockedData() {
-        return List.of(new Product(), new Product(), new Product());
+        return List.of(new Product("mechanical keyboard", "keyboard description", ProductCategory.ELECTRONICS, 99.9),
+                new Product("keyboard 60%", "test description", ProductCategory.ELECTRONICS, 12.3),
+                new Product("KEYBOARD123", "test description", ProductCategory.ELECTRONICS, 45.67));
     }
 
     @Test
-    void get_WithValidId_ThenReturnProductDTO() {
-        given(repository.findById(anyInt())).willReturn(Optional.of(new Product()));
+    void getAllByUsername_ShouldReturnUsersProducts() {
+        given(repository.findAllBySellerUsername("test_user123")).willReturn(mockedData());
 
-        assertThat(service.get(1)).isInstanceOf(ProductView.class);
-    }
+        List<ProductView> productsSpaceBefore = service.getAllByUsername(" test_user123");
+        List<ProductView> productsSpacesBeforeAndAfter = service.getAllByUsername(" test_user123 ");
 
-    @Test
-    void get_WithInvalidId_ThenThrowProductNotFoundException() {
-        given(repository.findById(anyInt())).willReturn(Optional.empty());
-
-        Exception exception = assertThrows(ProductNotFoundException.class,
-                () -> service.get(1));
-
-        assertThat(exception).isInstanceOf(ProductNotFoundException.class);
+        assertThat(productsSpaceBefore).isNotEmpty();
+        assertThat(productsSpaceBefore).containsAll(productsSpacesBeforeAndAfter);
     }
 
     @Test
     void getByCategory_WhenSuccess_ThenReturnListOfDTOs() {
-        given(repository.findAllByCategory(any()))
+        given(mapper.getProductCategory("ELECTRONICS"))
+                .willReturn(ProductCategory.ELECTRONICS);
+        given(repository.findAllByCategory(ProductCategory.ELECTRONICS))
                 .willReturn(mockedData());
 
-        List<ProductView> products = service.getByCategory("electronics");
+        String category = "electronics";
+        String categoryWithSpaceAfter = "electronics ";
+        String noSuchCategory = " ";
 
-        assertThat(products).hasSize(3);
-    }
+        List<ProductView> products1 = service.getByCategory(category);
+        List<ProductView> products2 = service.getByCategory(categoryWithSpaceAfter);
+        List<ProductView> noProducts = service.getByCategory(noSuchCategory);
 
-    @Test
-    void create_WhenSuccess_ThenReturnId() {
-        int expectedId = 1;
-        Product product = new Product();
-        product.setId(expectedId);
-        given(repository.save(any())).willReturn(product);
-
-        int actualId = service.create(productCreateRequest);
-
-        assertThat(actualId).isEqualTo(expectedId);
-    }
-
-    @Test
-    void create_WhenFailure_ThenThrowException() {
-        Product productWithoutId = new Product();
-        given(repository.save(any())).willReturn(productWithoutId);
-
-        Exception exception = assertThrows(RuntimeException.class,
-                () -> service.create(productCreateRequest));
-
-        String expectedMessage = "Could not save product";
-        String actualMessage = exception.getMessage();
-
-        assertThat(exception).isInstanceOf(RuntimeException.class);
-        assertThat(actualMessage).contains(expectedMessage);
-    }
-
-    static final ProductCreateRequest productCreateRequest = new ProductCreateRequest(
-            "test name", "test description", "sport", 1.2);
-
-    @Test
-    void update_ExistingResource_ThenReturnId() {
-        Product product = new Product();
-        product.setId(1);
-
-        given(repository.findById(anyInt())).willReturn(Optional.of(product));
-        given(repository.save(any())).willReturn(product);
-
-        int updId = service.update(1, new ProductUpdate());
-
-        assertThat(updId).isNotZero();
-    }
-
-    @Test
-    void update_NonExistingResource_ThenThrowException() {
-        given(repository.findById(anyInt())).willReturn(Optional.empty());
-        ProductUpdate productUpdate = new ProductUpdate();
-
-        Exception exception = assertThrows(RuntimeException.class,
-                () -> service.update(1, productUpdate));
-
-        String expectedMessage = "Could not find product";
-        String actualMessage = exception.getMessage();
-
-        assertThat(actualMessage).contains(expectedMessage);
+        assertThat(products1).hasSize(3);
+        assertThat(products1).containsAll(products2);
+        assertThat(noProducts).isEmpty();
     }
 
     @Test
@@ -171,4 +116,5 @@ class ProductServiceImplTest {
 
         assertThat(actualMessage).contains(expectedMessage);
     }
+
 }
