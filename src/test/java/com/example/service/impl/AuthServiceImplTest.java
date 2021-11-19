@@ -1,7 +1,5 @@
 package com.example.service.impl;
 
-import com.example.dto.AuthenticationResponse;
-import com.example.dto.LoginRequest;
 import com.example.dto.RegisterRequest;
 import com.example.exception.InvalidPasswordException;
 import com.example.exception.UsernameTakenException;
@@ -17,11 +15,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
@@ -96,21 +92,4 @@ class AuthServiceImplTest {
         verify(messageSender, never()).sendMessage(any());
     }
 
-    @Test
-    void loginWithValidCredentials_thenOk() {
-        UsernamePasswordAuthenticationToken authToken =
-                new UsernamePasswordAuthenticationToken(null,null);
-        String generatedToken = "test_token";
-        given(authManager.authenticate(any())).willReturn(authToken);
-        given(jwtTokenService.generateAccessToken(any())).willReturn(generatedToken);
-
-        AuthenticationResponse response = service.login(new LoginRequest("username", "password".toCharArray()));
-
-        assertThat(response.getToken()).isEqualTo(generatedToken);
-    }
-
-    @Test
-    void loginWithInvalidUsername_thenStatus403() {
-        fail("napisz test dla logowania z nieistniejącą nazwą użytkownika");
-    }
 }

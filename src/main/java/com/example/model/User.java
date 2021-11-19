@@ -38,7 +38,7 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "last_name")
     private String lastName;
 
-    @Email(message = "Email should be valid")
+    @Email(message = "Invalid email address")
     @Column(name = "email_address", unique = true)
     private String email;
 

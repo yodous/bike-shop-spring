@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 public class RegisterValidator {
     private final UserRepository userRepository;
     private final PasswordValidator passwordValidator;
-    private final EmailValidator emailValidator;
 
     public void validate(RegisterRequest registerRequest) {
         if (isUsernameTaken(registerRequest.getUsername()))
@@ -23,8 +22,6 @@ public class RegisterValidator {
 
         if (isAddressEmailTaken(registerRequest.getEmail()))
             throw new InvalidAddressEmailException();
-
-        emailValidator.isValid(registerRequest.getEmail());
     }
 
     private boolean isUsernameTaken(String username) {
