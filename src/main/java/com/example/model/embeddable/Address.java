@@ -1,13 +1,17 @@
-package com.example.model;
+package com.example.model.embeddable;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
 @Embeddable
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Address {
@@ -20,7 +24,8 @@ public class Address {
     private String street;
 
     @NotEmpty(message = "Zip code must not be empty")
-    @Pattern(regexp = "d{2}-d{3}", message = "Postal code must be in format xx-xxx where x is any digit")
+    @Pattern(regexp = "d{2}-d{3}",
+            message = "Postal code must be in format xx-xxx where x is any digit")
     @Column(name = "postal_code")
     private String postalCode;
 }

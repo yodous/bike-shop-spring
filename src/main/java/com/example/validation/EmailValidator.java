@@ -1,18 +1,19 @@
 package com.example.validation;
 
 import com.example.exception.InvalidAddressEmailException;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Component
 public class EmailValidator {
-    private static final String REGEX = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$";
+    @Value("${email.regex}")
+    private String regex;
 
-    private EmailValidator() {
-    }
-
-    public static void isValid(String email) {
-        Pattern emailPattern = Pattern.compile(REGEX);
+    public void isValid(String email) {
+        Pattern emailPattern = Pattern.compile(regex);
         Matcher emailMatcher = emailPattern.matcher(email);
 
         if (!emailMatcher.matches())

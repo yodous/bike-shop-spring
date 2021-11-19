@@ -15,7 +15,7 @@ public class CategoryServiceImpl implements CategoryService {
     public List<String> getAll() {
         ArrayList<String> categories = new ArrayList<>();
         for (ProductCategory category : List.of(ProductCategory.values()))
-            categories.add(category.getName());
+            categories.add(category.getValue());
 
         return categories;
     }

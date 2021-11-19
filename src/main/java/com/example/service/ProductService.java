@@ -1,25 +1,24 @@
 package com.example.service;
 
-import com.example.dto.ProductCreateRequest;
-import com.example.dto.ProductDTO;
-import com.example.dto.ProductUpdate;
+import com.example.dto.ProductRequest;
+import com.example.dto.ProductView;
 
 import java.util.List;
 
 public interface ProductService {
-    ProductDTO get(int productId);
+    ProductView get(int productId);
 
-    List<ProductDTO> getAll();
+    List<ProductView> getAll();
 
-    List<ProductDTO> getAllByUsername(String username);
+    List<ProductView> getAllByUsername(String username);
 
-    List<ProductDTO> getByCategory(String categoryName);
+    List<ProductView> getByCategory(String categoryName);
 
-    List<ProductDTO> getByString(String str);
+    List<ProductView> getByString(String str);
 
-    int create(ProductCreateRequest product);
+    int save(ProductRequest product);
 
-    int update(int productId, ProductUpdate product);
+    int update(int id, ProductRequest productRequest);
 
     int updatePrice(int productId, double newPrice);
 

@@ -2,6 +2,7 @@ package com.example.model;
 
 import com.example.model.abstracts.BaseEntity;
 import com.example.model.enums.ProductCategory;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,6 +16,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "product")
 public class Product extends BaseEntity {
@@ -32,7 +34,7 @@ public class Product extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ProductCategory category;
 
-    @Min(value = 0, message= "Price cannot be negative")
+    @Min(value = 0, message = "Price cannot be negative")
     @Column(name = "price")
     private double price;
 

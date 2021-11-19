@@ -17,21 +17,6 @@ CREATE TABLE users
     PRIMARY KEY (id)
 );
 
--- CREATE TABLE user_role
--- (
--- id   INT,
---     role VARCHAR(10) NOT NULL,
--- PRIMARY KEY (id)
--- );
-
---  CREATE TABLE user_authorities
---  (
---      username VARCHAR_IGNORECASE(50) NOT NULL,
---    authority VARCHAR_IGNORECASE(50) NOT NULL,
---     CONSTRAINT fk_authorities_users FOREIGN KEY (username) REFERENCES users (username)
--- );
--- CREATE UNIQUE INDEX ix_auth_username ON authorities (username, authority);
-
 CREATE TABLE acc_activation_token
 (
     id          INT(10) AUTO_INCREMENT,

@@ -1,190 +1,112 @@
 package com.example.service.impl;
 
-import com.example.dto.ProductCreateRequest;
-import com.example.dto.ProductDTO;
-import com.example.dto.ProductUpdate;
-import com.example.exception.ProductNotFoundException;
+import com.example.dto.ProductView;
+import com.example.mapper.ProductViewMapper;
 import com.example.model.Product;
 import com.example.model.enums.ProductCategory;
 import com.example.repository.ProductRepository;
+import com.example.service.AuthService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.when;
+import static org.mockito.BDDMockito.given;
 
 class ProductServiceImplTest {
     @Mock
-    ProductRepository repository;
+    private ProductRepository repository;
+    @Mock
+    private ProductViewMapper mapper;
+    @Mock
+    private AuthService authService;
 
     @InjectMocks
-    ProductServiceImpl service;
+    private ProductServiceImpl service;
 
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
+        given(mapper.mapSourceToView(any())).willReturn(new ProductView());
     }
 
     @Test
-    void getByString_WhenSuccess_ThenReturnListOfProductsContainingStringInTheirName() {
-        when(repository.findAllByNameContaining(anyString())).thenReturn(mockedProductsByName());
+    void getByString_WhenSuccess_ThenReturnListOfProductViews() {
+        String spaceBefore = " keyboard";
+        String spaceAfter = "keyboard ";
+        String spaceInside = "key board";
 
-        List<ProductDTO> products = service.getByString("fridge");
+        given(repository.findAllByNameContaining("keyboard")).willReturn(mockedData());
 
-        assertThat(products).isNotNull();
-        assertThat(products).hasSize(2);
-    }
+        List<ProductView> products1 = service.getByString(spaceAfter);
+        List<ProductView> products2 = service.getByString(spaceBefore);
+        List<ProductView> noProducts = service.getByString(spaceInside);
 
-    private List<Product> mockedProductsByName() {
-        return List.of(
-                new Product("fridge x", "description with > 10 characters#0", ProductCategory.HOUSE, 999.99),
-                new Product("ffridgee", "description with > 10 characters#0", ProductCategory.HOUSE, 999.99));
-    }
-
-    @Test
-    void getAll_WhenSuccess_ThenReturnListOfProductDTOs() {
-        when(repository.findAll()).thenReturn(mockedData());
-
-        List<ProductDTO> products = service.getAll();
-
-        assertThat(products).isNotNull();
-        assertThat(products).hasSize(3);
-        assertThat(products.get(1)).isInstanceOf(ProductDTO.class);
+        assertThat(products1).hasSize(3);
+        assertThat(products1).containsAll(products2);
+        assertThat(noProducts).isEmpty();
     }
 
     private List<Product> mockedData() {
-        return Arrays.asList(
-                new Product("test product 0", "description with > 10 characters#0", ProductCategory.ELECTRONICS, 1.11),
-                new Product("test product 1", "description with > 10 characters#1", ProductCategory.SPORT, 2.22),
-                new Product("test product 2", "description with > 10 characters#2", ProductCategory.HEALTH, 3.33));
+        return List.of(new Product("mechanical keyboard", "keyboard description", ProductCategory.ELECTRONICS, 99.9),
+                new Product("keyboard 60%", "test description", ProductCategory.ELECTRONICS, 12.3),
+                new Product("KEYBOARD123", "test description", ProductCategory.ELECTRONICS, 45.67));
     }
 
     @Test
-    void get_WithValidId_ThenReturnProductDTO() {
-        Product product = new Product("product dto",
-                "description with more than 10 characters", ProductCategory.SPORT, 1.23);
-        when(repository.findById(anyInt())).thenReturn(Optional.of(product));
+    void getAllByUsername_ShouldReturnUsersProducts() {
+        given(repository.findAllBySellerUsername("test_user123")).willReturn(mockedData());
 
-        ProductDTO dto = service.get(1);
+        List<ProductView> productsSpaceBefore = service.getAllByUsername(" test_user123");
+        List<ProductView> productsSpacesBeforeAndAfter = service.getAllByUsername(" test_user123 ");
 
-        assertThat(dto.getName()).contains("product dto");
-    }
-
-    @Test
-    void get_WithInvalidId_ThenThrowProductNotFoundException() {
-        when(repository.findById(anyInt())).thenReturn(Optional.empty());
-
-        Exception exception = assertThrows(ProductNotFoundException.class,
-                () -> service.get(1));
-
-        assertThat(exception).isInstanceOf(ProductNotFoundException.class);
+        assertThat(productsSpaceBefore).isNotEmpty();
+        assertThat(productsSpaceBefore).containsAll(productsSpacesBeforeAndAfter);
     }
 
     @Test
     void getByCategory_WhenSuccess_ThenReturnListOfDTOs() {
-        when(repository.findAllByCategory(any()))
-                .thenReturn(productsByCategoriesMock());
+        given(mapper.getProductCategory("ELECTRONICS"))
+                .willReturn(ProductCategory.ELECTRONICS);
+        given(repository.findAllByCategory(ProductCategory.ELECTRONICS))
+                .willReturn(mockedData());
 
-        List<ProductDTO> products = service.getByCategory("electronics");
+        String category = "electronics";
+        String categoryWithSpaceAfter = "electronics ";
+        String noSuchCategory = " ";
 
-        assertThat(products).isNotNull();
-        assertThat(products).hasSize(4);
-        assertThat(products.get(0).getCategory()).isEqualTo(ProductCategory.ELECTRONICS.getName());
-    }
+        List<ProductView> products1 = service.getByCategory(category);
+        List<ProductView> products2 = service.getByCategory(categoryWithSpaceAfter);
+        List<ProductView> noProducts = service.getByCategory(noSuchCategory);
 
-    private List<Product> productsByCategoriesMock() {
-        return Arrays.asList(
-                new Product("name0", "description", ProductCategory.ELECTRONICS, 1.23),
-                new Product("name1", "description", ProductCategory.ELECTRONICS, 2.34),
-                new Product("name2", "description", ProductCategory.ELECTRONICS, 3.45),
-                new Product("name3", "description", ProductCategory.ELECTRONICS, 4.56));
-    }
-
-    @Test
-    void create_WhenSuccess_ThenReturnId() {
-        int expectedId = 1;
-        Product product = new Product("test_name",
-                "description with more then 10 characters",
-                ProductCategory.HEALTH, 123.45);
-        product.setId(expectedId);
-        when(repository.save(any())).thenReturn(product);
-
-        int actualId = service.create(productCreateRequest);
-
-        assertThat(actualId).isEqualTo(expectedId);
-    }
-
-    @Test
-    void create_WhenFailure_ThenThrowException() {
-        Product productWithoutId = new Product();
-        when(repository.save(any())).thenReturn(productWithoutId);
-
-        Exception exception = assertThrows(RuntimeException.class,
-                () -> service.create(productCreateRequest));
-
-        String expectedMessage = "Could not save product";
-        String actualMessage = exception.getMessage();
-
-        assertThat(exception).isInstanceOf(RuntimeException.class);
-        assertThat(actualMessage).contains(expectedMessage);
-    }
-
-    static final ProductCreateRequest productCreateRequest = new ProductCreateRequest(
-            "test name", "test description", "sport", 1.2);
-
-
-    @Test
-    void update_ExistingResource_ThenReturnId() {
-        Product product = new Product();
-        when(repository.findById(anyInt())).thenReturn(Optional.of(product));
-        product.setId(1);
-        when(repository.save(any())).thenReturn(product);
-
-        int updId = service.update(1, new ProductUpdate(
-                "new name", "new description", ProductCategory.SPORT, 100));
-
-        assertThat(updId).isNotEqualTo(0);
-    }
-
-    @Test
-    void update_NonExistingResource_ThenThrowException() {
-        when(repository.findById(anyInt())).thenReturn(Optional.empty());
-        ProductUpdate productUpdate = new ProductUpdate(
-                "new name", "new description", ProductCategory.SPORT, 100);
-
-        Exception exception = assertThrows(RuntimeException.class,
-                () -> service.update(1, productUpdate));
-
-        String expectedMessage = "Could not find product";
-        String actualMessage = exception.getMessage();
-
-        assertThat(actualMessage).contains(expectedMessage);
+        assertThat(products1).hasSize(3);
+        assertThat(products1).containsAll(products2);
+        assertThat(noProducts).isEmpty();
     }
 
     @Test
     void updatePrice_WhenSuccess_ThenReturnId() {
         Product product = new Product();
-        when(repository.findById(anyInt())).thenReturn(Optional.of(product));
         product.setId(1);
-        when(repository.save(any())).thenReturn(product);
+
+        given(repository.findById(anyInt())).willReturn(Optional.of(product));
+        given(repository.save(any())).willReturn(product);
 
         int updId = service.updatePrice(1, 999);
 
-        assertThat(updId).isNotEqualTo(0);
+        assertThat(updId).isNotZero();
     }
 
     @Test
     void updatePrice_WhenFailure_ThenThrowException() {
-        when(repository.findById(anyInt())).thenReturn(Optional.empty());
+        given(repository.findById(anyInt())).willReturn(Optional.empty());
 
         Exception exception = assertThrows(RuntimeException.class,
                 () -> service.updatePrice(1, 100));
@@ -194,4 +116,5 @@ class ProductServiceImplTest {
 
         assertThat(actualMessage).contains(expectedMessage);
     }
+
 }

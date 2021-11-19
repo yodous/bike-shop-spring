@@ -2,6 +2,7 @@ package com.example.security;
 
 import com.example.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -9,15 +10,23 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.HeaderWriterLogoutHandler;
+import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter;
 
+import javax.servlet.http.HttpServletResponse;
 
+@Slf4j
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final UserRepository userRepository;
+    private final JwtTokenFilter jwtTokenFilter;
 
     @Override
     @Bean
@@ -29,11 +38,36 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
+                .sessionManagement(s -> s
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeRequests(r -> r
-                        .mvcMatchers(HttpMethod.GET, "/").permitAll() // get method of product, categories etc.
-                        .antMatchers("/", "/h2-console/**", "/api/auth/**").permitAll()
+                        .antMatchers("/", "/login", "/h2-console/**", "/api/auth/**").permitAll()
+                        .antMatchers(HttpMethod.GET, "/products/**", "/categories", "/users/*").permitAll()
                         .anyRequest().authenticated())
-                .headers().frameOptions().disable();
+                .exceptionHandling(e -> e
+                        .authenticationEntryPoint((request, response, ex) -> {
+                            String authHeader = request.getHeader("Authorization");
+
+                            if (authHeader == null || authHeader.isEmpty()) {
+                                log.error("Unauthenticated request");
+                                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage());
+                            }
+                        }))
+                .formLogin(l -> l
+                        .loginPage("/login.html")
+                        .defaultSuccessUrl("/secured")
+                        .loginProcessingUrl("/perform_login")
+                        .failureHandler(new SimpleUrlAuthenticationFailureHandler("/login")))
+                .logout(l -> l
+                        .logoutUrl("/perform_logout")
+                        .addLogoutHandler(new HeaderWriterLogoutHandler(
+                                new ClearSiteDataHeaderWriter(ClearSiteDataHeaderWriter.Directive.ALL))
+                        )
+                        .logoutSuccessUrl("/"))
+                .addFilterBefore(
+                        jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
+                .headers(h -> h
+                        .frameOptions().disable());
     }
 
     @Override

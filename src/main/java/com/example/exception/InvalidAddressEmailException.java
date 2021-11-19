@@ -7,7 +7,4 @@ public class InvalidAddressEmailException extends RuntimeException {
         super(MESSAGE);
     }
 
-    public InvalidAddressEmailException(String message) {
-        super(message);
-    }
 }

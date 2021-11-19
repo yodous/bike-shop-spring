@@ -1,8 +1,10 @@
 package com.example.model.enums;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 @Getter
+@AllArgsConstructor
 public enum ProductCategory {
     BEAUTY("beauty"),
     ENTERTAINMENT("entertainment"),
@@ -14,9 +16,5 @@ public enum ProductCategory {
     PROPERTY("property"),
     SPORT("sport");
 
-    private String name;
-
-    ProductCategory(String name) {
-        this.name = name;
-    }
+    private final String value;
 }
