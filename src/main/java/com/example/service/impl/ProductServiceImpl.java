@@ -11,6 +11,8 @@ import com.example.service.AuthService;
 import com.example.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -27,39 +29,46 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductView get(int id) {
-        return productRepository.findById(id).stream()
-                .map(productViewMapper::mapSourceToView).findAny()
+        return productRepository.findById(id)
+                .stream().map(productViewMapper::mapSourceToView).findAny()
                 .orElseThrow(ProductNotFoundException::new);
     }
 
     @Override
-    public List<ProductView> getAll() {
-        return productRepository.findAll().stream()
+    public List<ProductView> getAll(int page, int size) {
+        return productRepository.findAll(PageRequest.of(page, size))
+                .stream().map(productViewMapper::mapSourceToView)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ProductView> getByNamePaginated(String productName, int page, int size) {
+        String trimmed = productName.trim();
+
+        return productRepository.findAll(PageRequest.of(page, size))
+                .stream().filter(p -> StringUtils.containsIgnoreCase(p.getName(), trimmed))
                 .map(productViewMapper::mapSourceToView)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public List<ProductView> getByString(String productName) {
-        String trimmedName = productName.trim();
-        return productRepository.findAllByNameContaining(trimmedName).stream()
-                .map(productViewMapper::mapSourceToView).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<ProductView> getAllByUsername(String username) {
+    public List<ProductView> getAllByUsernamePaginated(String username, int page, int size) {
         String trimmedUsername = username.trim();
-        return productRepository.findAllBySellerUsername(trimmedUsername).stream()
-                .map(productViewMapper::mapSourceToView).collect(Collectors.toList());
+        return productRepository.findAll(PageRequest.of(page, size))
+                .filter(p -> StringUtils.containsIgnoreCase(p.getSeller().getUsername(), trimmedUsername))
+                .stream().map(productViewMapper::mapSourceToView)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public List<ProductView> getByCategory(String categoryName) {
+    public List<ProductView> getByCategoryPaginated(String categoryName, int page, int size) {
         String trimmedUpperCaseCategory = categoryName.trim().toUpperCase();
         ProductCategory category = productViewMapper.getProductCategory(trimmedUpperCaseCategory);
 
-        return productRepository.findAllByCategory(category).stream()
-                .map(productViewMapper::mapSourceToView).collect(Collectors.toList());
+        return productRepository.findAll(PageRequest.of(page, size))
+                .filter(p -> p.getCategory() == category)
+                .stream().map(productViewMapper::mapSourceToView)
+                .collect(Collectors.toList());
     }
 
     @Override

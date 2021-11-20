@@ -15,8 +15,9 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping
-    public ResponseEntity<List<ProductView>> getByString(@RequestParam String name) {
-        return ResponseEntity.ok(productService.getByString(name));
+    public ResponseEntity<List<ProductView>> getAll(@RequestParam int page,
+                                                    @RequestParam int size) {
+        return ResponseEntity.ok(productService.getAll(page, size));
     }
 
     @GetMapping("/{id}")
@@ -24,13 +25,24 @@ public class ProductController {
         return ResponseEntity.ok(productService.get(id));
     }
 
+    @GetMapping("/by-name")
+    public ResponseEntity<List<ProductView>> getByName(@RequestParam String name,
+                                                       @RequestParam int page,
+                                                       @RequestParam int size) {
+        return ResponseEntity.ok(productService.getByNamePaginated(name, page, size));
+    }
+
     @GetMapping("/categories/{category}")
-    public ResponseEntity<List<ProductView>> getByCategory(@PathVariable String category) {
-        return ResponseEntity.ok(productService.getByCategory(category));
+    public ResponseEntity<List<ProductView>> getByCategory(@PathVariable String category,
+                                                           @RequestParam int page,
+                                                           @RequestParam int size) {
+        return ResponseEntity.ok(productService.getByCategoryPaginated(category, page, size));
     }
 
     @GetMapping("/users/{username}")
-    public ResponseEntity<List<ProductView>> getByUsername(@PathVariable String username) {
-        return ResponseEntity.ok(productService.getAllByUsername(username));
+    public ResponseEntity<List<ProductView>> getByUsername(@PathVariable String username,
+                                                           @RequestParam int page,
+                                                           @RequestParam int size) {
+        return ResponseEntity.ok(productService.getAllByUsernamePaginated(username, page, size));
     }
 }

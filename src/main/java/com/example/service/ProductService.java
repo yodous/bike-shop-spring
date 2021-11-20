@@ -8,13 +8,13 @@ import java.util.List;
 public interface ProductService {
     ProductView get(int productId);
 
-    List<ProductView> getAll();
+    List<ProductView> getAll(int page, int size);
 
-    List<ProductView> getAllByUsername(String username);
+    List<ProductView> getAllByUsernamePaginated(String username, int page, int size);
 
-    List<ProductView> getByCategory(String categoryName);
+    List<ProductView> getByCategoryPaginated(String categoryName, int page, int size);
 
-    List<ProductView> getByString(String str);
+    List<ProductView> getByNamePaginated(String productName, int page, int size);
 
     int save(ProductRequest product);
 

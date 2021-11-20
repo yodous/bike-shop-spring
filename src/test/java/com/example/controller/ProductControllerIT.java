@@ -17,7 +17,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -46,9 +45,19 @@ class ProductControllerIT {
     }
 
     @Test
-    void getByString_thenReturnListOf2DTOsWithStatusIsOk() throws Exception {
-        given(productService.getByString(anyString())).willReturn(mockedData());
-        mockMvc.perform(get(PRODUCT_PATH + "?name=keyboard"))
+    void getAll_thenReturnListOfPaginatedProductViews() throws Exception {
+        given(productService.getAll(0, 2)).willReturn(mockedData());
+
+        mockMvc.perform(get(PRODUCT_PATH + "?page=0&size=2"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$[1].name").value("product name 1"));
+    }
+
+    @Test
+    void getByName_thenReturnListOf2DTOsWithStatusIsOk() throws Exception {
+        given(productService.getByNamePaginated("keyboard", 0, 2)).willReturn(mockedData());
+        mockMvc.perform(get(PRODUCT_PATH + "/by-name?name=keyboard&page=0&size=2"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].name").value("product name 0"))
@@ -61,10 +70,10 @@ class ProductControllerIT {
     }
 
     @Test
-    void getByString_thenReturnEmptyListWithStatusIsOk() throws Exception {
-        given(productService.getByString(anyString())).willReturn(Collections.emptyList());
+    void getByName_thenReturnEmptyListWithStatusIsOk() throws Exception {
+        given(productService.getByNamePaginated("keyboard", 0, 2)).willReturn(Collections.emptyList());
 
-        mockMvc.perform(get(PRODUCT_PATH + "?name=giraffe"))
+        mockMvc.perform(get(PRODUCT_PATH + "/by-name?name=giraffe&page=0&size=1"))
                 .andExpect(content().string("[]"))
                 .andExpect(status().isOk());
     }
@@ -93,17 +102,21 @@ class ProductControllerIT {
 
     @Test
     void getByCategory_thenStatusIsOK() throws Exception {
-        given(productService.getByCategory("electronics")).willReturn(mockedData());
+        given(productService.getByCategoryPaginated("electronics", 0, 2))
+                .willReturn(mockedData());
 
-        mockMvc.perform(get(PRODUCT_PATH + "/categories/electronics"))
-                .andExpect(status().isOk());
+        mockMvc.perform(get(PRODUCT_PATH + "/categories/electronics?page=0&size=1"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 
     @Test
     void getByUsername_thenStatusIsOK() throws Exception {
-        given(productService.getAllByUsername(anyString())).willReturn(mockedData());
-        mockMvc.perform(get(PRODUCT_PATH + "/users/test_username"))
-                .andExpect(status().isOk());
+        given(productService.getAllByUsernamePaginated("test_username", 0, 2))
+                .willReturn(mockedData());
+        mockMvc.perform(get(PRODUCT_PATH + "/users/test_username?page=0&size=1"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 
 }
