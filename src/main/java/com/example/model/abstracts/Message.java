@@ -2,12 +2,12 @@ package com.example.model.abstracts;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 @AllArgsConstructor
 public abstract class Message {
-    private String from;
     private String to;
-    private String subject;
-    private String text;
+    private String token;
 }

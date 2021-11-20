@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.security.authentication.AuthenticationManager;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -33,8 +32,6 @@ class AuthServiceImplTest {
     private RegisterValidator registerValidator;
     @Mock
     private UserViewMapper userViewMapper;
-    @Mock
-    AuthenticationManager authManager;
 
     @InjectMocks
     private AuthServiceImpl service;
@@ -54,7 +51,7 @@ class AuthServiceImplTest {
 
         service.register(request);
 
-        verify(registerValidator).validate(request);
+        verify(registerValidator).validateRequest(request);
         verify(userViewMapper).mapRegisterRequestToUser(request);
         verify(jwtTokenService).generateAccountActivationToken(user);
         verify(messageSender).sendMessage(any());
@@ -63,13 +60,13 @@ class AuthServiceImplTest {
     @Test
     void registerWithUsernameTaken_ThenThrowUsernameTakenException() {
         RegisterRequest request = new RegisterRequest();
-        doThrow(UsernameTakenException.class).when(registerValidator).validate(any());
+        doThrow(UsernameTakenException.class).when(registerValidator).validateRequest(any());
 
         Exception exception = assertThrows(UsernameTakenException.class,
                 () -> service.register(request));
 
         assertThat(exception).isInstanceOf(UsernameTakenException.class);
-        verify(registerValidator).validate(request);
+        verify(registerValidator).validateRequest(request);
 
         verify(userViewMapper, never()).mapRegisterRequestToUser(request);
         verify(jwtTokenService, never()).generateAccountActivationToken(any());
@@ -79,17 +76,18 @@ class AuthServiceImplTest {
     @Test
     void registerWithInvalidPassword_ThenThrowInvalidPasswordException() {
         RegisterRequest request = new RegisterRequest();
-        doThrow(InvalidPasswordException.class).when(registerValidator).validate(any());
+        doThrow(InvalidPasswordException.class).when(registerValidator).validateRequest(any());
 
         Exception exception = assertThrows(InvalidPasswordException.class,
                 () -> service.register(request));
 
         assertThat(exception).isInstanceOf(InvalidPasswordException.class);
-        verify(registerValidator).validate(request);
+        verify(registerValidator).validateRequest(request);
 
         verify(userViewMapper, never()).mapRegisterRequestToUser(request);
         verify(jwtTokenService, never()).generateAccountActivationToken(any());
         verify(messageSender, never()).sendMessage(any());
+
     }
 
 }

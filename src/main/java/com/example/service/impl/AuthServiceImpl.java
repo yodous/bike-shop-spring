@@ -35,16 +35,13 @@ public class AuthServiceImpl implements AuthService {
     @Override
     @Transactional
     public void register(RegisterRequest registerRequest) {
-        registerValidator.validate(registerRequest);
-
+        registerValidator.validateRequest(registerRequest);
         User user = userViewMapper.mapRegisterRequestToUser(registerRequest);
+
         userRepository.save(user);
 
-        ActivationEmail activationEmail = new ActivationEmail(
-                user.getEmail(), jwtTokenService.generateAccountActivationToken(user));
-        messageSender.sendMessage(activationEmail);
-
-        log.info("email has been sent\n" + activationEmail.getText());
+        String token = jwtTokenService.generateAccountActivationToken(user);
+        messageSender.sendMessage(new EmailSender.ActivationEmail(user.getEmail(), token));
     }
 
     @Override
