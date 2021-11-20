@@ -46,4 +46,8 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(IllegalProductCategoryNameException.class)
+    public ResponseEntity<Object> handleIllegalProductCategoryNameException(IllegalProductCategoryNameException exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+    }
 }
