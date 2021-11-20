@@ -2,7 +2,6 @@ package com.example.mapper;
 
 import com.example.dto.ProductRequest;
 import com.example.dto.ProductView;
-import com.example.exception.IllegalProductCategoryNameException;
 import com.example.model.Product;
 import com.example.model.User;
 import com.example.model.enums.ProductCategory;
@@ -22,11 +21,7 @@ public interface ProductViewMapper {
     Product mapProductDtoToSource(ProductRequest request, User user);
 
     default ProductCategory getProductCategory(String categoryName) {
-        try {
-            return ProductCategory.valueOf(categoryName.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            throw new IllegalProductCategoryNameException();
-        }
+        return ProductCategory.valueOf(categoryName.toUpperCase());
     }
 
 }

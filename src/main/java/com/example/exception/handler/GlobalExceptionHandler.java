@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    //todo: I don't need you, right?
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<Object> handleAuthenticationException(AuthenticationException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.FORBIDDEN);
@@ -44,11 +43,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ProductNotFoundException.class)
     public ResponseEntity<Object> handleProductNotFoundException(ProductNotFoundException exception) {
-        return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(IllegalProductCategoryNameException.class)
-    public ResponseEntity<Object> handleIllegalProductCategoryNameException(IllegalProductCategoryNameException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
 

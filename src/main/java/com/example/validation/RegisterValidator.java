@@ -13,7 +13,7 @@ public class RegisterValidator {
     private final UserRepository userRepository;
     private final PasswordValidator passwordValidator;
 
-    public void validate(RegisterRequest registerRequest) {
+    public void validateRequest(RegisterRequest registerRequest) {
         if (isUsernameTaken(registerRequest.getUsername()))
             throw new UsernameTakenException();
 

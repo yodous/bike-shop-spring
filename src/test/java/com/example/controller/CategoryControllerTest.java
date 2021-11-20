@@ -11,7 +11,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @AutoConfigureMockMvc
-@SpringBootTest
+@SpringBootTest(properties = "spring.main.lazy-initialization=true", classes = CategoryController.class)
 class CategoryControllerTest {
     private static final String CATEGORY_PATH = "/categories";
 
