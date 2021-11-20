@@ -4,7 +4,6 @@ import com.example.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -41,9 +40,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement(s -> s
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeRequests(r -> r
-                        .antMatchers("/", "/login", "/h2-console/**", "/api/auth/**").permitAll()
-                        .antMatchers(HttpMethod.GET, "/products/**", "/categories", "/users/*").permitAll()
-                        .anyRequest().authenticated())
+                        .antMatchers("/api/**").authenticated()
+                        .anyRequest().permitAll())
+                .addFilterAfter(
+                        jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(e -> e
                         .authenticationEntryPoint((request, response, ex) -> {
                             String authHeader = request.getHeader("Authorization");
@@ -64,8 +64,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                                 new ClearSiteDataHeaderWriter(ClearSiteDataHeaderWriter.Directive.ALL))
                         )
                         .logoutSuccessUrl("/"))
-                .addFilterBefore(
-                        jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .headers(h -> h
                         .frameOptions().disable());
     }
