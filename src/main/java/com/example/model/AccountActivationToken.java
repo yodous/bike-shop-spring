@@ -10,11 +10,11 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
 
-@Entity
-@Table(name = "acc_activation_token")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@Entity
+@Table(name = "acc_activation_token")
 public class AccountActivationToken extends BaseEntity {
     @NotNull
     @OneToOne(fetch = FetchType.LAZY)

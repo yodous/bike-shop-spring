@@ -9,14 +9,14 @@ import javax.persistence.*;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "cart_item")
-@NoArgsConstructor
 public class CartItem extends BaseEntity {
 
     @ManyToOne
-    @JoinColumn(name = "session_id")
-    private ShoppingSession session;
+    @JoinColumn(name = "cart_id")
+    private Cart cart;
 
     @OneToOne
     @JoinColumn(name = "product_id")
@@ -25,8 +25,8 @@ public class CartItem extends BaseEntity {
     @Column(name = "quantity")
     private int quantity;
 
-    public CartItem(ShoppingSession session, Product product, int quantity) {
-        this.session = session;
+    public CartItem(Cart cart, Product product, int quantity) {
+        this.cart = cart;
         this.product = product;
         this.quantity = quantity;
     }

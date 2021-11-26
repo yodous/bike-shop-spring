@@ -4,9 +4,9 @@ import com.example.exception.ProductNotFoundException;
 import com.example.model.CartItem;
 import com.example.model.Product;
 import com.example.model.enums.ProductCategory;
-import com.example.model.ShoppingSession;
+import com.example.model.Cart;
 import com.example.repository.ProductRepository;
-import com.example.repository.ShoppingSessionRepository;
+import com.example.repository.CartRepository;
 import com.example.repository.CartItemRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +25,7 @@ import static org.mockito.Mockito.verify;
 
 class CartItemServiceImplTest {
     @Mock
-    ShoppingSessionRepository sessionRepository;
+    CartRepository sessionRepository;
     @Mock
     CartItemRepository cartItemRepository;
     @Mock
@@ -34,7 +34,7 @@ class CartItemServiceImplTest {
     @InjectMocks
     CartItemServiceImpl service;
 
-    private ShoppingSession cart;
+    private Cart cart;
     private Product product;
     private CartItem cartItem;
 
@@ -43,7 +43,7 @@ class CartItemServiceImplTest {
         MockitoAnnotations.openMocks(this);
 
         product = new Product("test product", "test description", ProductCategory.ELECTRONICS, 1.23);
-        cart = new ShoppingSession();
+        cart = new Cart();
         cartItem = new CartItem(cart, product, 1);
         given(sessionRepository.findByUserId(anyInt())).willReturn(Optional.of(cart));
         given(productRepository.findById(anyInt())).willReturn(Optional.of(product));
@@ -56,12 +56,12 @@ class CartItemServiceImplTest {
         CartItem actualCartItem = service.add(1, 1);
 
         assertThat(actualCartItem.getProduct()).isEqualTo(product);
-        assertThat(actualCartItem.getSession()).isEqualTo(cart);
+        assertThat(actualCartItem.getCart()).isEqualTo(cart);
     }
 
     @Test
     void remove_FromNotEmptyShoppingSession_ThenOk() {
-        given(cartItemRepository.findBySessionAndProductId(any(), anyInt()))
+        given(cartItemRepository.findByCartAndProductId(any(), anyInt()))
                 .willReturn(Optional.of(cartItem));
 
         service.remove(1, 1);

@@ -8,7 +8,7 @@ import javax.persistence.*;
 @Getter
 @Entity
 @Table(name = "shopping_session")
-public class ShoppingSession extends BaseEntity {
+public class Cart extends BaseEntity {
 
     @OneToOne(cascade = {CascadeType.REMOVE, CascadeType.REFRESH})
     @JoinColumn(name = "user_id")

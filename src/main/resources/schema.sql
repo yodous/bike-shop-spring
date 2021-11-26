@@ -46,14 +46,14 @@ CREATE TABLE product
     PRIMARY KEY (id)
 );
 
-CREATE TABLE shopping_session
+CREATE TABLE cart
 (
     id          INT(10) AUTO_INCREMENT,
     user_id     INT(10)              DEFAULT NULL,
     total_price DECIMAL(10) NOT NULL DEFAULT '0.00',
     created_at  DATETIME    NOT NULL,
     modified_at DATETIME    NOT NULL,
-    UNIQUE KEY session_index (id, user_id) USING BTREE,
+    UNIQUE KEY cart_index (id, user_id) USING BTREE,
     PRIMARY KEY (id),
     CONSTRAINT fk_shopping_user
         FOREIGN KEY (user_id)
@@ -65,15 +65,15 @@ CREATE TABLE shopping_session
 CREATE TABLE cart_item
 (
     id          INT(10) AUTO_INCREMENT,
-    session_id  INT      NOT NULL,
+    cart_id  INT      NOT NULL,
     product_id  INT      NOT NULL,
     quantity    INT DEFAULT 0,
     created_at  DATETIME NOT NULL,
     modified_at DATETIME NOT NULL,
     PRIMARY KEY (id),
-    CONSTRAINT fk_session_id
-        FOREIGN KEY (session_id)
-            REFERENCES shopping_session (id)
+    CONSTRAINT fk_cart_id
+        FOREIGN KEY (cart_id)
+            REFERENCES cart(id)
             ON DELETE SET NULL
             ON UPDATE SET NULL,
     CONSTRAINT fk_cart_item_product_id
@@ -89,6 +89,7 @@ CREATE TABLE payment_details
     order_id    INT         NOT NULL,
     amount      INT DEFAULT 0,
     status      VARCHAR(50) NOT NULL,
+    type        VARCHAR(50) NOT NULl,
     created_at  DATETIME    NOT NULL,
     modified_at DATETIME    NOT NULL,
     PRIMARY KEY (id)
@@ -99,20 +100,14 @@ CREATE TABLE order_details
     id          INT(10) AUTO_INCREMENT,
     user_id     INT(10),
     total       DECIMAL(10) NOT NULL,
-    payment_id  INT(20)     NOT NULL,
     created_at  DATETIME    NOT NULL,
     modified_at DATETIME    NOT NULL,
     UNIQUE KEY order_index (id) USING BTREE,
     UNIQUE KEY customer_order_index (id, user_id) USING BTREE,
     PRIMARY KEY (id),
-    CONSTRAINT fk_shopping_user_order
+    CONSTRAINT fk_cart_user_order
         FOREIGN KEY (user_id)
             REFERENCES users (id)
-            ON DELETE SET NULL
-            ON UPDATE SET NULL,
-    CONSTRAINT fk_order_payment
-        FOREIGN KEY (payment_id)
-            REFERENCES payment_details (id)
             ON DELETE SET NULL
             ON UPDATE SET NULL
 );

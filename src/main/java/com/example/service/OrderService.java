@@ -1,8 +1,7 @@
 package com.example.service;
 
-import com.example.model.User;
+import com.example.dto.OrderRequest;
 
 public interface OrderService {
-    void orderProductById(int userId, int productId);
-    void orderAllProductsFromCart(User user, int cartId);
+    void add(OrderRequest orderRequest);
 }

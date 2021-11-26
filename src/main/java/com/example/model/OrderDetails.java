@@ -1,9 +1,15 @@
 package com.example.model;
 
 import com.example.model.abstracts.BaseEntity;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "order_details")
 public class OrderDetails extends BaseEntity {
@@ -14,9 +20,5 @@ public class OrderDetails extends BaseEntity {
 
     @Column(name = "total")
     private double totalPrice;
-
-    @OneToOne
-    @JoinColumn(name = "payment_id")
-    private PaymentDetails paymentDetails;
 
 }
