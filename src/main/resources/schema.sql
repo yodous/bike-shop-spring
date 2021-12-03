@@ -65,7 +65,7 @@ CREATE TABLE cart
 CREATE TABLE cart_item
 (
     id          INT(10) AUTO_INCREMENT,
-    cart_id  INT      NOT NULL,
+    cart_id     INT      NOT NULL,
     product_id  INT      NOT NULL,
     quantity    INT DEFAULT 0,
     created_at  DATETIME NOT NULL,
@@ -73,7 +73,7 @@ CREATE TABLE cart_item
     PRIMARY KEY (id),
     CONSTRAINT fk_cart_id
         FOREIGN KEY (cart_id)
-            REFERENCES cart(id)
+            REFERENCES cart (id)
             ON DELETE SET NULL
             ON UPDATE SET NULL,
     CONSTRAINT fk_cart_item_product_id
@@ -99,9 +99,9 @@ CREATE TABLE order_details
 (
     id          INT(10) AUTO_INCREMENT,
     user_id     INT(10),
-    total       DECIMAL(10) NOT NULL,
-    created_at  DATETIME    NOT NULL,
-    modified_at DATETIME    NOT NULL,
+    total       DECIMAL(10, 2) NOT NULL,
+    created_at  DATETIME       NOT NULL,
+    modified_at DATETIME       NOT NULL,
     UNIQUE KEY order_index (id) USING BTREE,
     UNIQUE KEY customer_order_index (id, user_id) USING BTREE,
     PRIMARY KEY (id),
@@ -117,6 +117,7 @@ CREATE TABLE order_items
     id          INT(10) AUTO_INCREMENT,
     order_id    INT      NOT NULL,
     product_id  INT      NOT NULL,
+    quantity    INT DEFAULT 0,
     created_at  DATETIME NOT NULL,
     modified_at DATETIME NOT NULL,
     PRIMARY KEY (id),
