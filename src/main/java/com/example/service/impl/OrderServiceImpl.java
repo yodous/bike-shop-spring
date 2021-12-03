@@ -42,13 +42,18 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public void orderSelectedItemsFromCart(List<Integer> ids) {
+    @Transactional
+    public void orderSelectedItemsFromCart(List<Integer> cartItemsIds) {
         User currentUser = authService.getCurrentUser();
-        List<CartItem> cartItems = cartItemRepository.findAllById(ids); //todo: shouldn't it be a set?
-        OrderDetails orderDetails = orderDetailsRepository.save(new OrderDetails(currentUser, 0));
+        Cart cart = cartRepository.findByUser(currentUser).orElseThrow();
+        List<CartItem> cartItems = cartItemRepository.findAllById(cartItemsIds);
+        double totalPrice = 0;
+        OrderDetails orderDetails = orderDetailsRepository.save(new OrderDetails(currentUser, totalPrice));
+
+        log.info("orDet: " + orderDetails.getUser().getFirstName());
 
         List<OrderItem> orderItems = new ArrayList<>();
-        double totalPrice = 0;
+
         for (CartItem cartItem : cartItems) {
             Product product = productRepository.findById(cartItem.getProduct().getId()).orElseThrow();
             orderItems.add(new OrderItem(orderDetails, product, cartItem.getQuantity()));
@@ -57,16 +62,21 @@ public class OrderServiceImpl implements OrderService {
         log.info("total price before = " + orderDetails.getTotalPrice());
         orderDetails.setTotalPrice(totalPrice);
         log.info("total price after = " + orderDetails.getTotalPrice());
+
+        orderItemRepository.saveAll(orderItems);
+        cartItemRepository.deleteAllById(cartItemsIds);
+
+        cart.setTotalPrice(cart.getTotalPrice() - totalPrice);
     }
 
     @Override
     @Transactional
     public void orderAllFromCart() {
         User currentUser = authService.getCurrentUser();
-        Cart cart = cartRepository.findByUserId(currentUser.getId()).orElseThrow(
+        Cart cart = cartRepository.findByUser(currentUser).orElseThrow(
                 () -> new RuntimeException("Could not find cart with userId=" + currentUser.getId()));
-        List<Integer> cartItemsIds = cartItemRepository.findAllByCart(cart)
-                .stream().map(CartItem::getId).collect(Collectors.toList());
+        List<Integer> cartItemsIds = cartItemRepository.findAllByCart(cart);
+
         orderSelectedItemsFromCart(cartItemsIds);
     }
 

@@ -1,13 +1,14 @@
 package com.example.service.impl;
 
-import com.example.exception.ProductNotFoundException;
 import com.example.model.CartItem;
 import com.example.model.Product;
+import com.example.model.User;
 import com.example.model.enums.ProductCategory;
 import com.example.model.Cart;
 import com.example.repository.ProductRepository;
 import com.example.repository.CartRepository;
 import com.example.repository.CartItemRepository;
+import com.example.service.AuthService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -19,62 +20,85 @@ import java.util.Optional;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.verify;
 
-class CartItemServiceImplTest {
+class CartServiceImplTest {
     @Mock
-    CartRepository sessionRepository;
+    private CartRepository sessionRepository;
     @Mock
-    CartItemRepository cartItemRepository;
+    private CartItemRepository cartItemRepository;
     @Mock
-    ProductRepository productRepository;
+    private ProductRepository productRepository;
+    @Mock
+    private AuthService authService;
 
     @InjectMocks
-    CartItemServiceImpl service;
+    private CartServiceImpl cartService;
 
     private Cart cart;
     private Product product;
     private CartItem cartItem;
+    private User user;
 
     @BeforeEach
     void setup() {
         MockitoAnnotations.openMocks(this);
 
-        product = new Product("test product", "test description", ProductCategory.ELECTRONICS, 1.23);
-        cart = new Cart();
+        product = new Product("test product", "test description", ProductCategory.ELECTRONICS, 1d);
+        user = new User();
+        cart = new Cart(user);
+        cart.setTotalPrice(100);
         cartItem = new CartItem(cart, product, 1);
-        given(sessionRepository.findByUserId(anyInt())).willReturn(Optional.of(cart));
-        given(productRepository.findById(anyInt())).willReturn(Optional.of(product));
+        given(sessionRepository.findByUser(any())).willReturn(Optional.of(cart));
+        given(productRepository.findById(1)).willReturn(Optional.of(product));
         given(cartItemRepository.save(any())).willReturn(cartItem);
     }
 
     @Test
-    void add_ProductToEmptyShoppingSession_ThenSaveNewCartItem() {
-        assert cart.getTotalPrice() == 0;
-        CartItem actualCartItem = service.add(1, 1);
+    void saveCartItem_ShouldSucceed() {
+        double totalPriceBefore = cart.getTotalPrice();
 
-        assertThat(actualCartItem.getProduct()).isEqualTo(product);
-        assertThat(actualCartItem.getCart()).isEqualTo(cart);
+        cartService.saveCartItem(1, 2);
+
+        double totalPriceAfter = cart.getTotalPrice();
+
+        assertThat(totalPriceBefore).isEqualTo(100);
+        assertThat(totalPriceAfter).isEqualTo(102);
     }
 
     @Test
-    void remove_FromNotEmptyShoppingSession_ThenOk() {
-        given(cartItemRepository.findByCartAndProductId(any(), anyInt()))
-                .willReturn(Optional.of(cartItem));
+    void deleteCartItem_ShouldSucceed() {
+        cartItem.setQuantity(10);
+        double totalPriceBefore = cart.getTotalPrice();
+        given(cartItemRepository.findById(1)).willReturn(Optional.of(cartItem));
 
-        service.remove(1, 1);
+        cartService.deleteCartItem(1, 4);
 
-        verify(cartItemRepository).delete(cartItem);
+        double totalPriceAfter = cart.getTotalPrice();
+
+        assertThat(cartItem.getQuantity()).isEqualTo(6);
+        assertThat(totalPriceBefore).isEqualTo(100);
+        assertThat(totalPriceAfter).isEqualTo(96);
     }
 
     @Test
-    void remove_FromEmptyShoppingSession_ThenThrow() {
-        Exception exception = assertThrows(ProductNotFoundException.class,
-                () -> service.remove(1, 1));
+    void deleteCartItem_WithQuantityToDeleteHigherThenTotalItemQuantity_ShouldThrowIAE() {
+        cartItem.setQuantity(5);
+        given(cartItemRepository.findById(1)).willReturn(Optional.of(cartItem));
 
-        assertThat(exception).isInstanceOf(ProductNotFoundException.class);
+        assertThrows(IllegalArgumentException.class, () ->
+                cartService.deleteCartItem(1, 10));
     }
 
+    @Test
+    void deleteAllCartItems_ShouldSucceed() {
+        double totalPriceBefore = cart.getTotalPrice();
+
+        cartService.deleteAllCartItems();
+
+        double totalPriceAfter = cart.getTotalPrice();
+
+        assertThat(totalPriceBefore).isEqualTo(100);
+        assertThat(totalPriceAfter).isZero();
+    }
 }

@@ -5,6 +5,7 @@ import com.example.dto.LoginRequest;
 import com.example.dto.RegisterRequest;
 import com.example.mapper.UserViewMapper;
 import com.example.model.*;
+import com.example.repository.CartRepository;
 import com.example.repository.UserRepository;
 import com.example.security.JwtTokenService;
 import com.example.service.AuthService;
@@ -26,6 +27,7 @@ import java.nio.CharBuffer;
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
+    private final CartRepository cartRepository;
     private final MessageSender messageSender;
     private final RegisterValidator registerValidator;
     private final AuthenticationManager authenticationManager;
@@ -36,9 +38,9 @@ public class AuthServiceImpl implements AuthService {
     @Transactional
     public void register(RegisterRequest registerRequest) {
         registerValidator.validateRequest(registerRequest);
-        User user = userViewMapper.mapRegisterRequestToUser(registerRequest);
+        User user = userRepository.save(userViewMapper.mapRegisterRequestToUser(registerRequest));
 
-        userRepository.save(user);
+        cartRepository.save(new Cart(user));
 
         String token = jwtTokenService.generateAccountActivationToken(user);
         messageSender.sendMessage(new EmailSender.ActivationEmail(user.getEmail(), token));
