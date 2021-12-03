@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/cart")
 @RequiredArgsConstructor
-public class ShoppingSessionController {
+public class CartController {
     private final CartItemService cartItemService;
 
     @PostMapping

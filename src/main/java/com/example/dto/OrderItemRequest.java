@@ -7,11 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderRequest {
+public class OrderItemRequest {
     private int productId;
     private int quantity;
-    private String city;
-    private String street;
-    private String postalCode;
-//    private String paymentType;
 }

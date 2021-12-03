@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @Getter
 @Entity
-@Table(name = "shopping_session")
+@Table(name = "cart")
 public class Cart extends BaseEntity {
 
     @OneToOne(cascade = {CascadeType.REMOVE, CascadeType.REFRESH})

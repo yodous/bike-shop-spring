@@ -1,24 +1,43 @@
 package com.example.model;
 
 import com.example.model.abstracts.BaseEntity;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "order_details")
+@Setter
+@Getter
+@NoArgsConstructor
 public class OrderDetails extends BaseEntity {
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+   
+    @OneToMany(fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            mappedBy = "order")
+    private List<OrderItem> orderItems;
+
+//    @Enumerated(EnumType.STRING)
+//    @Column(name = "shipping_type")s
+//    private ShippingType shippingType;
 
     @Column(name = "total")
     private double totalPrice;
 
+            @OneToOne(fetch = FetchType.LAZY,
+            cascade = CascadeType.ALL,
+            mappedBy = "orderDetails")
+    private PaymentDetails paymentDetails;
+
+    public OrderDetails(User user, double totalPrice) {
+        this.user = user;
+        this.totalPrice = totalPrice;
+    }
 }

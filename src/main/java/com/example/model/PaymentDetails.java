@@ -1,9 +1,17 @@
 package com.example.model;
 
 import com.example.model.abstracts.BaseEntity;
+import com.example.model.enums.PaymentStatus;
+import com.example.model.enums.PaymentType;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "payment_details")
 public class PaymentDetails extends BaseEntity {
@@ -12,13 +20,11 @@ public class PaymentDetails extends BaseEntity {
     @JoinColumn(name = "order_id")
     private OrderDetails orderDetails;
 
-    @Column(name = "amount")
-    private int amount;
+//    private double totalPrice;
 
-    @Column(name = "provider")
-    private String provider;
+    @Enumerated(EnumType.STRING)
+    private PaymentType type;
 
-    @Column(name = "status")
-    private String status;
-
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus status;
 }

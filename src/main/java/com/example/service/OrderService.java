@@ -1,7 +1,17 @@
 package com.example.service;
 
-import com.example.dto.OrderRequest;
+import com.example.dto.OrderItemRepresentation;
+import com.example.dto.OrderItemRequest;
+
+import java.util.List;
 
 public interface OrderService {
-    void add(OrderRequest orderRequest);
+    void orderOne(OrderItemRequest orderItemRequest);
+
+    void orderAllFromCart();
+
+    void orderSelectedItemsFromCart(List<Integer> ids);
+
+    List<OrderItemRepresentation> getAll();
+
 }

@@ -14,12 +14,15 @@ import javax.persistence.*;
 @Table(name = "order_items")
 public class OrderItem extends BaseEntity {
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private OrderDetails order;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY,
+            cascade = CascadeType.REMOVE)
     @JoinColumn(name = "product_id")
     private Product product;
+
+    private int quantity;
 
 }
