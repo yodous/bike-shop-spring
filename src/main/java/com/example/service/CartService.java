@@ -5,7 +5,7 @@ import com.example.dto.CartRepresentation;
 public interface CartService {
     CartRepresentation get();
 
-    int saveCartItem(int productId, int quantity);
+    void saveCartItem(int productId, int quantity);
 
     void deleteCartItem(int productId, int quantity);
 

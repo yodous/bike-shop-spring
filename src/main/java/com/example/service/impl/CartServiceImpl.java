@@ -44,16 +44,14 @@ public class CartServiceImpl implements CartService {
 
     @Override
     @Transactional
-    public int saveCartItem(int productId, int quantity) {
+    public void saveCartItem(int productId, int quantity) {
         Product product = productRepository.findById(productId).orElseThrow(
                 () -> new ProductNotFoundException(productId));
 
         Cart cart = findCartByCurrentUser();
         cart.setTotalPrice(cart.getTotalPrice() + (quantity * product.getPrice()));
 
-        CartItem cartItem = new CartItem(cart, product, quantity);
-
-        return cartItemRepository.save(cartItem).getId();
+        cartItemRepository.save(new CartItem(cart, product, quantity));
     }
 
     @Override
