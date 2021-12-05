@@ -18,8 +18,8 @@ public class OrderController {
     private static final String ORDER_PLACED_MESSAGE = "Your order is pending for payment.";
 
     @GetMapping
-    public List<OrderItemRepresentation> getAll() {
-        return orderService.getAll();
+    public ResponseEntity<List<OrderItemRepresentation>> getAll() {
+        return ResponseEntity.ok(orderService.getAll());
     }
 
     @PostMapping
