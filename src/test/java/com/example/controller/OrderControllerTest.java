@@ -45,8 +45,7 @@ class OrderControllerTest {
 
     @Test
     void orderSelectedFromCartShouldFailWith401() throws Exception {
-        mockMvc.perform(post(PATH + "/cart")
-                        )
+        mockMvc.perform(post(PATH + "/cart"))
                 .andExpect(status().isUnauthorized());
     }
 
