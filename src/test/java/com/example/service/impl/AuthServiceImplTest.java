@@ -5,6 +5,7 @@ import com.example.exception.InvalidPasswordException;
 import com.example.exception.UsernameTakenException;
 import com.example.mapper.UserViewMapper;
 import com.example.model.User;
+import com.example.repository.CartRepository;
 import com.example.repository.UserRepository;
 import com.example.security.JwtTokenService;
 import com.example.service.MessageSender;
@@ -32,6 +33,8 @@ class AuthServiceImplTest {
     private RegisterValidator registerValidator;
     @Mock
     private UserViewMapper userViewMapper;
+    @Mock
+    private CartRepository cartRepository;
 
     @InjectMocks
     private AuthServiceImpl service;
