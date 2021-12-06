@@ -18,7 +18,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 class ProductMgmtControllerIT {
-    private static final String PRODUCT_MGMT_PATH = "/api/products";
+    private static final String PATH = "/api/products";
+    private static final String PATH_WITH_ID = "/api/products/{id}";
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -30,7 +31,7 @@ class ProductMgmtControllerIT {
 
     @Test
     void unauthorizedPostRequest_thenStatus401() throws Exception {
-        mockMvc.perform(post(PRODUCT_MGMT_PATH)
+        mockMvc.perform(post(PATH)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
     }
@@ -39,7 +40,7 @@ class ProductMgmtControllerIT {
     void unauthorizedPutRequest_thenStatus401() throws Exception {
         int productId = 1;
 
-        mockMvc.perform(put(PRODUCT_MGMT_PATH + "/{id}", productId)
+        mockMvc.perform(put(PATH_WITH_ID, productId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
     }
@@ -47,7 +48,7 @@ class ProductMgmtControllerIT {
     @Test
     void unauthorizedPatchRequest_thenStatus401() throws Exception {
         int productId = 1;
-        mockMvc.perform(patch(PRODUCT_MGMT_PATH + "/{id}", productId)
+        mockMvc.perform(patch(PATH_WITH_ID, productId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
     }
@@ -56,7 +57,7 @@ class ProductMgmtControllerIT {
     void unauthorizedDeleteRequest_thenStatus401() throws Exception {
         int productId = 1;
 
-        mockMvc.perform(delete(PRODUCT_MGMT_PATH + "/{id}", productId)
+        mockMvc.perform(delete(PATH_WITH_ID, productId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
     }
@@ -66,7 +67,7 @@ class ProductMgmtControllerIT {
     void authorizedCreateRequest_thenStatus201() throws Exception {
         ProductRequest productRequest = new ProductRequest();
 
-        mockMvc.perform(post(PRODUCT_MGMT_PATH)
+        mockMvc.perform(post(PATH)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(productRequest)))
                 .andExpect(status().isCreated());
@@ -78,7 +79,7 @@ class ProductMgmtControllerIT {
         int productId = 1;
         ProductRequest productRequest = new ProductRequest();
 
-        mockMvc.perform(put(PRODUCT_MGMT_PATH + "/{id}", productId)
+        mockMvc.perform(put(PATH_WITH_ID, productId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(productRequest)))
                 .andExpect(status().isNoContent());
@@ -90,7 +91,7 @@ class ProductMgmtControllerIT {
         int productId = 1;
         double newPrice = 9.99;
 
-        mockMvc.perform(patch(PRODUCT_MGMT_PATH + "/{id}", productId)
+        mockMvc.perform(patch(PATH_WITH_ID, productId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(newPrice)))
                 .andExpect(status().isNoContent());
@@ -101,7 +102,7 @@ class ProductMgmtControllerIT {
     void authorizedDeleteRequest_thenStatus204() throws Exception {
         int productId = 1;
 
-        mockMvc.perform(delete(PRODUCT_MGMT_PATH + "/{id}", productId)
+        mockMvc.perform(delete(PATH_WITH_ID, productId)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
     }

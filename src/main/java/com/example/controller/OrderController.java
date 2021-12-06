@@ -24,19 +24,19 @@ public class OrderController {
 
     @PostMapping
     public ResponseEntity<String> orderOne(@RequestBody OrderItemRequest request) {
-        orderService.orderOne(request);
+        orderService.orderProduct(request);
         return new ResponseEntity<>(ORDER_PLACED_MESSAGE, HttpStatus.CREATED);
     }
 
     @PostMapping("/cart")
     public ResponseEntity<String> orderSelectedFromCart(@RequestBody List<Integer> productsIds) {
-        orderService.orderSelectedItemsFromCart(productsIds);
+        orderService.orderCartItems(productsIds);
         return new ResponseEntity<>(ORDER_PLACED_MESSAGE, HttpStatus.CREATED);
     }
 
     @PostMapping("/cart/all")
     public ResponseEntity<String> orderAllItemsFromCart() {
-        orderService.orderAllFromCart();
+        orderService.orderCart();
         return new ResponseEntity<>(ORDER_PLACED_MESSAGE, HttpStatus.CREATED);
     }
 }
