@@ -18,7 +18,7 @@ public class OrderDetails extends BaseEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-   
+
     @OneToMany(fetch = FetchType.LAZY,
             cascade = CascadeType.ALL,
             mappedBy = "order")
@@ -31,10 +31,19 @@ public class OrderDetails extends BaseEntity {
     @Column(name = "total")
     private double totalPrice;
 
-            @OneToOne(fetch = FetchType.LAZY,
+    @OneToOne(fetch = FetchType.LAZY,
             cascade = CascadeType.ALL,
             mappedBy = "orderDetails")
     private PaymentDetails paymentDetails;
+
+    public OrderDetails(User user) {
+        this.user = user;
+    }
+
+    public OrderDetails(User user, PaymentDetails paymentDetails) {
+        this.user = user;
+        this.paymentDetails = paymentDetails;
+    }
 
     public OrderDetails(User user, double totalPrice) {
         this.user = user;

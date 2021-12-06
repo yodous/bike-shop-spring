@@ -34,18 +34,19 @@ public class OrderServiceImpl implements OrderService {
         User currentUser = authService.getCurrentUser();
 
         return orderItemRepository.findAllByOrderUser(currentUser)
-                .stream().map(orderMapper::mapSourceToRepresentation)
+                .stream().map(orderMapper::mapOrderItemToRepresentation)
                 .collect(Collectors.toList());
     }
 
     @Override
     @Transactional
     public void orderProduct(OrderItemRequest request) {
+        User currentUser = authService.getCurrentUser();
         Product product = productRepository.findById(request.getProductId())
                 .orElseThrow(() -> new ProductNotFoundException(request.getProductId()));
 
-        OrderDetails orderDetails = orderDetailsRepository.save(
-                new OrderDetails(authService.getCurrentUser(), product.getPrice() * request.getQuantity()));
+        OrderDetails orderDetails = orderDetailsRepository.save(new OrderDetails(
+                currentUser, product.getPrice() * request.getQuantity()));
 
         orderItemRepository.save(new OrderItem(orderDetails, product, request.getQuantity()));
     }
@@ -58,12 +59,14 @@ public class OrderServiceImpl implements OrderService {
         List<CartItem> cartItems = cartItemRepository.findAllById(cartItemsIds);
 
         double totalPrice = 0;
-        OrderDetails orderDetails = orderDetailsRepository.save(new OrderDetails(currentUser, totalPrice));
+        OrderDetails orderDetails = orderDetailsRepository.save(new OrderDetails(currentUser));
 
         List<OrderItem> orderItems = new ArrayList<>();
 
         for (CartItem cartItem : cartItems) {
-            Product product = productRepository.findById(cartItem.getProduct().getId()).orElseThrow();
+            int productId = cartItem.getProduct().getId();
+            Product product = productRepository.findById(productId)
+                    .orElseThrow(() -> new ProductNotFoundException(productId));
             orderItems.add(new OrderItem(orderDetails, product, cartItem.getQuantity()));
             totalPrice += product.getPrice() * cartItem.getQuantity();
         }
