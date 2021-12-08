@@ -15,6 +15,7 @@ public interface ProductViewMapper {
     ProductView mapSourceToView(Product product);
 
 
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "category", expression = "java(getProductCategory(request.getCategory()))")
     @Mapping(target = "seller", source = "user")
     @Mapping(target = "createdAt", expression = "java(java.time.Instant.now())")
