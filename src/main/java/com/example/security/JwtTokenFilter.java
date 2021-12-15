@@ -2,6 +2,7 @@ package com.example.security;
 
 import com.example.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtTokenFilter extends OncePerRequestFilter {
@@ -61,12 +63,16 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 url -> new AntPathRequestMatcher(url).matches(request));
     }
 
+    //todo: throw exception if there is no auth header (you are creating 2 String objects unnecessary);
     private String getTokenFromRequest(HttpServletRequest request) {
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+        log.info("header: " + header);
         String token = "";
 
         if (header != null && header.startsWith(BEARER_HEADER))
             token = header.replace(BEARER_HEADER, "").trim();
+
+        log.info("token: " + token);
 
         return token;
     }

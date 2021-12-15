@@ -58,7 +58,9 @@ public class AuthServiceImpl implements AuthService {
         User principal = (User) authenticate.getPrincipal();
         String token = jwtTokenService.generateAccessToken(principal);
 
-        return new AuthenticationResponse(token, userViewMapper.mapToView(principal));
+        String username = userViewMapper.mapToView(principal).getUsername();
+        assert username != null;
+        return new AuthenticationResponse(token, username);
     }
 
     @Override

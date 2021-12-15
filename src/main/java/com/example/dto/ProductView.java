@@ -12,6 +12,7 @@ import java.time.Instant;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductView {
+    private int id;
     private String name;
     private String category;
     private double price;

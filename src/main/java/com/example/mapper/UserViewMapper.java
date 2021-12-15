@@ -20,7 +20,6 @@ public abstract class UserViewMapper {
     @Mapping(target = "address.postalCode", source = "postalCode")
     public abstract User mapRegisterRequestToUser(RegisterRequest registerRequest);
 
-    @Mapping(target = "fullName", expression = "java(user.getFirstName() + \" \" + user.getLastName())")
     public abstract UserView mapToView(User user);
 
     public String fromCharArray(char[] password) {

@@ -105,4 +105,9 @@ public class ProductServiceImpl implements ProductService {
     public void delete(int id) {
         productRepository.deleteById(id);
     }
+
+    @Override
+    public int count() {
+        return productRepository.findAll().size();
+    }
 }

@@ -5,6 +5,8 @@ import com.example.dto.LoginRequest;
 import com.example.dto.RegisterRequest;
 import com.example.security.JwtTokenService;
 import com.example.service.AuthService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -19,13 +21,15 @@ import javax.validation.Valid;
 public class AuthController {
     private final AuthService authService;
     private final JwtTokenService jwtTokenService;
+    private final ObjectMapper objectMapper;
 
     @PostMapping("/perform_login")
-    public ResponseEntity<String> login(@RequestBody @Valid LoginRequest request) {
+    public ResponseEntity<String> login(@RequestBody @Valid LoginRequest request) throws JsonProcessingException {
         AuthenticationResponse response = authService.login(request);
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION, response.getToken())
-                .body("You have been logged in");
+                .body(objectMapper.writeValueAsString(response));
+//                .body("You have been logged in");
     }
 
     @PostMapping("/perform_signup")
@@ -38,6 +42,14 @@ public class AuthController {
     public ResponseEntity<String> authenticateUser(@RequestParam String token) {
         jwtTokenService.enableUser(token);
         return new ResponseEntity<>("Your account has been activated", HttpStatus.CREATED);
+    }
+
+    @PostMapping("/perform_logout")
+    public ResponseEntity<String> logout(@RequestBody @Valid LoginRequest request) {
+        AuthenticationResponse response = authService.login(request);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.AUTHORIZATION, response.getToken())
+                .body("You have been logged in");
     }
 
 }

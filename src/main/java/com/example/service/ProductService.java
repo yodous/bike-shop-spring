@@ -24,4 +24,6 @@ public interface ProductService {
 
     void delete(int productId);
 
+    int count();
+
 }

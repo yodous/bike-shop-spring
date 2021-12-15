@@ -38,9 +38,9 @@ class ProductControllerIT {
 
     @BeforeEach
     void setup() {
-        productView = new ProductView(
+        productView = new ProductView(1,
                 "product name 0", "ELECTRONICS", 65, Instant.now());
-        productView1 = new ProductView(
+        productView1 = new ProductView(2,
                 "product name 1", "SPORT", 123, Instant.now());
     }
 
@@ -48,7 +48,7 @@ class ProductControllerIT {
     void getAll_thenReturnListOfPaginatedProductViews() throws Exception {
         given(productService.getAll(0, 2)).willReturn(mockedData());
 
-        mockMvc.perform(get(PRODUCT_PATH + "?page=0&size=2"))
+        mockMvc.perform(get(PRODUCT_PATH + "?pages=0&size=2"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[1].name").value("product name 1"));
