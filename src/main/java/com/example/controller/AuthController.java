@@ -29,7 +29,6 @@ public class AuthController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION, response.getToken())
                 .body(objectMapper.writeValueAsString(response));
-//                .body("You have been logged in");
     }
 
     @PostMapping("/perform_signup")
