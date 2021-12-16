@@ -1,25 +1,37 @@
 package com.example.mapper;
 
+import com.example.dto.OrderDetailsRepresentation;
 import com.example.dto.OrderItemRepresentation;
+import com.example.model.OrderDetails;
 import com.example.model.OrderItem;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
+import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public abstract class OrderMapper {
 
-    public OrderItemRepresentation mapOrderItemToRepresentation(OrderItem orderItem) {
-        return new OrderItemRepresentation(orderItem.getOrder().getUser().getUsername(),
-                orderItem.getProduct().getName(),
-                orderItem.getQuantity(),
-                orderItem.getProduct().getPrice(),
-                LocalDateTime.ofInstant(orderItem.getCreatedAt(), ZoneId.systemDefault())
-                        .truncatedTo(ChronoUnit.MINUTES),
-                String.valueOf(orderItem.getOrder().getPaymentDetails().getStatus()),
-                orderItem.getProduct().getPrice() * orderItem.getQuantity());
+    @Mapping(target = "productName", expression = "java(orderItem.getProduct().getName())")
+    @Mapping(target = "quantity", expression = "java(orderItem.getQuantity())")
+    @Mapping(target = "productPrice", expression = "java(orderItem.getProduct().getPrice())")
+    @Mapping(target = "totalPrice", expression = "java(orderItem.getProduct().getPrice() * orderItem.getQuantity())")
+    public abstract  OrderItemRepresentation mapOrderItemToRepresentation(OrderItem orderItem);
+
+    public OrderDetailsRepresentation mapDetailsToRepresentation(OrderDetails orderDetails) {
+        return new OrderDetailsRepresentation(
+                orderDetails.getUser().getUsername(),
+                orderDetails.getTotalPrice(),
+                orderDetails.getOrderItems().stream()
+                        .map(o -> mapOrderItemToRepresentation(o)).collect(Collectors.toList()),
+                orderDetails.getPaymentDetails().getType().getValue(),
+                orderDetails.getPaymentDetails().getStatus().name(),
+                LocalDate.ofInstant(orderDetails.getCreatedAt(), ZoneId.systemDefault())
+        );
     }
+
+    ;
 
 }

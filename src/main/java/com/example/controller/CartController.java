@@ -13,11 +13,12 @@ import org.springframework.web.bind.annotation.*;
 public class CartController {
     private final CartService cartService;
 
-    @GetMapping
+    @GetMapping//todo: pagination
     public ResponseEntity<CartRepresentation> get() {
         return ResponseEntity.ok(cartService.get());
     }
 
+    //todo: jwt token expired -> should be 401 but is 200
     @PostMapping("/{id}")
     public ResponseEntity<String> addProduct(@PathVariable int id,
                                              @RequestParam int quantity) {

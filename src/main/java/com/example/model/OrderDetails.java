@@ -24,10 +24,6 @@ public class OrderDetails extends BaseEntity {
             mappedBy = "order")
     private List<OrderItem> orderItems;
 
-//    @Enumerated(EnumType.STRING)
-//    @Column(name = "shipping_type")s
-//    private ShippingType shippingType;
-
     @Column(name = "total")
     private double totalPrice;
 

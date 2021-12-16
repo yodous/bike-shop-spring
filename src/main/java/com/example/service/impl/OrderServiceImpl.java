@@ -1,10 +1,12 @@
 package com.example.service.impl;
 
-import com.example.dto.OrderItemRepresentation;
+import com.example.dto.OrderDetailsRepresentation;
 import com.example.dto.OrderItemRequest;
 import com.example.exception.ProductNotFoundException;
 import com.example.mapper.OrderMapper;
 import com.example.model.*;
+import com.example.model.enums.PaymentStatus;
+import com.example.model.enums.PaymentType;
 import com.example.repository.*;
 import com.example.service.AuthService;
 import com.example.service.OrderService;
@@ -23,6 +25,7 @@ import java.util.stream.Collectors;
 public class OrderServiceImpl implements OrderService {
     private final OrderDetailsRepository orderDetailsRepository;
     private final OrderItemRepository orderItemRepository;
+    private final PaymentDetailsRepository paymentDetailsRepository;
     private final ProductRepository productRepository;
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
@@ -30,12 +33,21 @@ public class OrderServiceImpl implements OrderService {
     private final OrderMapper orderMapper;
 
     @Override
-    public List<OrderItemRepresentation> getAll() {
+    public List<OrderDetailsRepresentation> getAll() {
         User currentUser = authService.getCurrentUser();
 
-        return orderItemRepository.findAllByOrderUser(currentUser)
-                .stream().map(orderMapper::mapOrderItemToRepresentation)
+        return orderDetailsRepository.findAllByUser(currentUser)
+                .stream().map(orderMapper::mapDetailsToRepresentation)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public OrderDetailsRepresentation getById(int id) {
+        User currentUser = authService.getCurrentUser();
+        return orderDetailsRepository.findOrderDetailsByUserAndId(currentUser, id)
+                .map(orderMapper::mapDetailsToRepresentation).orElseThrow(
+                        () -> new RuntimeException("Could not find order details with id = " + id)
+                );
     }
 
     @Override
@@ -45,8 +57,12 @@ public class OrderServiceImpl implements OrderService {
         Product product = productRepository.findById(request.getProductId())
                 .orElseThrow(() -> new ProductNotFoundException(request.getProductId()));
 
+
         OrderDetails orderDetails = orderDetailsRepository.save(new OrderDetails(
                 currentUser, product.getPrice() * request.getQuantity()));
+
+        PaymentDetails paymentDetails = new PaymentDetails(orderDetails, PaymentType.valueOf(request.getPaymentType()), PaymentStatus.PENDING);
+        paymentDetailsRepository.save(paymentDetails);
 
         orderItemRepository.save(new OrderItem(orderDetails, product, request.getQuantity()));
     }

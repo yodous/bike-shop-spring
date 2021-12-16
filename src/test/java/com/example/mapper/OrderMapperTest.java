@@ -37,7 +37,6 @@ class OrderMapperTest {
 
         OrderItemRepresentation actual = orderMapper.mapOrderItemToRepresentation(orderItem);
 
-        assertThat(actual.getSellerUsername()).isEqualTo("test_user");
         assertThat(actual.getProductName()).isEqualTo("product0");
         assertThat(actual.getTotalPrice()).isEqualTo(1.23);
         assertThat(actual.getQuantity()).isEqualTo(1);

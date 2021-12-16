@@ -48,7 +48,7 @@ class ProductControllerIT {
     void getAll_thenReturnListOfPaginatedProductViews() throws Exception {
         given(productService.getAll(0, 2)).willReturn(mockedData());
 
-        mockMvc.perform(get(PRODUCT_PATH + "?pages=0&size=2"))
+        mockMvc.perform(get(PRODUCT_PATH + "?page=0&size=2"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[1].name").value("product name 1"));

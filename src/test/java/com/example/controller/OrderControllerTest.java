@@ -1,8 +1,10 @@
 package com.example.controller;
 
 import com.example.dto.OrderItemRequest;
+import com.example.model.enums.PaymentType;
 import com.example.service.OrderService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -29,6 +31,13 @@ class OrderControllerTest {
     @MockBean
     private OrderService orderService;
 
+    private String paymentType;
+
+    @BeforeEach
+    void setup() {
+        paymentType = PaymentType.TRANSFER.getValue();
+    }
+
     @Test
     void getAllShouldFailWith401() throws Exception {
         mockMvc.perform(get(PATH))
@@ -37,7 +46,7 @@ class OrderControllerTest {
 
     @Test
     void orderOneShouldFailWith401() throws Exception {
-        OrderItemRequest request = new OrderItemRequest(1, 1);
+        OrderItemRequest request = new OrderItemRequest(1, 1, paymentType);
         mockMvc.perform(post(PATH)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isUnauthorized());
@@ -65,7 +74,7 @@ class OrderControllerTest {
     @Test
     @WithMockUser
     void orderOneShouldSucceedWith201() throws Exception {
-        OrderItemRequest request = new OrderItemRequest(1, 1);
+        OrderItemRequest request = new OrderItemRequest(1, 1, paymentType);
         mockMvc.perform(post(PATH)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))

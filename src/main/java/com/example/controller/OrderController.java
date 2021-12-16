@@ -1,6 +1,6 @@
 package com.example.controller;
 
-import com.example.dto.OrderItemRepresentation;
+import com.example.dto.OrderDetailsRepresentation;
 import com.example.dto.OrderItemRequest;
 import com.example.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +18,13 @@ public class OrderController {
     private static final String ORDER_PLACED_MESSAGE = "Your order is pending for payment.";
 
     @GetMapping
-    public ResponseEntity<List<OrderItemRepresentation>> getAll() {
+    public ResponseEntity<List<OrderDetailsRepresentation>> getAll() {
         return ResponseEntity.ok(orderService.getAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<OrderDetailsRepresentation> getDetailsById(@PathVariable int id) {
+        throw new RuntimeException("not implemented yet");
     }
 
     @PostMapping
