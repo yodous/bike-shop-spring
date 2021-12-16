@@ -1,6 +1,6 @@
 package com.example.controller;
 
-import com.example.dto.OrderItemRequest;
+import com.example.dto.OrderOneItemRequest;
 import com.example.model.enums.PaymentType;
 import com.example.service.OrderService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -46,7 +46,7 @@ class OrderControllerTest {
 
     @Test
     void orderOneShouldFailWith401() throws Exception {
-        OrderItemRequest request = new OrderItemRequest(1, 1, paymentType);
+        OrderOneItemRequest request = new OrderOneItemRequest(1, 1, paymentType);
         mockMvc.perform(post(PATH)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isUnauthorized());
@@ -74,7 +74,7 @@ class OrderControllerTest {
     @Test
     @WithMockUser
     void orderOneShouldSucceedWith201() throws Exception {
-        OrderItemRequest request = new OrderItemRequest(1, 1, paymentType);
+        OrderOneItemRequest request = new OrderOneItemRequest(1, 1, paymentType);
         mockMvc.perform(post(PATH)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))

@@ -1,7 +1,8 @@
 package com.example.controller;
 
 import com.example.dto.OrderDetailsRepresentation;
-import com.example.dto.OrderItemRequest;
+import com.example.dto.OrderItemsRequest;
+import com.example.dto.OrderOneItemRequest;
 import com.example.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,20 +29,21 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<String> orderOne(@RequestBody OrderItemRequest request) {
+    public ResponseEntity<String> orderOne(@RequestBody OrderOneItemRequest request) {
         orderService.orderProduct(request);
         return new ResponseEntity<>(ORDER_PLACED_MESSAGE, HttpStatus.CREATED);
     }
 
     @PostMapping("/cart")
-    public ResponseEntity<String> orderSelectedFromCart(@RequestBody List<Integer> productsIds) {
-        orderService.orderCartItems(productsIds);
+    public ResponseEntity<String> orderSelectedFromCart(@RequestBody OrderItemsRequest request) {
+        orderService.orderCartItems(request);
         return new ResponseEntity<>(ORDER_PLACED_MESSAGE, HttpStatus.CREATED);
     }
 
     @PostMapping("/cart/all")
-    public ResponseEntity<String> orderAllItemsFromCart() {
-        orderService.orderCart();
+    public ResponseEntity<String> orderAllItemsFromCart(@RequestBody String paymentType) {
+        System.out.println("Payment type: " + paymentType);
+        orderService.orderCart(paymentType);
         return new ResponseEntity<>(ORDER_PLACED_MESSAGE, HttpStatus.CREATED);
     }
 }

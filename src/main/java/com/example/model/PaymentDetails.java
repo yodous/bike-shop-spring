@@ -20,8 +20,6 @@ public class PaymentDetails extends BaseEntity {
     @JoinColumn(name = "order_id")
     private OrderDetails orderDetails;
 
-//    private double totalPrice;
-
     @Enumerated(EnumType.STRING)
     private PaymentType type;
 

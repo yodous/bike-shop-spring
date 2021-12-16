@@ -4,11 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderItemRequest {
-    private int productId;
-    private int quantity;
+public class OrderItemsRequest {
+    private List<Integer> ids; // map: k=productid, v=quantity>
     private String paymentType;
 }

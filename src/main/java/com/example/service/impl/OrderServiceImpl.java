@@ -1,7 +1,8 @@
 package com.example.service.impl;
 
 import com.example.dto.OrderDetailsRepresentation;
-import com.example.dto.OrderItemRequest;
+import com.example.dto.OrderItemsRequest;
+import com.example.dto.OrderOneItemRequest;
 import com.example.exception.ProductNotFoundException;
 import com.example.mapper.OrderMapper;
 import com.example.model.*;
@@ -52,7 +53,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void orderProduct(OrderItemRequest request) {
+    public void orderProduct(OrderOneItemRequest request) {
         User currentUser = authService.getCurrentUser();
         Product product = productRepository.findById(request.getProductId())
                 .orElseThrow(() -> new ProductNotFoundException(request.getProductId()));
@@ -69,13 +70,15 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void orderCartItems(List<Integer> cartItemsIds) {
+    public void orderCartItems(OrderItemsRequest request) {
         User currentUser = authService.getCurrentUser();
         Cart cart = cartRepository.findByUser(currentUser).orElseThrow();
-        List<CartItem> cartItems = cartItemRepository.findAllById(cartItemsIds);
+        List<CartItem> cartItems = cartItemRepository.findAllById(request.getIds());
 
-        double totalPrice = 0;
+        double orderPrice = 0;
         OrderDetails orderDetails = orderDetailsRepository.save(new OrderDetails(currentUser));
+        paymentDetailsRepository.save(
+                new PaymentDetails(orderDetails, PaymentType.valueOf(request.getPaymentType()), PaymentStatus.PENDING));
 
         List<OrderItem> orderItems = new ArrayList<>();
 
@@ -84,24 +87,24 @@ public class OrderServiceImpl implements OrderService {
             Product product = productRepository.findById(productId)
                     .orElseThrow(() -> new ProductNotFoundException(productId));
             orderItems.add(new OrderItem(orderDetails, product, cartItem.getQuantity()));
-            totalPrice += product.getPrice() * cartItem.getQuantity();
+            orderPrice += product.getPrice() * cartItem.getQuantity();
         }
-        orderDetails.setTotalPrice(totalPrice);
+        orderDetails.setTotalPrice(orderPrice);
         orderItemRepository.saveAll(orderItems);
-        cartItemRepository.deleteAllById(cartItemsIds);
+        cartItemRepository.deleteAllById(request.getIds());
 
-        cart.setTotalPrice(cart.getTotalPrice() - totalPrice);
+        cart.setTotalPrice(cart.getTotalPrice() - orderPrice);
     }
 
     @Override
     @Transactional
-    public void orderCart() {
+    public void orderCart(String paymentType) {
         User currentUser = authService.getCurrentUser();
         Cart cart = cartRepository.findByUser(currentUser).orElseThrow(
                 () -> new RuntimeException("Could not find cart with userId=" + currentUser.getId()));
         List<Integer> cartItemsIds = cartItemRepository.findAllByCart(cart);
 
-        orderCartItems(cartItemsIds);
+        orderCartItems(new OrderItemsRequest(cartItemsIds, paymentType));
     }
 
 }

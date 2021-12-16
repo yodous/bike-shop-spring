@@ -1,5 +1,6 @@
 package com.example.service.impl;
 
+import com.example.dto.OrderItemsRequest;
 import com.example.mapper.OrderMapper;
 import com.example.model.*;
 import com.example.model.enums.ProductCategory;
@@ -61,7 +62,7 @@ class OrderServiceImplTest {
         double orderPriceBefore = orderDetails.getTotalPrice();
         double cartPriceBefore = cart.getTotalPrice();
 
-        orderService.orderCartItems(List.of(1));
+        orderService.orderCartItems(new OrderItemsRequest(List.of(1), "TRANSFER"));
 
         double orderPriceAfter = orderDetails.getTotalPrice();
         double cartPriceAfter = cart.getTotalPrice();
