@@ -32,7 +32,7 @@ public class ProductController {
     }
 
     //todo: return detailed product view
-    @GetMapping("/by-name") // /products?name=...
+    @GetMapping("/by-name")
     public ResponseEntity<List<ProductView>> getByName(@RequestParam String name,
                                                        @RequestParam int page,
                                                        @RequestParam int size) {
@@ -41,7 +41,9 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductView> getById(@PathVariable int id) {
-        return ResponseEntity.ok(productService.get(id));
+        ProductView product = productService.get(id);
+        log.info("product: " + product);
+        return ResponseEntity.ok(product);
     }
 
     @GetMapping("/categories/{category}")

@@ -34,7 +34,7 @@ class CartMapperTest {
 
     @Test
     void testMapItemSourceToRepresentation() {
-        CartItemRepresentation expected = new CartItemRepresentation(
+        CartItemRepresentation expected = new CartItemRepresentation(1,
                 product.getName(), product.getPrice(), 2, 2.46);
 
         CartItemRepresentation actual = cartMapper.mapItemSourceToRepresentation(cartItem);

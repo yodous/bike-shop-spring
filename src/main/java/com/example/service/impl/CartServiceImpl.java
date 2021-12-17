@@ -60,21 +60,13 @@ public class CartServiceImpl implements CartService {
         CartItem cartItem = cartItemRepository.findById(itemId).orElseThrow(
                 () -> new RuntimeException("No cart item with id=" + itemId));
 
-        if (cartItem.getQuantity() < quantity)
-            throw new IllegalArgumentException(
-                    "Cart item quantity is lower then supposed quantity to delete");
-
-        for (int i = 0; i < quantity; i++) {
-            cartItem.setQuantity(cartItem.getQuantity() - 1);
-            if (cartItem.getQuantity() == 0) {
-                cartItemRepository.delete(cartItem);
-                return;
-            }
-        }
-
-        double cartItemsTotalPrice = cartItem.getProduct().getPrice() * quantity;
         Cart cart = findCartByCurrentUser();
-        cart.setTotalPrice(cart.getTotalPrice() - cartItemsTotalPrice);
+        cart.setTotalPrice(cart.getTotalPrice() - cartItem.getProduct().getPrice());
+
+        cartItemRepository.delete(cartItem);
+        log.info("cart price: " + cart.getTotalPrice());
+
+//        cartRepository.save(cart);
     }
 
 

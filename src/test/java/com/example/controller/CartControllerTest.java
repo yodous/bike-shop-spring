@@ -38,7 +38,8 @@ class CartControllerTest {
     @Test
     @WithMockUser
     void addProductShouldSucceedWith204() throws Exception {
-        mockMvc.perform(post(PATH_WITH_ID, 1)
+        mockMvc.perform(post(PATH)
+                        .param("id", "1")
                         .param("quantity", "1"))
                 .andExpect(status().isAccepted());
     }
