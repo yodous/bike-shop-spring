@@ -10,6 +10,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderItemsRequest {
-    private List<Integer> ids; // map: k=productid, v=quantity>
+    private List<Integer> ids; // map: k=productid, v=quantity
     private String paymentType;
 }

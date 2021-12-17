@@ -8,11 +8,14 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface CartItemRepository extends JpaRepository<CartItem, Integer> {
-    void deleteAllByCart(Cart cart);
+    Optional<CartItem> findByProductId(int productId);
 
     @Query("select c.id from CartItem c where c.cart=:cart")
     List<Integer> findAllByCart(@Param("cart") Cart cart);
+
+    void deleteAllByCart(Cart cart);
 }

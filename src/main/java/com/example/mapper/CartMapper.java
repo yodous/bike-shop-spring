@@ -22,6 +22,7 @@ public abstract class CartMapper {
                 .collect(Collectors.toList());
     }
 
+    @Mapping(target = "id", source = "cartItem.product.id")
     @Mapping(target = "name", source = "product.name")
     @Mapping(target = "price", source = "product.price")
     @Mapping(target = "totalPrice", expression = "java(calculateTotalPrice(cartItem))")

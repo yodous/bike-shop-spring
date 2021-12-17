@@ -16,12 +16,6 @@ import java.util.List;
 public class ProductController {
     private final ProductService productService;
 
-    //todo: try to refactor products component to not need this method
-    @GetMapping("/count")
-    public int countProducts() {
-        return productService.count();
-    }
-
     //todo: return basic product view
     @GetMapping
     public ResponseEntity<List<ProductView>> getAll(@RequestParam int page,
@@ -50,7 +44,10 @@ public class ProductController {
     public ResponseEntity<List<ProductView>> getByCategory(@PathVariable String category,
                                                            @RequestParam int page,
                                                            @RequestParam int size) {
-        return ResponseEntity.ok(productService.getByCategoryPaginated(category, page, size));
+        List<ProductView> products = productService.getByCategoryPaginated(category, page, size);
+        log.info("size: " + products.size());
+
+        return ResponseEntity.ok(products);
     }
 
     @GetMapping("/users/{username}")
@@ -58,5 +55,11 @@ public class ProductController {
                                                            @RequestParam int page,
                                                            @RequestParam int size) {
         return ResponseEntity.ok(productService.getAllByUsernamePaginated(username, page, size));
+    }
+
+    //todo: try to refactor products component to not need this method
+    @GetMapping("/count")
+    public int countProducts() {
+        return productService.count();
     }
 }

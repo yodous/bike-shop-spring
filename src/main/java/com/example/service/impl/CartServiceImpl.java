@@ -56,17 +56,15 @@ public class CartServiceImpl implements CartService {
 
     @Override
     @Transactional
-    public void deleteCartItem(int itemId, int quantity) {
-        CartItem cartItem = cartItemRepository.findById(itemId).orElseThrow(
-                () -> new RuntimeException("No cart item with id=" + itemId));
+    public void deleteCartItem(int productId, int quantity) {
+        CartItem cartItem = cartItemRepository.findByProductId(productId).orElseThrow(
+                () -> new RuntimeException("No cart item with id=" + productId));
 
         Cart cart = findCartByCurrentUser();
         cart.setTotalPrice(cart.getTotalPrice() - cartItem.getProduct().getPrice());
 
         cartItemRepository.delete(cartItem);
         log.info("cart price: " + cart.getTotalPrice());
-
-//        cartRepository.save(cart);
     }
 
 
