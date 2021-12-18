@@ -30,13 +30,12 @@ public class CartController {
     }
 
     @DeleteMapping
-    public ResponseEntity<String> deleteProduct(@RequestParam int id,
+    public ResponseEntity<Void> deleteProduct(@RequestParam int id,
                                                 @RequestParam int quantity) {
         log.info("id: " + id + ", quantity: " + quantity);
 
         cartService.deleteCartItem(id, quantity);
-        return new ResponseEntity<>("Product has been removed from cart",
-                HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("/all")

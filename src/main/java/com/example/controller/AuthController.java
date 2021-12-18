@@ -43,12 +43,4 @@ public class AuthController {
         return new ResponseEntity<>("Your account has been activated", HttpStatus.CREATED);
     }
 
-    @PostMapping("/perform_logout")
-    public ResponseEntity<String> logout(@RequestBody @Valid LoginRequest request) {
-        AuthenticationResponse response = authService.login(request);
-        return ResponseEntity.ok()
-                .header(HttpHeaders.AUTHORIZATION, response.getToken())
-                .body("You have been logged in");
-    }
-
 }

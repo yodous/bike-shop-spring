@@ -49,9 +49,15 @@ public class CartServiceImpl implements CartService {
                 () -> new ProductNotFoundException(productId));
 
         Cart cart = findCartByCurrentUser();
-        cart.setTotalPrice(cart.getTotalPrice() + (quantity * product.getPrice()));
+        boolean isProductInCart = cartItemRepository.findByProductId(productId).isPresent();
+        if (isProductInCart) {
+            CartItem cartItem = cartItemRepository.findByProductId(productId).orElseThrow();
+            cartItem.setQuantity(cartItem.getQuantity() + 1);
+        }
+        else
+            cartItemRepository.save(new CartItem(cart, product, quantity));
 
-        cartItemRepository.save(new CartItem(cart, product, quantity));
+        cart.setTotalPrice(cart.getTotalPrice() + (quantity * product.getPrice()));
     }
 
     @Override
@@ -59,11 +65,19 @@ public class CartServiceImpl implements CartService {
     public void deleteCartItem(int productId, int quantity) {
         CartItem cartItem = cartItemRepository.findByProductId(productId).orElseThrow(
                 () -> new RuntimeException("No cart item with id=" + productId));
+        log.info("cart item: " + cartItem.getProduct().getName());
 
         Cart cart = findCartByCurrentUser();
-        cart.setTotalPrice(cart.getTotalPrice() - cartItem.getProduct().getPrice());
+        cart.setTotalPrice(cart.getTotalPrice() - cartItem.getProduct().getPrice() * quantity);
 
-        cartItemRepository.delete(cartItem);
+        if (cartItem.getQuantity() == 1)
+            cartItemRepository.delete(cartItem);
+        else
+            cartItem.setQuantity(cartItem.getQuantity() - 1);
+
+        cartRepository.save(cart);
+
+
         log.info("cart price: " + cart.getTotalPrice());
     }
 
