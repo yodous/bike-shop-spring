@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.dto.CategoryView;
 import com.example.service.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +16,7 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping
-    public List<String> getAll() {
+    public List<CategoryView> getAll() {
         return categoryService.getAll();
     }
 

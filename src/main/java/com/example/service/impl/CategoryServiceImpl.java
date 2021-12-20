@@ -1,5 +1,6 @@
 package com.example.service.impl;
 
+import com.example.dto.CategoryView;
 import com.example.model.enums.ProductCategory;
 import com.example.service.CategoryService;
 import lombok.RequiredArgsConstructor;
@@ -12,10 +13,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CategoryServiceImpl implements CategoryService {
 
-    public List<String> getAll() {
-        ArrayList<String> categories = new ArrayList<>();
+    public List<CategoryView> getAll() {
+        ArrayList<CategoryView> categories = new ArrayList<>();
+
         for (ProductCategory category : List.of(ProductCategory.values()))
-            categories.add(category.getValue());
+            categories.add(new CategoryView(category.getValue(), category.getImgUrl()));
 
         return categories;
     }
