@@ -15,26 +15,25 @@ import org.springframework.web.bind.annotation.*;
 public class CartController {
     private final CartService cartService;
 
-    @GetMapping//todo: pagination
+    @GetMapping
     public ResponseEntity<CartRepresentation> get() {
         return ResponseEntity.ok(cartService.get());
     }
 
     //todo: jwt token expired -> should be 401 but is 200
-    @PostMapping//("/{id}")
-    public ResponseEntity<String> addProduct(@RequestParam int id,
-                                             @RequestParam int quantity) {
-        log.info("cartController -> addProduct with id = " + id + ", quantity = " + quantity);
-        cartService.saveCartItem(id, quantity);
+    // inform user about need to authenticated or token has expired
+    @PostMapping("/{id}")
+    public ResponseEntity<Void> addProduct(@PathVariable int id) {
+        log.info("cartController -> addProduct with id = " + id + ", quantity = " + 1);
+        cartService.saveCartItem(id, 1);
         return new ResponseEntity<>(HttpStatus.ACCEPTED);
     }
 
-    @DeleteMapping
-    public ResponseEntity<Void> deleteProduct(@RequestParam int id,
-                                                @RequestParam int quantity) {
-        log.info("id: " + id + ", quantity: " + quantity);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable int id) {
+        log.info("id: " + id);
 
-        cartService.deleteCartItem(id, quantity);
+        cartService.deleteCartItem(id, 1);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

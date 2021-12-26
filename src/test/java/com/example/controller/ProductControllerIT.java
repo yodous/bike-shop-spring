@@ -39,9 +39,9 @@ class ProductControllerIT {
     @BeforeEach
     void setup() {
         productView = new ProductView(1,
-                "product name 0", "ELECTRONICS", 65, Instant.now());
+                "product name 0", "ELECTRONICS", "test-img-url", 65, Instant.now());
         productView1 = new ProductView(2,
-                "product name 1", "SPORT", 123, Instant.now());
+                "product name 1", "SPORT","test-img-url", 123, Instant.now());
     }
 
     @Test

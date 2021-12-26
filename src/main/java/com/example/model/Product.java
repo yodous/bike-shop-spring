@@ -11,7 +11,6 @@ import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -38,10 +37,8 @@ public class Product extends BaseEntity {
     @Column(name = "price")
     private double price;
 
-    @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seller_id")
-    private User seller;
+    @Column(name = "img_url")
+    private String imgUrl;
 
     public Product(String name, String description, ProductCategory category, double price) {
         this.name = name;

@@ -25,13 +25,11 @@ public abstract class OrderMapper {
                 orderDetails.getUser().getUsername(),
                 orderDetails.getTotalPrice(),
                 orderDetails.getOrderItems().stream()
-                        .map(o -> mapOrderItemToRepresentation(o)).collect(Collectors.toList()),
+                        .map(this::mapOrderItemToRepresentation).collect(Collectors.toList()),
                 orderDetails.getPaymentDetails().getType().getValue(),
                 orderDetails.getPaymentDetails().getStatus().name(),
                 LocalDate.ofInstant(orderDetails.getCreatedAt(), ZoneId.systemDefault())
         );
     }
-
-    ;
 
 }

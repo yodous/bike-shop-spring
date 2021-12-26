@@ -16,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -69,42 +68,43 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    @Transactional
+    @Transactional //find products by cartItem.productId and call more generic function
     public void orderCartItems(OrderItemsRequest request) {
-        User currentUser = authService.getCurrentUser();
-        Cart cart = cartRepository.findByUser(currentUser).orElseThrow();
-        List<CartItem> cartItems = cartItemRepository.findAllById(request.getIds());
-
-        double orderPrice = 0;
-        OrderDetails orderDetails = orderDetailsRepository.save(new OrderDetails(currentUser));
-        paymentDetailsRepository.save(
-                new PaymentDetails(orderDetails, PaymentType.valueOf(request.getPaymentType()), PaymentStatus.PENDING));
-
-        List<OrderItem> orderItems = new ArrayList<>();
-
-        for (CartItem cartItem : cartItems) {
-            int productId = cartItem.getProduct().getId();
-            Product product = productRepository.findById(productId)
-                    .orElseThrow(() -> new ProductNotFoundException(productId));
-            orderItems.add(new OrderItem(orderDetails, product, cartItem.getQuantity()));
-            orderPrice += product.getPrice() * cartItem.getQuantity();
-        }
-        orderDetails.setTotalPrice(orderPrice);
-        orderItemRepository.saveAll(orderItems);
-        cartItemRepository.deleteAllById(request.getIds());
-
-        cart.setTotalPrice(cart.getTotalPrice() - orderPrice);
+        throw new RuntimeException("not implemented");
+//        User currentUser = authService.getCurrentUser();
+//        Cart cart = cartRepository.findByUser(currentUser).orElseThrow();
+//        List<CartItem> cartItems = cartItemRepository.findAllById(request.getItemIdsWithQuantity().keySet());
+//
+//        double orderPrice = 0;
+//        OrderDetails orderDetails = orderDetailsRepository.save(new OrderDetails(currentUser));
+//        paymentDetailsRepository.save(
+//                new PaymentDetails(orderDetails, PaymentType.valueOf(request.getPaymentType()), PaymentStatus.PENDING));
+//
+//        List<OrderItem> orderItems = new ArrayList<>();
+//
+//        for (CartItem cartItem : cartItems) {
+//            int productId = cartItem.getProduct().getId();
+//            Product product = productRepository.findById(productId)
+//                    .orElseThrow(() -> new ProductNotFoundException(productId));
+//            orderItems.add(new OrderItem(orderDetails, product, cartItem.getQuantity()));
+//            orderPrice += product.getPrice() * cartItem.getQuantity();
+//        }
+//        orderDetails.setTotalPrice(orderPrice);
+//        orderItemRepository.saveAll(orderItems);
+//        cartItemRepository.deleteAllById(request.getIds());
+//
+//        cart.setTotalPrice(cart.getTotalPrice() - orderPrice);
     }
 
     @Override
     @Transactional
     public void orderCart(String paymentType) {
-        User currentUser = authService.getCurrentUser();
-        Cart cart = cartRepository.findByUser(currentUser).orElseThrow(
-                () -> new RuntimeException("Could not find cart with userId=" + currentUser.getId()));
-        List<Integer> cartItemsIds = cartItemRepository.findAllByCart(cart);
-
-        orderCartItems(new OrderItemsRequest(cartItemsIds, paymentType));
+//        User currentUser = authService.getCurrentUser();
+//        Cart cart = cartRepository.findByUser(currentUser).orElseThrow(
+//                () -> new RuntimeException("Could not find cart with userId=" + currentUser.getId()));
+//        List<Integer> cartItemsIds = cartItemRepository.findAllByCart(cart);
+//
+//        orderCartItems(new OrderItemsRequest(cartItemsIds, paymentType));
     }
 
 }

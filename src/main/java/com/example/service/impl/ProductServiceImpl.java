@@ -53,20 +53,19 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductView> getAllByUsernamePaginated(String username, int page, int size) {
-        String trimmedUsername = username.trim();
-        return productRepository.findAll(PageRequest.of(page, size))
-                .filter(p -> StringUtils.containsIgnoreCase(p.getSeller().getUsername(), trimmedUsername))
-                .stream().map(productViewMapper::mapSourceToView)
-                .collect(Collectors.toList());
+//        String trimmedUsername = username.trim();
+//        return productRepository.findAll(PageRequest.of(page, size))
+//                .filter(p -> StringUtils.containsIgnoreCase(p.getSeller().getUsername(), trimmedUsername))
+//                .stream().map(productViewMapper::mapSourceToView)
+//                .collect(Collectors.toList());
+        throw new RuntimeException("implement this method");
     }
 
     @Override
     public List<ProductView> getByCategoryPaginated(String categoryName, int page, int size) {
-        String trimmedUpperCaseCategory = categoryName.trim().toUpperCase();
-        ProductCategory category = productViewMapper.getProductCategory(trimmedUpperCaseCategory);
+        ProductCategory category = productViewMapper.getProductCategory(categoryName);
 
-        return productRepository.findAll(PageRequest.of(page, size))
-                .filter(p -> p.getCategory() == category)
+        return productRepository.findAllByCategoryWithPagination(category, PageRequest.of(page, size))
                 .stream().map(productViewMapper::mapSourceToView)
                 .collect(Collectors.toList());
     }
