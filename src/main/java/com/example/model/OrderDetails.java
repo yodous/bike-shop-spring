@@ -36,11 +36,6 @@ public class OrderDetails extends BaseEntity {
         this.user = user;
     }
 
-    public OrderDetails(User user, PaymentDetails paymentDetails) {
-        this.user = user;
-        this.paymentDetails = paymentDetails;
-    }
-
     public OrderDetails(User user, double totalPrice) {
         this.user = user;
         this.totalPrice = totalPrice;

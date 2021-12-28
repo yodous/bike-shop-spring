@@ -1,16 +1,17 @@
 package com.example.controller;
 
 import com.example.dto.OrderDetailsRepresentation;
-import com.example.dto.OrderItemsRequest;
-import com.example.dto.OrderOneItemRequest;
+import com.example.dto.OrderRequest;
 import com.example.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/orders")
 @RequiredArgsConstructor
@@ -28,14 +29,14 @@ public class OrderController {
         throw new RuntimeException("not implemented yet");
     }
 
-    @PostMapping
-    public ResponseEntity<String> orderOne(@RequestBody OrderOneItemRequest request) {
-        orderService.orderProduct(request);
-        return new ResponseEntity<>(ORDER_PLACED_MESSAGE, HttpStatus.CREATED);
-    }
+//    @PostMapping
+//    public ResponseEntity<String> orderOne(@RequestBody OrderOneItemRequest request, String paymentType) {
+//        orderService.orderProduct(request);
+//        return new ResponseEntity<>(ORDER_PLACED_MESSAGE, HttpStatus.CREATED);
+//    }
 
-    @PostMapping("/cart")
-    public ResponseEntity<String> orderSelectedFromCart(@RequestBody OrderItemsRequest request) {
+    @PostMapping//("/cart")
+    public ResponseEntity<String> orderSelectedFromCart(@RequestBody OrderRequest request)  {
         orderService.orderCartItems(request);
         return new ResponseEntity<>(ORDER_PLACED_MESSAGE, HttpStatus.CREATED);
     }

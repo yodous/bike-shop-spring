@@ -1,5 +1,6 @@
 package com.example.controller;
 
+import com.example.dto.CartItemRepresentation;
 import com.example.dto.CartRepresentation;
 import com.example.service.CartService;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,10 @@ public class CartController {
         return ResponseEntity.ok(cartService.get());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<CartItemRepresentation> getCartItem(@PathVariable int id) {
+        return ResponseEntity.ok(cartService.getItemByProductId(id));
+    }
     //todo: jwt token expired -> should be 401 but is 200
     // inform user about need to authenticated or token has expired
     @PostMapping("/{id}")

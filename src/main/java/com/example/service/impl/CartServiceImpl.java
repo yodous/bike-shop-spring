@@ -1,5 +1,6 @@
 package com.example.service.impl;
 
+import com.example.dto.CartItemRepresentation;
 import com.example.dto.CartRepresentation;
 import com.example.exception.ProductNotFoundException;
 import com.example.mapper.CartMapper;
@@ -33,6 +34,13 @@ public class CartServiceImpl implements CartService {
     public CartRepresentation get() {
         Cart cart = findCartByCurrentUser();
         return cartMapper.mapCartToRepresentation(cart);
+    }
+
+    @Override
+    public CartItemRepresentation getItemByProductId(int productId) {
+        return this.cartItemRepository.findByProductId(productId)
+                .map(cartMapper::mapItemSourceToRepresentation)
+                .orElseThrow(() -> new ProductNotFoundException(productId));
     }
 
     private Cart findCartByCurrentUser() {
