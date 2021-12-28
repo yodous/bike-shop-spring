@@ -31,6 +31,7 @@ public class AuthController {
                 .body(objectMapper.writeValueAsString(response));
     }
 
+    //todo: accountNumber taken: should handle exception but is 500
     @PostMapping("/perform_signup")
     public ResponseEntity<String> register(@RequestBody RegisterRequest registerRequest) {
         authService.register(registerRequest);

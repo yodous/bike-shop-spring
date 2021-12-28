@@ -20,5 +20,4 @@ public class RegisterRequest {
     private String city;
     private String street;
     private String postalCode;
-    private String role;
 }
