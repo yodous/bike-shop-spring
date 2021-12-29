@@ -71,6 +71,7 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public void orderCartItems(OrderRequest request) {
         User currentUser = authService.getCurrentUser();
+        Cart cart = currentUser.getCart();
         List<OrderItemRequest> items = request.getItems();
         if (items == null)
             throw new RuntimeException("no product selected");
@@ -86,15 +87,14 @@ public class OrderServiceImpl implements OrderService {
                     .findById(item.getProductId()).orElseThrow(
                             () -> new RuntimeException("Could not find product with id = " + item.getProductId())
                     );
-
+            cartItemRepository.deleteByCartIdAndProductId(cart.getId(), product.getId());
             int quantity = item.getQuantity();
-            OrderItem orderItem = orderItemRepository.save(new OrderItem(orderDetails, product, quantity));
-            log.info("order item id = " + orderItem.getId());
+            orderItemRepository.save(new OrderItem(orderDetails, product, quantity));
             orderDetails.setTotalPrice(orderDetails.getTotalPrice() + product.getPrice() * quantity);
-
-            log.info("product: " + product.getPrice() + " -> " + product.getPrice() * quantity);
         }
 
+        cart.setTotalPrice(cart.getTotalPrice() - orderDetails.getTotalPrice());
+        cartRepository.save(cart);
         orderDetailsRepository.save(orderDetails);
     }
 
