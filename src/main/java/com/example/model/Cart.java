@@ -17,7 +17,7 @@ import java.util.List;
 @Table(name = "cart")
 public class Cart extends BaseEntity {
 
-    @OneToOne //(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 

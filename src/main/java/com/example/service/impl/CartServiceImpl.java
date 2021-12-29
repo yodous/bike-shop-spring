@@ -19,6 +19,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -33,6 +34,7 @@ public class CartServiceImpl implements CartService {
     @Override
     public CartRepresentation get() {
         Cart cart = findCartByCurrentUser();
+        log.info("items count : " + cart.getItems().size());
         return cartMapper.mapCartToRepresentation(cart);
     }
 
@@ -57,12 +59,12 @@ public class CartServiceImpl implements CartService {
                 () -> new ProductNotFoundException(productId));
 
         Cart cart = findCartByCurrentUser();
-        boolean isProductInCart = cartItemRepository.findByProductId(productId).isPresent();
-        if (isProductInCart) {
-            CartItem cartItem = cartItemRepository.findByProductId(productId).orElseThrow();
+        Optional<CartItem> cartProduct = cartItemRepository.findByCartAndProductId(cart, productId);
+        if (cartProduct.isPresent()) {
+            CartItem cartItem = cartProduct.get();
             cartItem.setQuantity(cartItem.getQuantity() + 1);
-        }
-        else
+            cartItemRepository.save(cartItem);
+        } else
             cartItemRepository.save(new CartItem(cart, product, quantity));
 
         cart.setTotalPrice(cart.getTotalPrice() + (quantity * product.getPrice()));
