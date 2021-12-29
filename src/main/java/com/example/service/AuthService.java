@@ -8,7 +8,7 @@ import com.example.model.User;
 public interface AuthService {
     AuthenticationResponse login(LoginRequest loginRequest);
 
-    void register(RegisterRequest registerRequest);
+    String register(RegisterRequest registerRequest);
 
     User getCurrentUser();
 }

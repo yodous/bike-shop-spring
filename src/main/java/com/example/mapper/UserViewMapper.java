@@ -18,6 +18,7 @@ public abstract class UserViewMapper {
     @Mapping(target = "address.city", source = "city")
     @Mapping(target = "address.street", source = "street")
     @Mapping(target = "address.postalCode", source = "postalCode")
+    @Mapping(target = "role", expression = "java(com.example.model.enums.Role.USER)")
     public abstract User mapRegisterRequestToUser(RegisterRequest registerRequest);
 
     @Mapping(target = "fullName", expression = "java(user.getFirstName() + \" \" + user.getLastName())")

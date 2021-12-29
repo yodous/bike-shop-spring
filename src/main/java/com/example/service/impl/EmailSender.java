@@ -15,8 +15,8 @@ import org.springframework.stereotype.Service;
 public class EmailSender implements MessageSender {
     private final JavaMailSender mailSender;
 
-    @Value("${server.port}")
-    private int port;
+//    @Value("${server.port}")
+//    private int port;
     @Value("${email.sender}")
     private String from;
     @Value("${email.subject}")
@@ -38,7 +38,7 @@ public class EmailSender implements MessageSender {
     }
 
     private String generatedActivationBaseUrl() {
-        return String.format(text, port);
+        return String.format("localhost:%d/account-verification?token=", 4200);
     }
 
     static class ActivationEmail extends Message {

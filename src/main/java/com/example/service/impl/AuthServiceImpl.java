@@ -36,7 +36,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public void register(RegisterRequest registerRequest) {
+    public String register(RegisterRequest registerRequest) {
         registerValidator.validateRequest(registerRequest);
         User user = userRepository.save(userViewMapper.mapRegisterRequestToUser(registerRequest));
 
@@ -44,6 +44,8 @@ public class AuthServiceImpl implements AuthService {
 
         String token = jwtTokenService.generateAccountActivationToken(user);
         messageSender.sendMessage(new EmailSender.ActivationEmail(user.getEmail(), token));
+
+        return token;
     }
 
     @Override
