@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -82,6 +83,8 @@ public class OrderServiceImpl implements OrderService {
         PaymentDetails paymentDetails = new PaymentDetails
                 (PaymentType.valueOf(request.getPaymentType()), PaymentStatus.PENDING);
 
+        List<OrderItem> orderItems = new ArrayList<>();
+
         for (OrderItemRequest item : items) {
             Product product = productRepository
                     .findById(item.getProductId()).orElseThrow(
@@ -89,7 +92,7 @@ public class OrderServiceImpl implements OrderService {
                     );
             cartItemRepository.deleteByCartIdAndProductId(cart.getId(), product.getId());
             int quantity = item.getQuantity();
-            orderItemRepository.save(new OrderItem(orderDetails, product, quantity));
+            orderItems.add(new OrderItem(orderDetails, product, quantity));
             orderDetails.setTotalPrice(orderDetails.getTotalPrice() + product.getPrice() * quantity);
         }
 
@@ -98,6 +101,8 @@ public class OrderServiceImpl implements OrderService {
 
         paymentDetails.setOrderDetails(orderDetailsRepository.save(orderDetails));
         paymentDetailsRepository.save(paymentDetails);
+
+        orderItemRepository.saveAll(orderItems);
     }
 
     @Override
