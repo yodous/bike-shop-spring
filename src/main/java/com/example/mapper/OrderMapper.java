@@ -17,18 +17,17 @@ public abstract class OrderMapper {
     @Mapping(target = "productName", expression = "java(orderItem.getProduct().getName())")
     @Mapping(target = "quantity", expression = "java(orderItem.getQuantity())")
     @Mapping(target = "productPrice", expression = "java(orderItem.getProduct().getPrice())")
-    @Mapping(target = "totalPrice", expression = "java(orderItem.getProduct().getPrice() * orderItem.getQuantity())")
+//    @Mapping(target = "totalPrice", expression = "java(orderItem.getProduct().getPrice() * orderItem.getQuantity())")
     public abstract  OrderItemRepresentation mapOrderItemToRepresentation(OrderItem orderItem);
 
     public OrderDetailsRepresentation mapDetailsToRepresentation(OrderDetails orderDetails) {
         return new OrderDetailsRepresentation(
-                orderDetails.getUser().getUsername(),
-                orderDetails.getTotalPrice(),
                 orderDetails.getOrderItems().stream()
                         .map(this::mapOrderItemToRepresentation).collect(Collectors.toList()),
+                LocalDate.ofInstant(orderDetails.getCreatedAt(), ZoneId.systemDefault()),
+                orderDetails.getTotalPrice(),
                 orderDetails.getPaymentDetails().getType().getValue(),
-                orderDetails.getPaymentDetails().getStatus().name(),
-                LocalDate.ofInstant(orderDetails.getCreatedAt(), ZoneId.systemDefault())
+                orderDetails.getPaymentDetails().getStatus().name()
         );
     }
 

@@ -30,14 +30,14 @@ class ProductMgmtControllerIT {
     private ProductService productService;
 
     @Test
-    void unauthorizedPostRequest_thenStatus401() throws Exception {
+    void unauthenticatedPostRequest_thenStatus401() throws Exception {
         mockMvc.perform(post(PATH)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void unauthorizedPutRequest_thenStatus401() throws Exception {
+    void unauthenticatedPutRequest_thenStatus401() throws Exception {
         int productId = 1;
 
         mockMvc.perform(put(PATH_WITH_ID, productId)
@@ -46,7 +46,7 @@ class ProductMgmtControllerIT {
     }
 
     @Test
-    void unauthorizedPatchRequest_thenStatus401() throws Exception {
+    void unauthenticatedPatchRequest_thenStatus401() throws Exception {
         int productId = 1;
         mockMvc.perform(patch(PATH_WITH_ID, productId)
                         .contentType(MediaType.APPLICATION_JSON))
@@ -54,7 +54,7 @@ class ProductMgmtControllerIT {
     }
 
     @Test
-    void unauthorizedDeleteRequest_thenStatus401() throws Exception {
+    void unauthenticatedDeleteRequest_thenStatus401() throws Exception {
         int productId = 1;
 
         mockMvc.perform(delete(PATH_WITH_ID, productId)
@@ -64,7 +64,52 @@ class ProductMgmtControllerIT {
 
     @Test
     @WithMockUser
-    void authorizedCreateRequest_thenStatus201() throws Exception {
+    void unauthorizedPostRequest_RoleUSER__thenStatus403() throws Exception {
+        ProductRequest productRequest = new ProductRequest();
+
+        mockMvc.perform(post(PATH)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(productRequest)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser
+    void unauthorizedPutRequest_RoleUSER_thenStatus403() throws Exception {
+        int productId = 1;
+        ProductRequest productRequest = new ProductRequest();
+
+        mockMvc.perform(put(PATH_WITH_ID, productId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(productRequest)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser
+    void unauthorizedPatchRequest_RoleUSER_thenStatus403() throws Exception {
+        int productId = 1;
+        double newPrice = 9.99;
+
+        mockMvc.perform(patch(PATH_WITH_ID, productId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(newPrice)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser
+    void unauthorizedDeleteRequest_RoleUSER_thenStatus403() throws Exception {
+        int productId = 1;
+
+        mockMvc.perform(delete(PATH_WITH_ID, productId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser(username="admin", roles = {"ADMIN"})    
+    void authorizedPostRequest_RoleADMIN_thenStatus201() throws Exception {
         ProductRequest productRequest = new ProductRequest();
 
         mockMvc.perform(post(PATH)
@@ -74,8 +119,8 @@ class ProductMgmtControllerIT {
     }
 
     @Test
-    @WithMockUser
-    void authorizedUpdateRequest_thenStatus204() throws Exception {
+    @WithMockUser(username="admin", roles = {"ADMIN"})
+    void authorizedPutRequest_RoleADMIN_thenStatus204() throws Exception {
         int productId = 1;
         ProductRequest productRequest = new ProductRequest();
 
@@ -86,8 +131,8 @@ class ProductMgmtControllerIT {
     }
 
     @Test
-    @WithMockUser
-    void authorizedUpdatePriceRequest_thenStatus204() throws Exception {
+    @WithMockUser(username="admin", roles = {"ADMIN"})
+    void authorizedPatchPriceRequest_RoleADMIN_thenStatus204() throws Exception {
         int productId = 1;
         double newPrice = 9.99;
 
@@ -98,8 +143,8 @@ class ProductMgmtControllerIT {
     }
 
     @Test
-    @WithMockUser
-    void authorizedDeleteRequest_thenStatus204() throws Exception {
+    @WithMockUser(username="admin", roles = {"ADMIN"})
+    void authorizedDeleteRequest_RoleADMIN_thenStatus204() throws Exception {
         int productId = 1;
 
         mockMvc.perform(delete(PATH_WITH_ID, productId)

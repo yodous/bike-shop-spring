@@ -29,13 +29,7 @@ public class OrderController {
         throw new RuntimeException("not implemented yet");
     }
 
-//    @PostMapping
-//    public ResponseEntity<String> orderOne(@RequestBody OrderOneItemRequest request, String paymentType) {
-//        orderService.orderProduct(request);
-//        return new ResponseEntity<>(ORDER_PLACED_MESSAGE, HttpStatus.CREATED);
-//    }
-
-    @PostMapping//("/cart")
+    @PostMapping
     public ResponseEntity<String> orderSelectedFromCart(@RequestBody OrderRequest request)  {
         orderService.orderCartItems(request);
         return new ResponseEntity<>(ORDER_PLACED_MESSAGE, HttpStatus.CREATED);

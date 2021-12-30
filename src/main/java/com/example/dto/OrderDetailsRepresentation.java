@@ -11,10 +11,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderDetailsRepresentation {
-    private String sellerName;
-    private double totalPrice;
     private List<OrderItemRepresentation> items;
+    private LocalDate date;
+    private double totalPrice;
     private String paymentType;
     private String paymentStatus;
-    private LocalDate date;
 }

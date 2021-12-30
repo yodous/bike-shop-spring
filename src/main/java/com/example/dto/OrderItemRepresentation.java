@@ -13,5 +13,4 @@ public class OrderItemRepresentation {
     private String productName;
     private int quantity;
     private double productPrice;
-    private double totalPrice;
 }
