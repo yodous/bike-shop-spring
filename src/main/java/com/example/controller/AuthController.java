@@ -3,6 +3,7 @@ package com.example.controller;
 import com.example.dto.AuthenticationResponse;
 import com.example.dto.LoginRequest;
 import com.example.dto.RegisterRequest;
+import com.example.model.enums.Role;
 import com.example.security.JwtTokenService;
 import com.example.service.AuthService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -45,4 +46,9 @@ public class AuthController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    @GetMapping("/user/role")
+    public ResponseEntity<Boolean> getUsersRole() {
+        return ResponseEntity.ok(
+                this.authService.getCurrentUser().getRole() == Role.ADMIN);
+    }
 }

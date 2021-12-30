@@ -1,5 +1,13 @@
 package com.example.model.enums;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
 public enum PaymentStatus {
-        WAITING_FOR_PAYMENT, PENDING, FAILED, COMPLETED
-    }
+    PENDING("pending"), COMPLETED("completed"),
+    CANCELED("canceled"), FAILED("failed");
+
+    private final String value;
+}

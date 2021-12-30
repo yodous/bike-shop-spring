@@ -4,6 +4,7 @@ import com.example.dto.OrderDetailsRepresentation;
 import com.example.dto.OrderItemRepresentation;
 import com.example.model.OrderDetails;
 import com.example.model.OrderItem;
+import lombok.extern.slf4j.Slf4j;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Mapper(componentModel = "spring")
 public abstract class OrderMapper {
 
@@ -27,7 +29,7 @@ public abstract class OrderMapper {
                 LocalDate.ofInstant(orderDetails.getCreatedAt(), ZoneId.systemDefault()),
                 orderDetails.getTotalPrice(),
                 orderDetails.getPaymentDetails().getType().getValue(),
-                orderDetails.getPaymentDetails().getStatus().name()
+                orderDetails.getPaymentDetails().getStatus().getValue()
         );
     }
 

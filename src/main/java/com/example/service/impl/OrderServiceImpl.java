@@ -78,9 +78,9 @@ public class OrderServiceImpl implements OrderService {
         if (request.getPaymentType() == null)
             throw new RuntimeException("Payment Type not selected");
 
-        OrderDetails orderDetails = orderDetailsRepository.save(new OrderDetails(currentUser));
-        paymentDetailsRepository.save(new PaymentDetails
-                (orderDetails, PaymentType.valueOf(request.getPaymentType()), PaymentStatus.PENDING));
+        OrderDetails orderDetails = new OrderDetails(currentUser); //new orddet, then orddet = save(orddet) -> paydet.setdet(orddet)
+        PaymentDetails paymentDetails = new PaymentDetails
+                (PaymentType.valueOf(request.getPaymentType()), PaymentStatus.PENDING);
 
         for (OrderItemRequest item : items) {
             Product product = productRepository
@@ -95,7 +95,9 @@ public class OrderServiceImpl implements OrderService {
 
         cart.setTotalPrice(cart.getTotalPrice() - orderDetails.getTotalPrice());
         cartRepository.save(cart);
-        orderDetailsRepository.save(orderDetails);
+
+        paymentDetails.setOrderDetails(orderDetailsRepository.save(orderDetails));
+        paymentDetailsRepository.save(paymentDetails);
     }
 
     @Override
