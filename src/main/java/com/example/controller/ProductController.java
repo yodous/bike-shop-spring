@@ -50,14 +50,7 @@ public class ProductController {
         return ResponseEntity.ok(products);
     }
 
-    @GetMapping("/users/{username}")
-    public ResponseEntity<List<ProductView>> getByUsername(@PathVariable String username,
-                                                           @RequestParam int page,
-                                                           @RequestParam int size) {
-        return ResponseEntity.ok(productService.getAllByUsernamePaginated(username, page, size));
-    }
-
-    //todo: try to refactor products component to not need this method
+    //todo: refactor products component to not need this method
     @GetMapping("/count")
     public int countProducts() {
         return productService.count();

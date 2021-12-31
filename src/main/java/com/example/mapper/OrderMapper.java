@@ -19,7 +19,6 @@ public abstract class OrderMapper {
     @Mapping(target = "productName", expression = "java(orderItem.getProduct().getName())")
     @Mapping(target = "quantity", expression = "java(orderItem.getQuantity())")
     @Mapping(target = "productPrice", expression = "java(orderItem.getProduct().getPrice())")
-//    @Mapping(target = "totalPrice", expression = "java(orderItem.getProduct().getPrice() * orderItem.getQuantity())")
     public abstract  OrderItemRepresentation mapOrderItemToRepresentation(OrderItem orderItem);
 
     public OrderDetailsRepresentation mapDetailsToRepresentation(OrderDetails orderDetails) {

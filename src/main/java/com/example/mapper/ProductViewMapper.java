@@ -11,7 +11,7 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface ProductViewMapper {
-    @Mapping(target = "lastModified", source = "product.modifiedAt")
+    @Mapping(target = "lastModified", expression = "java(String.valueOf(product.getModifiedAt()))")
     ProductView mapSourceToView(Product product);
 
 

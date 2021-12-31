@@ -2,8 +2,6 @@ package com.example.dto;
 
 import lombok.*;
 
-import java.time.Instant;
-
 @ToString
 @Setter
 @Getter
@@ -15,5 +13,5 @@ public class ProductView {
     private String category;
     private String imgUrl;
     private double price;
-    private Instant lastModified;
+    private String lastModified;
 }

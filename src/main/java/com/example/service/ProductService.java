@@ -10,8 +10,6 @@ public interface ProductService {
 
     List<ProductView> getAll(int page, int size);
 
-    List<ProductView> getAllByUsernamePaginated(String username, int page, int size);
-
     List<ProductView> getByCategoryPaginated(String categoryName, int page, int size);
 
     List<ProductView> getByNamePaginated(String productName, int page, int size);

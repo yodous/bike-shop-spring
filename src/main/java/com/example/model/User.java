@@ -51,8 +51,8 @@ public class User extends BaseEntity implements UserDetails {
     private Role role;
 
     @OneToOne(fetch = FetchType.LAZY,
-            mappedBy = "user",
-            cascade = CascadeType.ALL)
+            cascade = CascadeType.ALL,
+            mappedBy = "user")
     private Cart cart;
 
     @Column(name = "is_enabled")

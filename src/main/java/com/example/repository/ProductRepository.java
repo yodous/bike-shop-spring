@@ -10,9 +10,8 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Integer> {
     @Query("select p from Product p where p.category=:category ")
-    List<Product> findAllByCategoryWithPagination(@Param("category")ProductCategory category, Pageable pageable);
+    List<Product> findAllByCategoryWithPagination(@Param("category") ProductCategory category, Pageable pageable);
 }

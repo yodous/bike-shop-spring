@@ -39,9 +39,9 @@ class ProductControllerIT {
     @BeforeEach
     void setup() {
         productView = new ProductView(1,
-                "product name 0", "ELECTRONICS", "test-img-url", 65, Instant.now());
+                "product name 0", "ELECTRONICS", "test-img-url", 65, String.valueOf(Instant.now()));
         productView1 = new ProductView(2,
-                "product name 1", "SPORT","test-img-url", 123, Instant.now());
+                "product name 1", "SPORT","test-img-url", 123, String.valueOf(Instant.now()));
     }
 
     @Test
@@ -106,15 +106,6 @@ class ProductControllerIT {
                 .willReturn(mockedData());
 
         mockMvc.perform(get(PRODUCT_PATH + "/categories/electronics?page=0&size=1"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
-    }
-
-    @Test
-    void getByUsername_thenStatusIsOK() throws Exception {
-        given(productService.getAllByUsernamePaginated("test_username", 0, 2))
-                .willReturn(mockedData());
-        mockMvc.perform(get(PRODUCT_PATH + "/users/test_username?page=0&size=1"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }

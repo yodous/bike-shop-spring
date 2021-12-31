@@ -79,7 +79,7 @@ public class OrderServiceImpl implements OrderService {
         if (request.getPaymentType() == null)
             throw new RuntimeException("Payment Type not selected");
 
-        OrderDetails orderDetails = new OrderDetails(currentUser); //new orddet, then orddet = save(orddet) -> paydet.setdet(orddet)
+        OrderDetails orderDetails = new OrderDetails(currentUser);
         PaymentDetails paymentDetails = new PaymentDetails
                 (PaymentType.valueOf(request.getPaymentType()), PaymentStatus.PENDING);
 

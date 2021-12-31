@@ -6,6 +6,7 @@ import com.example.exception.ProductNotFoundException;
 import com.example.model.Product;
 import com.example.mapper.ProductViewMapper;
 import com.example.model.enums.ProductCategory;
+import com.example.repository.OrderItemRepository;
 import com.example.repository.ProductRepository;
 import com.example.service.AuthService;
 import com.example.service.ProductService;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
     private final ProductRepository productRepository;
+    private final OrderItemRepository orderItemRepository;
     private final ProductViewMapper productViewMapper;
     private final AuthService authService;
 
@@ -49,16 +51,6 @@ public class ProductServiceImpl implements ProductService {
                 .stream().filter(p -> StringUtils.containsIgnoreCase(p.getName(), trimmed))
                 .map(productViewMapper::mapSourceToView)
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<ProductView> getAllByUsernamePaginated(String username, int page, int size) {
-//        String trimmedUsername = username.trim();
-//        return productRepository.findAll(PageRequest.of(page, size))
-//                .filter(p -> StringUtils.containsIgnoreCase(p.getSeller().getUsername(), trimmedUsername))
-//                .stream().map(productViewMapper::mapSourceToView)
-//                .collect(Collectors.toList());
-        throw new RuntimeException("implement this method");
     }
 
     @Override
@@ -101,7 +93,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public void delete(int id) {
+        orderItemRepository.deleteByProductId(id);
         productRepository.deleteById(id);
     }
 

@@ -18,8 +18,7 @@ public class OrderItem extends BaseEntity {
     @JoinColumn(name = "order_id")
     private OrderDetails order;
 
-    @OneToOne(fetch = FetchType.LAZY,
-            cascade = CascadeType.REMOVE)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
 
