@@ -18,9 +18,9 @@ public interface ProductService {
 
     int update(int id, ProductRequest productRequest);
 
-    int updatePrice(int productId, double newPrice);
-
     void delete(int productId);
+
+    int refreshDate(int id);
 
     int count();
 

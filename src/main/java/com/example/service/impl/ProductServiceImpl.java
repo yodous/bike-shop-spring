@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -83,13 +84,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    @Transactional
-    public int updatePrice(int id, double newPrice) {
-        Product product = productRepository.findById(id)
-                .orElseThrow(ProductNotFoundException::new);
-        product.setPrice(newPrice);
-
-        return id;
+    public int refreshDate(int id) {
+        Product product = this.productRepository.findById(id).orElseThrow(
+                () -> new ProductNotFoundException(id));
+        product.setModifiedAt(Instant.now());
+        productRepository.save(product);
+        return product.getId();
     }
 
     @Override

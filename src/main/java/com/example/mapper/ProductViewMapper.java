@@ -23,7 +23,10 @@ public interface ProductViewMapper {
     default ProductCategory getProductCategory(String categoryName) {
         try {
             return ProductCategory.valueOf(categoryName.toUpperCase());
-        } catch (IllegalArgumentException e) {
+        } catch (NullPointerException e) {
+            throw new RuntimeException("product category is null");
+        }
+        catch (IllegalArgumentException e) {
             throw new IllegalProductCategoryNameException();
         }
     }

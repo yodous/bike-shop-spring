@@ -23,8 +23,7 @@ public class ProductMgmtController {
         int productId = productService.save(productRequest);
         String url = "localhost:" + serverPort + "/products/" + productId;
 
-        return new ResponseEntity<>("Product has been saved with.\n" +
-                "You can find your product at this address: " + url, HttpStatus.CREATED);
+        return new ResponseEntity<>("Product has been saved.", HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
@@ -34,9 +33,9 @@ public class ProductMgmtController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<String> updatePrice(@PathVariable int id, @RequestBody double newPrice) {
-        productService.updatePrice(id, newPrice);
-        return new ResponseEntity<>("Product price has been updated", HttpStatus.NO_CONTENT);
+    public ResponseEntity<String> refreshDate(@PathVariable int id) {
+        productService.refreshDate(id);
+        return new ResponseEntity<>("Product has been refreshed", HttpStatus.NO_CONTENT);
     }
 
     @DeleteMapping("/{id}")
