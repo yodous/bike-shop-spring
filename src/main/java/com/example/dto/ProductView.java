@@ -11,6 +11,7 @@ public class ProductView {
     private int id;
     private String name;
     private String category;
+    private String description;
     private String imgUrl;
     private double price;
     private String lastModified;

@@ -38,10 +38,12 @@ class ProductControllerIT {
 
     @BeforeEach
     void setup() {
-        productView = new ProductView(1,
-                "product name 0", "ELECTRONICS", "test-img-url", 65, String.valueOf(Instant.now()));
-        productView1 = new ProductView(2,
-                "product name 1", "SPORT","test-img-url", 123, String.valueOf(Instant.now()));
+        productView = new ProductView(1, "product name 0",
+                "ELECTRONICS", "test description",
+                "test-img-url", 65, String.valueOf(Instant.now()));
+        productView1 = new ProductView(2, "product name 1",
+                "SPORT", "test description",
+                "test-img-url", 123, String.valueOf(Instant.now()));
     }
 
     @Test

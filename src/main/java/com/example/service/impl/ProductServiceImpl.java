@@ -76,7 +76,7 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.findById(id)
                 .orElseThrow(ProductNotFoundException::new);
         product.setName(request.getName());
-        product.setDescription(request.getName());
+        product.setDescription(request.getDescription());
         product.setCategory(productViewMapper.getProductCategory(request.getCategory()));
         product.setPrice(request.getPrice());
 
