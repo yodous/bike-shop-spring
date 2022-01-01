@@ -29,7 +29,7 @@ class CartControllerTest {
 
     @Test
     @WithMockUser
-    void getShouldReturnCartDto() throws Exception {
+    void get_WithRoleUser_ShouldReturnCartDto() throws Exception {
         given(cartService.get()).willReturn(new CartRepresentation(null, 0));
         mockMvc.perform(get(PATH))
                 .andExpect(status().isOk());
@@ -37,16 +37,14 @@ class CartControllerTest {
 
     @Test
     @WithMockUser
-    void addProductShouldSucceedWith204() throws Exception {
-        mockMvc.perform(post(PATH)
-                        .param("id", "1")
-                        .param("quantity", "1"))
+    void addCartItem_WithRoleUser_ShouldSucceedWith204() throws Exception {
+        mockMvc.perform(post(PATH + "/1"))
                 .andExpect(status().isAccepted());
     }
 
     @Test
     @WithMockUser
-    void deleteProductShouldReturnCartDto() throws Exception {
+    void deleteCartItem_WithRoleUser_ShouldReturnCartDto() throws Exception {
         mockMvc.perform(delete(PATH_WITH_ID, 1)
                         .param("quantity", "1"))
                 .andExpect(status().isNoContent());
@@ -54,33 +52,33 @@ class CartControllerTest {
 
     @Test
     @WithMockUser
-    void deleteAllProductsShouldReturnCartDto() throws Exception {
+    void deleteAllCartItems_WithRoleUser_ShouldReturnCartDto() throws Exception {
         mockMvc.perform(delete(PATH + "/all"))
                 .andExpect(status().isNoContent());
     }
 
     @Test
-    void getShouldFailWith401() throws Exception {
+    void get_Unauthenticated_ShouldFailWith401() throws Exception {
         mockMvc.perform(get(PATH))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void addProductShouldFailWith401() throws Exception {
+    void addCartItem_Unauthenticated_ShouldFailWith401() throws Exception {
         mockMvc.perform(post(PATH_WITH_ID, 1)
                         .param("quantity", "1"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void deleteProductShouldFailWith401() throws Exception {
+    void deleteCartItem_Unauthenticated_ShouldFailWith401() throws Exception {
         mockMvc.perform(delete(PATH_WITH_ID, 1)
                         .param("quantity", "1"))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    void deleteAllProductsShouldFailWith401() throws Exception {
+    void deleteAllCartItems_Unauthenticated_FailWith401() throws Exception {
         mockMvc.perform(delete(PATH + "/all"))
                 .andDo(print())
                 .andExpect(status().isUnauthorized());

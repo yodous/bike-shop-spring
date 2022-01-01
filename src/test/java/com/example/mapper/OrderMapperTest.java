@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class OrderMapperTest {
     @Autowired
-    private OrderMapper orderMapper;
+    private OrderMapperImpl orderMapper;
 
     private User user;
     private OrderDetails orderDetails;

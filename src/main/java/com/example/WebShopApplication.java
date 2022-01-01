@@ -23,4 +23,7 @@ public class WebShopApplication {
         };
     }
 
+//    todo: auto delete activation_token when expired == true
+//    @EnableScheduling
+
 }

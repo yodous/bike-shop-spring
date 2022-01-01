@@ -23,6 +23,7 @@ public abstract class CartMapper {
     }
 
     @Mapping(target = "id", source = "cartItem.product.id")
+    @Mapping(target = "imgUrl", expression = "java(cartItem.getProduct().getImgUrl())")
     @Mapping(target = "name", source = "product.name")
     @Mapping(target = "price", source = "product.price")
     @Mapping(target = "totalPrice", expression = "java(calculateTotalPrice(cartItem))")

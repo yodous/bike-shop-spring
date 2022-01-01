@@ -4,14 +4,14 @@ import com.example.dto.OrderDetailsRepresentation;
 import com.example.dto.OrderRequest;
 import com.example.service.OrderService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Slf4j
+@Secured("ROLE_USER")
 @RestController
 @RequestMapping("/api/orders")
 @RequiredArgsConstructor
@@ -24,21 +24,10 @@ public class OrderController {
         return ResponseEntity.ok(orderService.getAll());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<OrderDetailsRepresentation> getDetailsById(@PathVariable int id) {
-        throw new RuntimeException("not implemented yet");
-    }
-
     @PostMapping
     public ResponseEntity<String> orderSelectedFromCart(@RequestBody OrderRequest request)  {
         orderService.orderCartItems(request);
         return new ResponseEntity<>(ORDER_PLACED_MESSAGE, HttpStatus.CREATED);
     }
 
-    @PostMapping("/cart/all")
-    public ResponseEntity<String> orderAllItemsFromCart(@RequestBody String paymentType) {
-        System.out.println("Payment type: " + paymentType);
-        orderService.orderCart(paymentType);
-        return new ResponseEntity<>(ORDER_PLACED_MESSAGE, HttpStatus.CREATED);
-    }
 }

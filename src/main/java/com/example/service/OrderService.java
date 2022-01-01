@@ -9,8 +9,6 @@ import java.util.List;
 public interface OrderService {
     void orderProduct(OrderItemRequest orderItemRequest);
 
-    void orderCart(String paymentType);
-
     void orderCartItems(OrderRequest request);
 
     List<OrderDetailsRepresentation> getAll();

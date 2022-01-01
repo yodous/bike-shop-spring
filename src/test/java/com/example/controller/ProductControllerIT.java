@@ -13,7 +13,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.Instant;
-import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyInt;
@@ -56,28 +55,8 @@ class ProductControllerIT {
                 .andExpect(jsonPath("$[1].name").value("product name 1"));
     }
 
-    @Test
-    void getByName_thenReturnListOf2DTOsWithStatusIsOk() throws Exception {
-        given(productService.getByNamePaginated("keyboard", 0, 2)).willReturn(mockedData());
-        mockMvc.perform(get(PRODUCT_PATH + "/by-name?name=keyboard&page=0&size=2"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$[0].name").value("product name 0"))
-                .andExpect(jsonPath("$[1].name").value("product name 1"));
-
-    }
-
     private List<ProductView> mockedData() {
         return List.of(productView, productView1);
-    }
-
-    @Test
-    void getByName_thenReturnEmptyListWithStatusIsOk() throws Exception {
-        given(productService.getByNamePaginated("keyboard", 0, 2)).willReturn(Collections.emptyList());
-
-        mockMvc.perform(get(PRODUCT_PATH + "/by-name?name=giraffe&page=0&size=1"))
-                .andExpect(content().string("[]"))
-                .andExpect(status().isOk());
     }
 
     @Test

@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.security.Key;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -64,6 +65,7 @@ public class JwtTokenService {
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
+    @Transactional
     public void enableUser(String token) {
         AccountActivationToken authToken = authTokenRepository.findAll().stream()
                 .filter(t -> t.getToken().equals(token)).findAny()
@@ -76,7 +78,8 @@ public class JwtTokenService {
 
         user.setEnabled(true);
         userRepository.save(user);
-        authToken.setModifiedAt(Instant.now());
+
+        authTokenRepository.delete(authToken);
 
         log.info("user has been enabled");
     }

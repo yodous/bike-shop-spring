@@ -18,8 +18,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 class ProductMgmtControllerIT {
-    private static final String PATH = "/api/products";
-    private static final String PATH_WITH_ID = "/api/products/{id}";
+    private static final String PATH = "/api/mgmt/products";
+    private static final String PATH_WITH_ID = PATH + "/{id}";
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -63,7 +63,7 @@ class ProductMgmtControllerIT {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = "USER")
     void unauthorizedPostRequest_RoleUSER__thenStatus403() throws Exception {
         ProductRequest productRequest = new ProductRequest();
 

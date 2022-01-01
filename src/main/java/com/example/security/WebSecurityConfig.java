@@ -2,7 +2,6 @@ package com.example.security;
 
 import com.example.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -26,7 +25,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import static java.util.Collections.singletonList;
 
-@Slf4j
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
@@ -49,6 +47,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement(s -> s
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeRequests(r -> r
+                        .antMatchers("/api/mgmt/**").hasRole("ADMIN")
                         .antMatchers("/api/**").authenticated()
                         .anyRequest().permitAll())
                 .addFilterAfter(
@@ -57,10 +56,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .authenticationEntryPoint((request, response, ex) -> {
                             String authHeader = request.getHeader("Authorization");
 
-                            if (authHeader == null || authHeader.isEmpty()) {
-                                log.error("Unauthenticated request");
+                            if (authHeader == null || authHeader.isEmpty())
                                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, ex.getMessage());
-                            }
                         }))
                 .formLogin(l -> l
                         .defaultSuccessUrl("/")

@@ -14,7 +14,6 @@ public interface ProductViewMapper {
     @Mapping(target = "lastModified", expression = "java(String.valueOf(product.getModifiedAt()))")
     ProductView mapSourceToView(Product product);
 
-
     @Mapping(target = "category", expression = "java(getProductCategory(request.getCategory()))")
     @Mapping(target = "createdAt", expression = "java(java.time.Instant.now())")
     @Mapping(target = "modifiedAt", expression = "java(java.time.Instant.now())")

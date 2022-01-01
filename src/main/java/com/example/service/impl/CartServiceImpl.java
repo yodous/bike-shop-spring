@@ -4,24 +4,22 @@ import com.example.dto.CartItemRepresentation;
 import com.example.dto.CartRepresentation;
 import com.example.exception.ProductNotFoundException;
 import com.example.mapper.CartMapper;
-import com.example.model.CartItem;
 import com.example.model.Cart;
+import com.example.model.CartItem;
 import com.example.model.Product;
 import com.example.model.User;
 import com.example.repository.CartItemRepository;
-import com.example.repository.ProductRepository;
 import com.example.repository.CartRepository;
+import com.example.repository.ProductRepository;
 import com.example.service.AuthService;
 import com.example.service.CartService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Optional;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CartServiceImpl implements CartService {
@@ -34,7 +32,6 @@ public class CartServiceImpl implements CartService {
     @Override
     public CartRepresentation get() {
         Cart cart = findCartByCurrentUser();
-        log.info("items count : " + cart.getItems().size());
         return cartMapper.mapCartToRepresentation(cart);
     }
 
@@ -75,20 +72,18 @@ public class CartServiceImpl implements CartService {
     public void deleteCartItem(int productId, int quantity) {
         CartItem cartItem = cartItemRepository.findByProductId(productId).orElseThrow(
                 () -> new RuntimeException("No cart item with id=" + productId));
-        log.info("cart item: " + cartItem.getProduct().getName());
 
         Cart cart = findCartByCurrentUser();
         cart.setTotalPrice(cart.getTotalPrice() - cartItem.getProduct().getPrice() * quantity);
 
+        if (cartItem.getQuantity() < quantity)
+            throw new IllegalArgumentException("Cart item quantity lower then quantity to delete");
         if (cartItem.getQuantity() == 1)
             cartItemRepository.delete(cartItem);
         else
-            cartItem.setQuantity(cartItem.getQuantity() - 1);
+            cartItem.setQuantity(cartItem.getQuantity() - quantity);
 
         cartRepository.save(cart);
-
-
-        log.info("cart price: " + cart.getTotalPrice());
     }
 
 

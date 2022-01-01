@@ -65,16 +65,6 @@ class AuthControllerTest {
                 .andExpect(status().isOk());
     }
 
-//    @Test //todo: write test for invalid credentials login
-//    void login_WithInvalidCredentials_ShouldFail() throws Exception {
-//        given(authService.login(any())).willReturn(null);
-//
-//        mockMvc.perform(post(LOGIN_PATH)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(objectMapper.writeValueAsString(request)))
-//                .andExpect(status().isForbidden());
-//    }
-
     @Test
     void register_ShouldSucceedWith201() throws Exception {
         mockMvc.perform(post(REGISTER_PATH)

@@ -80,8 +80,8 @@ public class OrderServiceImpl implements OrderService {
             throw new RuntimeException("Payment Type not selected");
 
         OrderDetails orderDetails = new OrderDetails(currentUser);
-        PaymentDetails paymentDetails = new PaymentDetails
-                (PaymentType.valueOf(request.getPaymentType()), PaymentStatus.PENDING);
+        PaymentDetails paymentDetails = new PaymentDetails(
+                PaymentType.valueOf(request.getPaymentType()), PaymentStatus.PENDING);
 
         List<OrderItem> orderItems = new ArrayList<>();
 
@@ -103,22 +103,6 @@ public class OrderServiceImpl implements OrderService {
         paymentDetailsRepository.save(paymentDetails);
 
         orderItemRepository.saveAll(orderItems);
-    }
-
-    @Override
-    @Transactional
-    public void orderCart(String paymentType) {
-//        User currentUser = authService.getCurrentUser();
-//        Cart cart = cartRepository.findByUser(currentUser).orElseThrow(
-//                () -> new RuntimeException("Could not find cart with userId=" + currentUser.getId()));
-//        List<CartItem> cartItems = cartItemRepository.findAllByCart(cart);
-//
-//        HashMap<Integer, Integer> idsWithQuantity = new HashMap<>();
-//        for (CartItem item : cartItems) {
-//            idsWithQuantity.put(item.getProduct().getId(), item.getQuantity());
-//        }
-//
-//        orderCartItems(new OrderRequest(idsWithQuantity, paymentType));
     }
 
 }

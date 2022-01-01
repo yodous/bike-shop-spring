@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Secured("ROLE_ADMIN")
 @RestController
-@RequestMapping("/api/products")
+@RequestMapping("/api/mgmt/products")
 @RequiredArgsConstructor
 public class ProductMgmtController {
     private final ProductService productService;

@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class UserViewMapperTest {
 
     @Autowired
-    private UserViewMapper mapper;
+    private UserViewMapperImpl mapper;
 
     @Test
     void testMapRegisterRequestToUser() {
@@ -23,8 +23,8 @@ class UserViewMapperTest {
 
         User actual = mapper.mapRegisterRequestToUser(registerRequest);
 
-        String hashedPassword = actual.getPassword();
-        assertThat(hashedPassword).isNotEqualTo(rawPassword);
+        String encodedPassword = actual.getPassword();
+        assertThat(encodedPassword).isNotEqualTo(rawPassword);
     }
 
     @Test

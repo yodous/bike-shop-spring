@@ -15,8 +15,6 @@ import org.springframework.stereotype.Service;
 public class EmailSender implements MessageSender {
     private final JavaMailSender mailSender;
 
-//    @Value("${server.port}")
-//    private int port;
     @Value("${email.sender}")
     private String from;
     @Value("${email.subject}")
@@ -42,9 +40,6 @@ public class EmailSender implements MessageSender {
     }
 
     static class ActivationEmail extends Message {
-        private String recipientAddressEmail;
-        private String activationToken;
-
         public ActivationEmail(String recipientAddressEmail, String activationToken) {
             super(recipientAddressEmail, activationToken);
         }
