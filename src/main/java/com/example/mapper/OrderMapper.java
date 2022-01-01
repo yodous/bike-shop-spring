@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring")
 public abstract class OrderMapper {
 
+    @Mapping(target = "productId", expression = "java(orderItem.getProduct().getId())")
     @Mapping(target = "productName", expression = "java(orderItem.getProduct().getName())")
     @Mapping(target = "quantity", expression = "java(orderItem.getQuantity())")
     @Mapping(target = "productPrice", expression = "java(orderItem.getProduct().getPrice())")
@@ -23,6 +24,7 @@ public abstract class OrderMapper {
 
     public OrderDetailsRepresentation mapDetailsToRepresentation(OrderDetails orderDetails) {
         return new OrderDetailsRepresentation(
+                orderDetails.getPaymentDetails().getId(),
                 orderDetails.getOrderItems().stream()
                         .map(this::mapOrderItemToRepresentation).collect(Collectors.toList()),
                 LocalDate.ofInstant(orderDetails.getCreatedAt(), ZoneId.systemDefault()),

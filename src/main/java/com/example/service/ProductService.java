@@ -22,6 +22,6 @@ public interface ProductService {
 
     int refreshDate(int id);
 
-    int count();
+    int countCategoryProducts(String category);
 
 }

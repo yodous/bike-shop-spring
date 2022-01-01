@@ -3,34 +3,26 @@ package com.example.controller;
 import com.example.dto.ProductRequest;
 import com.example.service.ProductService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
-@Slf4j
 @Secured("ROLE_ADMIN")
 @RestController
 @RequestMapping("/api/products")
 @RequiredArgsConstructor
 public class ProductMgmtController {
     private final ProductService productService;
-    @Value("${server.port}")
-    private int serverPort;
 
     @PostMapping
     public ResponseEntity<String> create(@RequestBody ProductRequest productRequest) {
-        int productId = productService.save(productRequest);
-        String url = "localhost:" + serverPort + "/products/" + productId;
-
+        productService.save(productRequest);
         return new ResponseEntity<>("Product has been saved.", HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<String> update(@PathVariable int id, @RequestBody ProductRequest product) {
-        log.info("request: name: " + product.getName() + ", desc: " + product.getDescription().substring(0, 50));
         productService.update(id, product);
         return new ResponseEntity<>("Product has been updated", HttpStatus.NO_CONTENT);
     }

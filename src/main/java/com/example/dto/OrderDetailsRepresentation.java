@@ -11,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderDetailsRepresentation {
+    private int paymentId;
     private List<OrderItemRepresentation> items;
     private LocalDate date;
     private double totalPrice;

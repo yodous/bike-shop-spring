@@ -100,7 +100,8 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public int count() {
-        return productRepository.findAll().size();
+    public int countCategoryProducts(String category) {
+        return productRepository.countByCategory(
+                productViewMapper.getProductCategory(category));
     }
 }

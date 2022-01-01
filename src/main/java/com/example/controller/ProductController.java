@@ -20,8 +20,9 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<List<ProductView>> getAll(@RequestParam int page,
                                                     @RequestParam int size) {
+//        List<ProductView> products = productService.getAll(Integer.parseInt(page), Integer.parseInt(size));
         List<ProductView> products = productService.getAll(page, size);
-        log.info("size=" + products.size() + "page=" + page + ", size=" + size);
+        log.info("page=" + page + ", size=" + size);
         return ResponseEntity.ok(products);
     }
 
@@ -45,14 +46,16 @@ public class ProductController {
                                                            @RequestParam int page,
                                                            @RequestParam int size) {
         List<ProductView> products = productService.getByCategoryPaginated(category, page, size);
-        log.info("size: " + products.size());
+        log.info("items count: " + products.size() + " => page=" + page + ", size=" + size);
 
         return ResponseEntity.ok(products);
     }
 
     //todo: refactor products component to not need this method
-    @GetMapping("/count")
-    public int countProducts() {
-        return productService.count();
+    @GetMapping("/count/{categoryName}")
+    public int countProducts(@PathVariable String categoryName) {
+        int productsNumber = productService.countCategoryProducts(categoryName);
+        log.info("count : " + productsNumber);
+        return productsNumber;
     }
 }
