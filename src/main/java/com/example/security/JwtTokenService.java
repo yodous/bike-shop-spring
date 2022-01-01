@@ -3,6 +3,7 @@ package com.example.security;
 import com.example.exception.InvalidTokenException;
 import com.example.model.AccountActivationToken;
 import com.example.model.User;
+import com.example.model.enums.Role;
 import com.example.repository.AccountActivationTokenRepository;
 import com.example.repository.UserRepository;
 import io.jsonwebtoken.*;
@@ -18,6 +19,7 @@ import java.security.Key;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.Map;
 import java.util.UUID;
 
 @Slf4j
@@ -48,6 +50,7 @@ public class JwtTokenService {
     public String generateAccessToken(User user) {
         return Jwts.builder()
                 .setSubject(user.getUsername())
+                .addClaims(Map.of("admin", user.getRole() == Role.ADMIN))
                 .setIssuer(jwtIssuer)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(Instant.now()

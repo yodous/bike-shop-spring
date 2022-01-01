@@ -3,12 +3,12 @@ package com.example.controller;
 import com.example.dto.AuthenticationResponse;
 import com.example.dto.LoginRequest;
 import com.example.dto.RegisterRequest;
-import com.example.model.enums.Role;
 import com.example.security.JwtTokenService;
 import com.example.service.AuthService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
+@Slf4j
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -28,6 +29,7 @@ public class AuthController {
     @PostMapping("/perform_login")
     public ResponseEntity<String> login(@RequestBody @Valid LoginRequest request) throws JsonProcessingException {
         AuthenticationResponse response = authService.login(request);
+        log.info("token: " +response.getToken());
         return ResponseEntity.ok()
                 .header(HttpHeaders.AUTHORIZATION, response.getToken())
                 .body(objectMapper.writeValueAsString(response));
@@ -46,9 +48,4 @@ public class AuthController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping("/user/role")
-    public ResponseEntity<Boolean> getUsersRole() {
-        return ResponseEntity.ok(
-                this.authService.getCurrentUser().getRole() == Role.ADMIN);
-    }
 }
