@@ -25,7 +25,7 @@ public class Address {
 
     @NotEmpty(message = "Zip code must not be empty")
     @Pattern(regexp = "d{2}-d{3}",
-            message = "Postal code must be in format xx-xxx where x is any digit")
+            message = "Postal code must be in format xx-xxx")
     @Column(name = "postal_code")
     private String postalCode;
 }

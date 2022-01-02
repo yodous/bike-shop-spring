@@ -29,6 +29,11 @@ public abstract class OrderMapper {
                         .map(this::mapOrderItemToRepresentation).collect(Collectors.toList()),
                 LocalDate.ofInstant(orderDetails.getCreatedAt(), ZoneId.systemDefault()),
                 orderDetails.getTotalPrice(),
+                orderDetails.getBillingAddress().getFullName(),
+                orderDetails.getBillingAddress().getEmail(),
+                orderDetails.getBillingAddress().getAddress().getCity(),
+                orderDetails.getBillingAddress().getAddress().getStreet(),
+                orderDetails.getBillingAddress().getAddress().getPostalCode(),
                 orderDetails.getPaymentDetails().getType().getValue(),
                 orderDetails.getPaymentDetails().getStatus().getValue()
         );

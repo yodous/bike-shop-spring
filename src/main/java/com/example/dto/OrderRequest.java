@@ -11,5 +11,10 @@ import java.util.List;
 @AllArgsConstructor
 public class OrderRequest {
     private List<OrderItemRequest> items;
+    private String fullName;
+    private String email;
+    private String city;
+    private String street;
+    private String postalCode;
     private String paymentType;
 }

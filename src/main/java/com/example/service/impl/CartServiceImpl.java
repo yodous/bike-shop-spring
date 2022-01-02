@@ -37,7 +37,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartItemRepresentation getItemByProductId(int productId) {
-        return this.cartItemRepository.findByProductId(productId)
+        return this.cartItemRepository.findByCartAndProductId(findCartByCurrentUser(), productId)
                 .map(cartMapper::mapItemSourceToRepresentation)
                 .orElseThrow(() -> new ProductNotFoundException(productId));
     }

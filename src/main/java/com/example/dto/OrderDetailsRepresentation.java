@@ -15,6 +15,11 @@ public class OrderDetailsRepresentation {
     private List<OrderItemRepresentation> items;
     private LocalDate date;
     private double totalPrice;
+    private String fullName;
+    private String email;
+    private String city;
+    private String street;
+    private String postalCode;
     private String paymentType;
     private String paymentStatus;
 }

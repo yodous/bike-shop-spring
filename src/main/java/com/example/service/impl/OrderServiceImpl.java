@@ -5,6 +5,8 @@ import com.example.dto.OrderItemRequest;
 import com.example.dto.OrderRequest;
 import com.example.mapper.OrderMapper;
 import com.example.model.*;
+import com.example.model.embeddable.Address;
+import com.example.model.embeddable.BillingAddress;
 import com.example.model.enums.PaymentStatus;
 import com.example.model.enums.PaymentType;
 import com.example.repository.*;
@@ -80,6 +82,10 @@ public class OrderServiceImpl implements OrderService {
             throw new RuntimeException("Payment Type not selected");
 
         OrderDetails orderDetails = new OrderDetails(currentUser);
+
+        Address address = new Address(request.getCity(), request.getStreet(), request.getPostalCode());
+        orderDetails.setBillingAddress(new BillingAddress(request.getFullName(), request.getEmail(), address));
+
         PaymentDetails paymentDetails = new PaymentDetails(
                 PaymentType.valueOf(request.getPaymentType()), PaymentStatus.PENDING);
 

@@ -1,6 +1,7 @@
 package com.example.model;
 
 import com.example.model.abstracts.BaseEntity;
+import com.example.model.embeddable.BillingAddress;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -31,6 +32,9 @@ public class OrderDetails extends BaseEntity {
             cascade = CascadeType.ALL,
             mappedBy = "orderDetails")
     private PaymentDetails paymentDetails;
+
+    @Embedded
+    private BillingAddress billingAddress;
 
     public OrderDetails(User user) {
         this.user = user;

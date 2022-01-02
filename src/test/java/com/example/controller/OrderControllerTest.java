@@ -60,9 +60,14 @@ class OrderControllerTest {
     @Test
     @WithMockUser
     void orderSelectedFromCartShouldSucceedWith201() throws Exception {
-        OrderRequest request=  new OrderRequest(List.of(
-                        new OrderItemRequest(1, 1),
-                        new OrderItemRequest(2, 3)),
+        OrderRequest request = new OrderRequest(List.of(
+                new OrderItemRequest(1, 1),
+                new OrderItemRequest(2, 3)),
+                "fullname",
+                "email",
+                "city",
+                "street",
+                "postalCode",
                 "TRANSFER");
 
         mockMvc.perform(post(PATH)
