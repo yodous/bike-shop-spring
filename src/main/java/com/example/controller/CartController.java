@@ -18,8 +18,7 @@ public class CartController {
 
     @GetMapping
     public ResponseEntity<CartRepresentation> get() {
-        CartRepresentation cart = cartService.get();
-        return ResponseEntity.ok(cart);
+        return ResponseEntity.ok(cartService.get());
     }
 
     @GetMapping("/{id}")

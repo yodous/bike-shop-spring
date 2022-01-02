@@ -104,4 +104,10 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.countByCategory(
                 productViewMapper.getProductCategory(category));
     }
+
+    @Override
+    public long count() {
+        return productRepository.count();
+    }
+
 }

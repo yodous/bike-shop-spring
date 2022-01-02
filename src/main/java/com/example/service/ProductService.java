@@ -24,4 +24,5 @@ public interface ProductService {
 
     int countCategoryProducts(String category);
 
+    long count();
 }

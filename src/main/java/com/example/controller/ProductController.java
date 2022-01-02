@@ -32,8 +32,13 @@ public class ProductController {
         return ResponseEntity.ok(productService.getByCategoryPaginated(category, page, size));
     }
 
+    @GetMapping("/count")
+    public ResponseEntity<Long> countAll() {
+        return ResponseEntity.ok(productService.count());
+    }
+
     @GetMapping("/count/{categoryName}")
-    public int countProducts(@PathVariable String categoryName) {
-        return productService.countCategoryProducts(categoryName);
+    public ResponseEntity<Integer> countProducts(@PathVariable String categoryName) {
+        return ResponseEntity.ok(productService.countCategoryProducts(categoryName));
     }
 }
