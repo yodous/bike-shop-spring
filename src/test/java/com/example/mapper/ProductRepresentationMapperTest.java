@@ -1,7 +1,7 @@
 package com.example.mapper;
 
+import com.example.dto.ProductRepresentation;
 import com.example.dto.ProductRequest;
-import com.example.dto.ProductView;
 import com.example.exception.IllegalProductCategoryNameException;
 import com.example.model.Product;
 import com.example.model.User;
@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @SpringBootTest
-class ProductViewMapperTest {
+class ProductRepresentationMapperTest {
     @Autowired
     private ProductViewMapperImpl mapper;
 
@@ -22,10 +22,10 @@ class ProductViewMapperTest {
     void mapSourceToView() {
         Product product = new Product("test product", "description",
                 ProductCategory.E_BIKE, 1.23);
-        ProductView productView = mapper.mapSourceToView(product);
+        ProductRepresentation productRepresentation = mapper.mapSourceToView(product);
 
-        assertThat(productView.getName()).isEqualTo(product.getName());
-        assertThat(productView.getCategory()).isEqualToIgnoringCase(product.getCategory().getValue());
+        assertThat(productRepresentation.getName()).isEqualTo(product.getName());
+        assertThat(productRepresentation.getCategory()).isEqualToIgnoringCase(product.getCategory().getValue());
     }
 
     @Test

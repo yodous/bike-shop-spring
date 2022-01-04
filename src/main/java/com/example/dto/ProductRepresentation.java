@@ -7,7 +7,7 @@ import lombok.*;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductView {
+public class ProductRepresentation {
     private int id;
     private String name;
     private String category;

@@ -7,7 +7,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class UserView {
+public class UserRepresentation {
     private String username;
     private String fullName;
 }

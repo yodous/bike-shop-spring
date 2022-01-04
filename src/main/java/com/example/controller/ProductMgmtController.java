@@ -1,6 +1,7 @@
 package com.example.controller;
 
 import com.example.dto.ProductRequest;
+import com.example.service.ProductMgmtService;
 import com.example.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/mgmt/products")
 @RequiredArgsConstructor
 public class ProductMgmtController {
-    private final ProductService productService;
+    private final ProductMgmtService productService;
 
     @PostMapping
     public ResponseEntity<String> create(@RequestBody ProductRequest productRequest) {

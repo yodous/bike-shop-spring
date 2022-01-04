@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryView {
+public class CategoryRepresentation {
     private String name;
     private String imgUrl;
 }

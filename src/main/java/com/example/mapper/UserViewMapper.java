@@ -1,7 +1,7 @@
 package com.example.mapper;
 
 import com.example.dto.RegisterRequest;
-import com.example.dto.UserView;
+import com.example.dto.UserRepresentation;
 import com.example.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -22,7 +22,7 @@ public abstract class UserViewMapper {
     public abstract User mapRegisterRequestToUser(RegisterRequest registerRequest);
 
     @Mapping(target = "fullName", expression = "java(user.getFirstName() + \" \" + user.getLastName())")
-    public abstract UserView mapToView(User user);
+    public abstract UserRepresentation mapToView(User user);
 
     public String fromCharArray(char[] password) {
         return String.valueOf(password);

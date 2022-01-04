@@ -1,7 +1,7 @@
 package com.example.mapper;
 
 import com.example.dto.RegisterRequest;
-import com.example.dto.UserView;
+import com.example.dto.UserRepresentation;
 import com.example.model.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-class UserViewMapperTest {
+class UserRepresentationMapperTest {
 
     @Autowired
     private UserViewMapperImpl mapper;
@@ -34,7 +34,7 @@ class UserViewMapperTest {
         user.setFirstName("Bob");
         user.setLastName("Ross");
 
-        UserView actual = mapper.mapToView(user);
+        UserRepresentation actual = mapper.mapToView(user);
 
         assertThat(actual.getUsername()).isEqualTo("bob_ross");
         assertThat(actual.getFullName()).isEqualTo("Bob Ross");
