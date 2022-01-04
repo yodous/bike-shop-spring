@@ -7,8 +7,6 @@ import com.example.dto.OrderItemRequest;
 import java.util.List;
 
 public interface OrderService {
-    void orderProduct(OrderItemRequest orderItemRequest);
-
     void orderCartItems(OrderRequest request);
 
     List<OrderDetailsRepresentation> getAll();

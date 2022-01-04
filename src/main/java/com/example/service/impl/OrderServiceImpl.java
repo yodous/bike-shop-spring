@@ -54,24 +54,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void orderProduct(OrderItemRequest request) {
-        throw new RuntimeException("not implemented");
-//        User currentUser = authService.getCurrentUser();
-//        Product product = productRepository.findById(request.getProductId())
-//                .orElseThrow(() -> new ProductNotFoundException(request.getProductId()));
-//
-//
-//        OrderDetails orderDetails = orderDetailsRepository.save(new OrderDetails(
-//                currentUser, product.getPrice() * request.getQuantity()));
-//
-//        PaymentDetails paymentDetails = new PaymentDetails(orderDetails, PaymentType.valueOf(request.getPaymentType()), PaymentStatus.PENDING);
-//        paymentDetailsRepository.save(paymentDetails);
-//
-//        orderItemRepository.save(new OrderItem(orderDetails, product, request.getQuantity()));
-    }
-
-    @Override
-    @Transactional
     public void orderCartItems(OrderRequest request) {
         User currentUser = authService.getCurrentUser();
         Cart cart = currentUser.getCart();

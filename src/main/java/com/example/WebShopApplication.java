@@ -13,17 +13,4 @@ public class WebShopApplication {
         SpringApplication.run(WebShopApplication.class, args);
     }
 
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").allowedOrigins("http://localhost:4200");
-            }
-        };
-    }
-
-//    todo: auto delete activation_token when expired == true
-//    @EnableScheduling
-
 }
