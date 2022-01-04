@@ -52,8 +52,7 @@ class CartServiceImplTest {
         given(sessionRepository.findByUser(any())).willReturn(Optional.of(cart));
         given(productRepository.findById(1)).willReturn(Optional.of(product));
         given(cartItemRepository.save(any())).willReturn(cartItem);
-        given(cartItemRepository.findByProductId(1)).willReturn(Optional.of(cartItem));
-
+        given(cartItemRepository.findByCartAndProductId(cart,1)).willReturn(Optional.of(cartItem));
     }
 
     @Test
