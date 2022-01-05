@@ -1,7 +1,7 @@
 package com.example.controller;
 
 import com.example.dto.ProductRequest;
-import com.example.service.ProductService;
+import com.example.service.ProductMgmtService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ class ProductMgmtControllerIT {
     private MockMvc mockMvc;
 
     @MockBean
-    private ProductService productService;
+    private ProductMgmtService productService;
 
     @Test
     void unauthenticatedPostRequest_thenStatus401() throws Exception {
@@ -108,7 +108,7 @@ class ProductMgmtControllerIT {
     }
 
     @Test
-    @WithMockUser(username="admin", roles = {"ADMIN"})    
+    @WithMockUser(username="admin", roles = {"ADMIN"})
     void authorizedPostRequest_RoleADMIN_thenStatus201() throws Exception {
         ProductRequest productRequest = new ProductRequest();
 
@@ -142,14 +142,14 @@ class ProductMgmtControllerIT {
                 .andExpect(status().isNoContent());
     }
 
+
     @Test
     @WithMockUser(username="admin", roles = {"ADMIN"})
     void authorizedDeleteRequest_RoleADMIN_thenStatus204() throws Exception {
         int productId = 1;
 
         mockMvc.perform(delete(PATH_WITH_ID, productId)
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
     }
-
 }
