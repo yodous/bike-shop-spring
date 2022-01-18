@@ -2,7 +2,7 @@ version: '3.1'
 
 services:
   app:
-    container_name: eshop-springboot
+    container_name: bike-shop-springboot
     image: eshop-springboot
     build: ./
     ports:
