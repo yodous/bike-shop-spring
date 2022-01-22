@@ -13,7 +13,6 @@ import com.example.repository.*;
 import com.example.service.AuthService;
 import com.example.service.OrderService;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -21,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
@@ -54,14 +52,12 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public void orderCartItems(OrderRequest request) {
+    public void orderCartItems(OrderRequest request) { //todo: test and refactor
+        validatePaymentType(request);
+        List<OrderItemRequest> items = request.getItems();
+        validateItems(items);
         User currentUser = authService.getCurrentUser();
         Cart cart = currentUser.getCart();
-        List<OrderItemRequest> items = request.getItems();
-        if (items == null)
-            throw new RuntimeException("no product selected");
-        if (request.getPaymentType() == null)
-            throw new RuntimeException("Payment Type not selected");
 
         OrderDetails orderDetails = new OrderDetails(currentUser);
 
@@ -69,15 +65,14 @@ public class OrderServiceImpl implements OrderService {
         orderDetails.setBillingAddress(new BillingAddress(request.getFullName(), request.getEmail(), address));
 
         PaymentDetails paymentDetails = new PaymentDetails(
-                PaymentType.valueOf(request.getPaymentType()), PaymentStatus.PENDING);
+                PaymentType.valueOf(request.getPaymentType().toUpperCase()), PaymentStatus.PENDING);
 
         List<OrderItem> orderItems = new ArrayList<>();
 
         for (OrderItemRequest item : items) {
-            Product product = productRepository
-                    .findById(item.getProductId()).orElseThrow(
-                            () -> new RuntimeException("Could not find product with id = " + item.getProductId())
-                    );
+            Product product = productRepository.findById(item.getProductId())
+                    .orElseThrow(() -> new RuntimeException(
+                            "Could not find product with id = " + item.getProductId()));
             cartItemRepository.deleteByCartIdAndProductId(cart.getId(), product.getId());
             int quantity = item.getQuantity();
             orderItems.add(new OrderItem(orderDetails, product, quantity));
@@ -91,6 +86,21 @@ public class OrderServiceImpl implements OrderService {
         paymentDetailsRepository.save(paymentDetails);
 
         orderItemRepository.saveAll(orderItems);
+    }
+
+    private void validatePaymentType(OrderRequest request) {
+        if (request.getPaymentType() == null)
+            throw new IllegalArgumentException("Payment type must not be null");
+        try {
+            PaymentType.valueOf(request.getPaymentType().toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Invalid payment type");
+        }
+    }
+
+    private void validateItems(List<OrderItemRequest> items) {
+        if (items == null || items.size() == 0)
+            throw new IllegalArgumentException("Products not selected");
     }
 
 }
