@@ -9,14 +9,11 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
-import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface CartItemRepository extends JpaRepository<CartItem, Integer> {
     Optional<CartItem> findByCartAndProductId(Cart cart, int productId);
-
-    Optional<CartItem> findByProductId(int productId);
 
     void deleteAllByCart(Cart cart);
 

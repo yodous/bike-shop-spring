@@ -25,20 +25,20 @@ public class ProductMgmtServiceImpl implements ProductMgmtService {
     private final AuthService authService;
 
     @Override
-    public int save(ProductRequest productRequest) {
+    public int save(ProductRequest productSave) {
         Product product = productViewMapper.mapProductDtoToSource(
-                productRequest, authService.getCurrentUser());
+                productSave, authService.getCurrentUser());
         return productRepository.save(product).getId();
     }
 
     @Override
-    public int update(int id, ProductRequest request) {
+    public int update(int id, ProductRequest productUpdate) {
         Product product = productRepository.findById(id)
                 .orElseThrow(ProductNotFoundException::new);
-        product.setName(request.getName());
-        product.setDescription(request.getDescription());
-        product.setCategory(productViewMapper.getProductCategory(request.getCategory()));
-        product.setPrice(request.getPrice());
+        product.setName(productUpdate.getName());
+        product.setDescription(productUpdate.getDescription());
+        product.setCategory(productViewMapper.getProductCategory(productUpdate.getCategory()));
+        product.setPrice(productUpdate.getPrice());
 
         return productRepository.save(product).getId();
     }

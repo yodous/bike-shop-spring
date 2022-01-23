@@ -17,7 +17,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class OrderController {
     private final OrderService orderService;
-    private static final String ORDER_PLACED_MESSAGE = "Your order is pending for payment.";
 
     @GetMapping
     public ResponseEntity<List<OrderDetailsRepresentation>> getAll() {
@@ -27,7 +26,7 @@ public class OrderController {
     @PostMapping
     public ResponseEntity<String> orderSelectedFromCart(@RequestBody OrderRequest request)  {
         orderService.orderCartItems(request);
-        return new ResponseEntity<>(ORDER_PLACED_MESSAGE, HttpStatus.CREATED);
+        return new ResponseEntity<>("Your order is pending for payment.", HttpStatus.CREATED);
     }
 
 }

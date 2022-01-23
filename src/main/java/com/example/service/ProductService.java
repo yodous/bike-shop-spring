@@ -11,9 +11,6 @@ public interface ProductService {
 
     List<ProductRepresentation> getByCategoryPaginated(String categoryName, int page, int size);
 
-    List<ProductRepresentation> getByNamePaginated(String productName, int page, int size);
-
-
     int countCategoryProducts(String category);
 
     long count();

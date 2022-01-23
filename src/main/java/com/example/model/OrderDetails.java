@@ -9,11 +9,11 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.util.List;
 
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "order_details")
-@Setter
-@Getter
-@NoArgsConstructor
 public class OrderDetails extends BaseEntity {
 
     @OneToOne(fetch = FetchType.LAZY)

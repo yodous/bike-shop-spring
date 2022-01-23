@@ -8,7 +8,6 @@ import com.example.repository.ProductRepository;
 import com.example.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -33,16 +32,6 @@ public class ProductServiceImpl implements ProductService {
     public List<ProductRepresentation> getAll(int page, int size) {
         return productRepository.findAll(PageRequest.of(page, size))
                 .stream().map(productViewMapper::mapSourceToView)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<ProductRepresentation> getByNamePaginated(String productName, int page, int size) {
-        String trimmed = productName.trim();
-
-        return productRepository.findAll(PageRequest.of(page, size))
-                .stream().filter(p -> StringUtils.containsIgnoreCase(p.getName(), trimmed))
-                .map(productViewMapper::mapSourceToView)
                 .collect(Collectors.toList());
     }
 
