@@ -91,4 +91,23 @@ class ProductControllerIT {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 
+    @Test
+    void countAll_thenStatusIsOk() throws Exception {
+        given(productService.count()).willReturn(10L);
+
+        mockMvc
+                .perform(get(PRODUCT_PATH + "/count"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("10"));
+    }
+
+    @Test
+    void countByCategory_thenStatusIsOk() throws Exception {
+        given(productService.countCategoryProducts("road")).willReturn(5);
+
+        mockMvc
+                .perform(get(PRODUCT_PATH + "/count/road"))
+                .andExpect(status().isOk())
+                .andExpect(content().string("5"));
+    }
 }

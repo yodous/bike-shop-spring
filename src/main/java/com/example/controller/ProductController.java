@@ -38,7 +38,7 @@ public class ProductController {
     }
 
     @GetMapping("/count/{categoryName}")
-    public ResponseEntity<Integer> countProducts(@PathVariable String categoryName) {
+    public ResponseEntity<Integer> countByCategory(@PathVariable String categoryName) {
         return ResponseEntity.ok(productService.countCategoryProducts(categoryName));
     }
 }
