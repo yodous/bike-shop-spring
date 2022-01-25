@@ -50,4 +50,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> handleIllegalProductCategoryNameException(IllegalProductCategoryNameException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(PaymentNotFound.class)
+    public ResponseEntity<Object> handlePaymentNotFoundException(PaymentNotFound exception) {
+        return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
+    }
 }

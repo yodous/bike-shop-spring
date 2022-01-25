@@ -58,11 +58,9 @@ class OrderServiceImplTest {
         product1 = new Product("bike1", "road bike", ProductCategory.ROAD, 1000);
         product2 = new Product("bike2", "mountain bike", ProductCategory.MOUNTAIN, 2000);
         orderDetails = new OrderDetails(user);
-//        CartItem cartItem1 = new CartItem(cart, product1, 1);
 
         given(authService.getCurrentUser()).willReturn(user);
         given(cartRepository.findByUser(user)).willReturn(Optional.of(cart));
-//        given(orderDetailsRepository.save(any())).willReturn(orderDetails);
         given(productRepository.findById(1)).willReturn(Optional.of(product1));
         given(productRepository.findById(2)).willReturn(Optional.of(product2));
     }
@@ -117,17 +115,5 @@ class OrderServiceImplTest {
         assertThat(actualMessage).containsIgnoringCase(expectedMessage);
     }
 
-    @Test
-    void orderCartItems_shouldSucceed() {
-//        OrderItemRequest orderItemRequest1 = new OrderItemRequest(1, 1);
-//        OrderItemRequest orderItemRequest2 = new OrderItemRequest(2, 2);
-//        OrderRequest orderRequest = new OrderRequest(List.of(orderItemRequest1, orderItemRequest2),
-//                "fullname","email", "city", "street",
-//                "12-345", PaymentType.TRANSFER.getValue());
-//        given(cartItemRepository.findById(anyInt())).willReturn(Optional.of(new CartItem(cart, product1, 1)));
-//        doNothing().when(cartItemRepository).deleteByCartIdAndProductId(anyInt(), anyInt());
-//
-//        assertDoesNotThrow(() -> orderService.orderCartItems(orderRequest));
-    }
 
 }

@@ -1,8 +1,9 @@
 package com.example.service.impl;
 
-import com.example.dto.OrderDetailsRepresentation;
+import com.example.dto.OrderDetailsResponse;
 import com.example.dto.OrderItemRequest;
 import com.example.dto.OrderRequest;
+import com.example.exception.ProductNotFoundException;
 import com.example.mapper.OrderMapper;
 import com.example.model.*;
 import com.example.model.embeddable.Address;
@@ -33,21 +34,12 @@ public class OrderServiceImpl implements OrderService {
     private final OrderMapper orderMapper;
 
     @Override
-    public List<OrderDetailsRepresentation> getAll() {
+    public OrderDetailsResponse getAll() {
         User currentUser = authService.getCurrentUser();
 
-        return orderDetailsRepository.findAllByUser(currentUser)
+        return new OrderDetailsResponse(orderDetailsRepository.findAllByUser(currentUser)
                 .stream().map(orderMapper::mapDetailsToRepresentation)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public OrderDetailsRepresentation getById(int id) {
-        User currentUser = authService.getCurrentUser();
-        return orderDetailsRepository.findOrderDetailsByUserAndId(currentUser, id)
-                .map(orderMapper::mapDetailsToRepresentation).orElseThrow(
-                        () -> new RuntimeException("Could not find order details with id = " + id)
-                );
+                .collect(Collectors.toList()));
     }
 
     @Override
@@ -71,8 +63,7 @@ public class OrderServiceImpl implements OrderService {
 
         for (OrderItemRequest item : items) {
             Product product = productRepository.findById(item.getProductId())
-                    .orElseThrow(() -> new RuntimeException(
-                            "Could not find product with id = " + item.getProductId()));
+                    .orElseThrow(() -> new ProductNotFoundException(item.getProductId()));
             cartItemRepository.deleteByCartIdAndProductId(cart.getId(), product.getId());
             int quantity = item.getQuantity();
             orderItems.add(new OrderItem(orderDetails, product, quantity));

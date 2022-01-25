@@ -16,7 +16,6 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -65,10 +64,13 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     private String getTokenFromRequest(HttpServletRequest request) {
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String token = "";
 
         if (header != null && header.startsWith(BEARER_HEADER))
-            return header.replace(BEARER_HEADER, "").trim();
+            token = header.replace(BEARER_HEADER, "").trim();
 
-        throw new IllegalArgumentException("Authorization header must not be null");
+        log.info("token: " + token);
+
+        return token;
     }
 }
