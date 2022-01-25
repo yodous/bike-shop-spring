@@ -11,7 +11,7 @@ public class MailConfig {
     @Bean
     public JavaMailSender mailcatcherCfg() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        mailSender.setHost("127.0.0.1");
+        mailSender.setHost("127.0.0.1"); // mailhog server for api testing purposes
         mailSender.setPort(1025);
 
         return mailSender;
