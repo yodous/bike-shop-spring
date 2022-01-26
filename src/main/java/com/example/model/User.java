@@ -47,20 +47,22 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "acc_number", unique = true)
     private String accountNumber;
 
+    @Column(name = "is_enabled")
+    private boolean enabled;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Role role;
+
+    @Embedded
+    private Address address;
 
     @OneToOne(fetch = FetchType.LAZY,
             cascade = CascadeType.ALL,
             mappedBy = "user")
     private Cart cart;
 
-    @Column(name = "is_enabled")
-    private boolean enabled;
 
-    @Embedded
-    private Address address;
 
     public User(String username, String password, String firstName, String lastName,
                 String email, String accountNumber, Role role, Address address) {
