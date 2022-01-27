@@ -1,15 +1,13 @@
 package com.example.controller;
 
-import com.example.dto.OrderDetailsRepresentation;
 import com.example.dto.OrderRequest;
+import com.example.dto.OrderViewResponse;
 import com.example.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Secured("ROLE_USER")
 @RestController
@@ -20,7 +18,7 @@ public class OrderController {
     private static final String ORDER_PLACED_MESSAGE = "Your order is pending for payment.";
 
     @GetMapping
-    public ResponseEntity<List<OrderDetailsRepresentation>> getAll() {
+    public ResponseEntity<OrderViewResponse> getAll() {
         return ResponseEntity.ok(orderService.getAll());
     }
 

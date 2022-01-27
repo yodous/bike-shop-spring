@@ -2,14 +2,12 @@ package com.example.service;
 
 import com.example.dto.OrderDetailsRepresentation;
 import com.example.dto.OrderRequest;
-import com.example.dto.OrderItemRequest;
-
-import java.util.List;
+import com.example.dto.OrderViewResponse;
 
 public interface OrderService {
     void orderCartItems(OrderRequest request);
 
-    List<OrderDetailsRepresentation> getAll();
+    OrderViewResponse getAll();
 
     OrderDetailsRepresentation getById(int id);
 }
