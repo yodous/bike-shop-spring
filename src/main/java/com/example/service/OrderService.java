@@ -1,12 +1,10 @@
 package com.example.service;
 
-import com.example.dto.OrderDetailsRepresentation;
-import com.example.dto.OrderDetailsResponse;
 import com.example.dto.OrderRequest;
+import com.example.dto.OrderViewResponse;
 
 public interface OrderService {
     void orderCartItems(OrderRequest request);
-
-    OrderDetailsResponse getAll();
+    OrderViewResponse getAll();
 
 }

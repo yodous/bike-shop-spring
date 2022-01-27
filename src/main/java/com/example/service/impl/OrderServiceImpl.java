@@ -1,8 +1,9 @@
 package com.example.service.impl;
 
-import com.example.dto.OrderDetailsResponse;
+import com.example.dto.OrderDetailsRepresentation;
 import com.example.dto.OrderItemRequest;
 import com.example.dto.OrderRequest;
+import com.example.dto.OrderViewResponse;
 import com.example.exception.ProductNotFoundException;
 import com.example.mapper.OrderMapper;
 import com.example.model.*;
@@ -34,12 +35,13 @@ public class OrderServiceImpl implements OrderService {
     private final OrderMapper orderMapper;
 
     @Override
-    public OrderDetailsResponse getAll() {
+    public OrderViewResponse getAll() {
         User currentUser = authService.getCurrentUser();
 
-        return new OrderDetailsResponse(orderDetailsRepository.findAllByUser(currentUser)
+        List<OrderDetailsRepresentation> orders = orderDetailsRepository.findAllByUser(currentUser)
                 .stream().map(orderMapper::mapDetailsToRepresentation)
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList());
+        return new OrderViewResponse(orders);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.example.controller;
 
-import com.example.dto.OrderDetailsResponse;
 import com.example.dto.OrderRequest;
+import com.example.dto.OrderViewResponse;
 import com.example.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,7 +18,7 @@ public class OrderController {
     private static final String ORDER_PLACED_MESSAGE = "Your order is pending for payment.";
 
     @GetMapping
-    public ResponseEntity<OrderDetailsResponse> getAll() {
+    public ResponseEntity<OrderViewResponse> getAll() {
         return ResponseEntity.ok(orderService.getAll());
     }
 
