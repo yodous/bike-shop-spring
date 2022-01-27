@@ -5,6 +5,7 @@ import com.example.service.MessageSender;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -15,6 +16,9 @@ import org.springframework.stereotype.Service;
 public class EmailSender implements MessageSender {
     private final JavaMailSender mailSender;
 
+//    @Value("${server.port}")
+    @LocalServerPort
+    private int serverPort;
     @Value("${email.sender}")
     private String from;
     @Value("${email.subject}")
@@ -28,15 +32,15 @@ public class EmailSender implements MessageSender {
         simpleMailMessage.setFrom(from);
         simpleMailMessage.setTo(message.getTo());
         simpleMailMessage.setSubject(subject);
-        String activationUrl = generatedActivationBaseUrl() + message.getToken();
+        String activationUrl = generatedActivationUrl(message.getToken());
         simpleMailMessage.setText(activationUrl);
 
         mailSender.send(simpleMailMessage);
         log.info("email has been sent\n" + activationUrl);
     }
 
-    private String generatedActivationBaseUrl() {
-        return String.format("localhost:%d/account-verification?token=", 4200);
+    private String generatedActivationUrl(String token) {
+        return String.format(text, serverPort, token);
     }
 
     static class ActivationEmail extends Message {

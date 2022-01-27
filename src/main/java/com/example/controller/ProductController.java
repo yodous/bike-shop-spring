@@ -1,12 +1,11 @@
 package com.example.controller;
 
 import com.example.dto.ProductRepresentation;
+import com.example.dto.ProductsResponse;
 import com.example.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/products")
@@ -15,8 +14,8 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping
-    public ResponseEntity<List<ProductRepresentation>> getAll(@RequestParam int page,
-                                                              @RequestParam int size) {
+    public ResponseEntity<ProductsResponse> getAll(@RequestParam int page,
+                                                   @RequestParam int size) {
         return ResponseEntity.ok(productService.getAll(page, size));
     }
 
@@ -26,19 +25,10 @@ public class ProductController {
     }
 
     @GetMapping("/categories/{category}")
-    public ResponseEntity<List<ProductRepresentation>> getByCategory(@PathVariable String category,
+    public ResponseEntity<ProductsResponse> getByCategory(@PathVariable String category,
                                                                      @RequestParam int page,
                                                                      @RequestParam int size) {
         return ResponseEntity.ok(productService.getByCategoryPaginated(category, page, size));
     }
 
-    @GetMapping("/count")
-    public ResponseEntity<Long> countAll() {
-        return ResponseEntity.ok(productService.count());
-    }
-
-    @GetMapping("/count/{categoryName}")
-    public ResponseEntity<Integer> countProducts(@PathVariable String categoryName) {
-        return ResponseEntity.ok(productService.countCategoryProducts(categoryName));
-    }
 }

@@ -1,18 +1,22 @@
 package com.example.controller;
 
+import com.example.dto.CartItemRepresentation;
 import com.example.dto.CartRepresentation;
 import com.example.service.CartService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -23,6 +27,8 @@ class CartControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @MockBean
     private CartService cartService;
@@ -37,8 +43,21 @@ class CartControllerTest {
 
     @Test
     @WithMockUser
-    void addCartItem_WithRoleUser_ShouldSucceedWith204() throws Exception {
-        mockMvc.perform(post(PATH + "/1"))
+    void getCartItem_shouldSucceedWith200() throws Exception {
+        CartItemRepresentation cartItemRepresentation = new CartItemRepresentation(
+                1, "imgurl", "trek madone", 5000, 3, 1500);
+        given(cartService.getItemByProductId(1)).willReturn(cartItemRepresentation);
+
+        mockMvc.perform(get(PATH_WITH_ID, 1))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().string(objectMapper.writeValueAsString(cartItemRepresentation)));
+    }
+
+    @Test
+    @WithMockUser
+    void addCartItem_withRoleUser_shouldSucceedWith204() throws Exception {
+        mockMvc.perform(post(PATH_WITH_ID , 1))
                 .andExpect(status().isAccepted());
     }
 

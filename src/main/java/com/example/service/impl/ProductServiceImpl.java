@@ -1,6 +1,7 @@
 package com.example.service.impl;
 
 import com.example.dto.ProductRepresentation;
+import com.example.dto.ProductsResponse;
 import com.example.exception.ProductNotFoundException;
 import com.example.mapper.ProductViewMapper;
 import com.example.model.enums.ProductCategory;
@@ -29,30 +30,22 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductRepresentation> getAll(int page, int size) {
-        return productRepository.findAll(PageRequest.of(page, size))
+    public ProductsResponse getAll(int page, int size) {
+        List<ProductRepresentation> products = productRepository.findAll(PageRequest.of(page, size))
                 .stream().map(productViewMapper::mapSourceToView)
                 .collect(Collectors.toList());
+        return new ProductsResponse(products, products.size());
     }
 
     @Override
-    public List<ProductRepresentation> getByCategoryPaginated(String categoryName, int page, int size) {
+    public ProductsResponse getByCategoryPaginated(String categoryName, int page, int size) {
         ProductCategory category = productViewMapper.getProductCategory(categoryName);
 
-        return productRepository.findAllByCategoryWithPagination(category, PageRequest.of(page, size))
+        List<ProductRepresentation> products =
+                productRepository.findAllByCategoryWithPagination(category, PageRequest.of(page, size))
                 .stream().map(productViewMapper::mapSourceToView)
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public int countCategoryProducts(String category) {
-        return productRepository.countByCategory(
-                productViewMapper.getProductCategory(category));
-    }
-
-    @Override
-    public long count() {
-        return productRepository.count();
+        return new ProductsResponse(products, products.size());
     }
 
 }

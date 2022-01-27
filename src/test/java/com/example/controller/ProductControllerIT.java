@@ -1,8 +1,10 @@
 package com.example.controller;
 
 import com.example.dto.ProductRepresentation;
+import com.example.dto.ProductsResponse;
 import com.example.exception.ProductNotFoundException;
 import com.example.service.ProductService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.time.Instant;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -28,6 +31,8 @@ class ProductControllerIT {
 
     @Autowired
     private MockMvc mockMvc;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @MockBean
     private ProductService productService;
@@ -45,18 +50,24 @@ class ProductControllerIT {
                 "test-img-url", 123, String.valueOf(Instant.now()));
     }
 
+    private ProductsResponse mockedData() {
+        List<ProductRepresentation> products = List.of(this.productRepresentation, productRepresentation1);
+        return new ProductsResponse(products, products.size());
+    }
+
     @Test
     void getAll_thenReturnListOfPaginatedProductViews() throws Exception {
         given(productService.getAll(0, 2)).willReturn(mockedData());
 
-        mockMvc.perform(get(PRODUCT_PATH + "?page=0&size=2"))
+        String jsonResponse = mockMvc.perform(get(PRODUCT_PATH + "?page=0&size=2"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$[1].name").value("product name 1"));
-    }
+                .andReturn().getResponse().getContentAsString();
 
-    private List<ProductRepresentation> mockedData() {
-        return List.of(productRepresentation, productRepresentation1);
+        ProductsResponse actualResponse = objectMapper.readValue(jsonResponse, ProductsResponse.class);
+
+        assertThat(actualResponse.getProducts()).hasSize(2);
+        assertThat(actualResponse.getProducts().get(0).getName()).isEqualTo(productRepresentation.getName());
     }
 
     @Test
@@ -86,9 +97,15 @@ class ProductControllerIT {
         given(productService.getByCategoryPaginated("electronics", 0, 2))
                 .willReturn(mockedData());
 
-        mockMvc.perform(get(PRODUCT_PATH + "/categories/electronics?page=0&size=1"))
+        String jsonResponse = mockMvc.perform(get(PRODUCT_PATH + "/categories/electronics?page=0&size=2"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andReturn().getResponse().getContentAsString();
+
+        ProductsResponse actualResponse = objectMapper.readValue(jsonResponse, ProductsResponse.class);
+
+        assertThat(actualResponse.getProducts()).hasSize(2);
+        assertThat(actualResponse.getProducts().get(0).getName()).isEqualTo(productRepresentation.getName());
     }
 
 }

@@ -63,16 +63,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 url -> new AntPathRequestMatcher(url).matches(request));
     }
 
-    //todo: throw exception if there is no auth header (you are creating 2 String objects unnecessary);
     private String getTokenFromRequest(HttpServletRequest request) {
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
         String token = "";
 
         if (header != null && header.startsWith(BEARER_HEADER))
             token = header.replace(BEARER_HEADER, "").trim();
-
-        log.info("token: " + token);
-
         return token;
     }
 }

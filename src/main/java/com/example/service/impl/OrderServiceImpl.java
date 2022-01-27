@@ -3,6 +3,7 @@ package com.example.service.impl;
 import com.example.dto.OrderDetailsRepresentation;
 import com.example.dto.OrderItemRequest;
 import com.example.dto.OrderRequest;
+import com.example.dto.OrderViewResponse;
 import com.example.mapper.OrderMapper;
 import com.example.model.*;
 import com.example.model.embeddable.Address;
@@ -33,12 +34,13 @@ public class OrderServiceImpl implements OrderService {
     private final OrderMapper orderMapper;
 
     @Override
-    public List<OrderDetailsRepresentation> getAll() {
+    public OrderViewResponse getAll() {
         User currentUser = authService.getCurrentUser();
 
-        return orderDetailsRepository.findAllByUser(currentUser)
+        List<OrderDetailsRepresentation> orders = orderDetailsRepository.findAllByUser(currentUser)
                 .stream().map(orderMapper::mapDetailsToRepresentation)
                 .collect(Collectors.toList());
+        return new OrderViewResponse(orders);
     }
 
     @Override

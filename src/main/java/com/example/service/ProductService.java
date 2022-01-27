@@ -1,17 +1,12 @@
 package com.example.service;
 
 import com.example.dto.ProductRepresentation;
-
-import java.util.List;
+import com.example.dto.ProductsResponse;
 
 public interface ProductService {
     ProductRepresentation get(int productId);
 
-    List<ProductRepresentation> getAll(int page, int size);
+    ProductsResponse getAll(int page, int size);
 
-    List<ProductRepresentation> getByCategoryPaginated(String categoryName, int page, int size);
-
-    int countCategoryProducts(String category);
-
-    long count();
+    ProductsResponse getByCategoryPaginated(String categoryName, int page, int size);
 }
