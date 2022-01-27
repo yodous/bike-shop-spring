@@ -65,10 +65,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     private String getTokenFromRequest(HttpServletRequest request) {
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+        String token = "";
 
         if (header != null && header.startsWith(BEARER_HEADER))
-            return header.replace(BEARER_HEADER, "").trim();
-
-        throw new IllegalArgumentException("Authorization header must not be null");
+            token = header.replace(BEARER_HEADER, "").trim();
+        return token;
     }
 }
