@@ -63,7 +63,7 @@ public class OrderServiceImplIT {
     @Test
     void getAll_shouldSucceed_status200() throws Exception {
         String responseJson = mockMvc.perform(get(PATH)
-                        .header(HttpHeaders.AUTHORIZATION, token)
+                        .header(HttpHeaders.AUTHORIZATION, token) //todo: fails because jwt has expired
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(print())
