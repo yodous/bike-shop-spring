@@ -42,10 +42,9 @@
 
 ## About The Project
 
-This is my first vaster project build from scratch by myself. Main goal of this repo was to ground my knowledge about
-Spring Boot and SQL. For now project is done with basic functionality and won't be developed up to march I guess,
-because now I'm working on my new application in which I will be building application based on microservice
-architecture. You can find ui build with AngularCli upon
+This is first vaster project build from scratch by myself. Main goal of this repo was to ground my knowledge about
+Spring Boot and SQL. For now project is done with basic functionality and won't be developed for some time.
+You can find ui built with AngularCli upon
 this <a href="https://github.com/JFrred/eshop-frontend-angular"> link </a>
 
 ### Built With
