@@ -7,6 +7,7 @@ import com.example.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+// TODO ML: Looks like a service and not validator/component
 @Component
 @RequiredArgsConstructor
 public class RegisterValidator {

@@ -54,6 +54,7 @@ public class AuthServiceImpl implements AuthService {
                 .authenticate(
                         new UsernamePasswordAuthenticationToken(
                                 loginRequest.getUsername(),
+								// TODO ML: I can produce a NPE here if I will send { "username": "" } - the object LoginRequest is marked as @Valid but is not validated
                                 CharBuffer.wrap(loginRequest.getPassword())
                         ));
 
@@ -64,6 +65,7 @@ public class AuthServiceImpl implements AuthService {
         return new AuthenticationResponse(token, username);
     }
 
+	// TODO ML: side note: this SecurityContextHolder is such an anti-pattern...
     @Override
     public User getCurrentUser() {
         return (User) SecurityContextHolder.getContext()

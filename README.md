@@ -72,6 +72,8 @@ cd bike-shop-spring
 java -jar target/*.jar
   ```
 
+TODO ML: this is not sufficient; You are still trying to use postgresql in your code and You will have issues if You follow Your guide
+
 ### maven plugin
 
 Or you can run it from Maven directly using the Spring Boot Maven plugin
@@ -88,6 +90,8 @@ Then go to http://localhost:8080/
 - [ ] count user daily login
 - [ ] total spent money by user
 - [ ] add product to favorite
+
+TODO ML: add some information about docker-compose.yml
 
 ## Contributing
 

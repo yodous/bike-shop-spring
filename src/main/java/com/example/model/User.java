@@ -16,7 +16,7 @@ import java.util.*;
 
 @Getter
 @Setter
-@NoArgsConstructor
+@NoArgsConstructor // TODO ML: by default it will be public; it does not have to be public - hibernate requires at most package-visible (or protected-visible if You want to extend it)
 @Entity
 @Table(name = "users")
 public class User extends BaseEntity implements UserDetails {
@@ -79,16 +79,17 @@ public class User extends BaseEntity implements UserDetails {
         return Collections.singleton(new SimpleGrantedAuthority("ROLE_" +  role));
     }
 
+	// TODO ML: 3 methods, 3 different things, same single field?
     @Override
     public boolean isAccountNonExpired() {
         return enabled;
     }
-
+	// TODO ML: 3 methods, 3 different things, same single field?
     @Override
     public boolean isAccountNonLocked() {
         return enabled;
     }
-
+	// TODO ML: 3 methods, 3 different things, same single field?
     @Override
     public boolean isCredentialsNonExpired() {
         return enabled;

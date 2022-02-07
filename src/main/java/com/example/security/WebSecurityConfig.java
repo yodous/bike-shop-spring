@@ -46,6 +46,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .sessionManagement(s -> s
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				// TODO ML: side-note: the new docs suggest to use mvcMatchers() instead of old antMatchers(); at some point (not sure if this apply in 2.6.3) - both where using AntMatcher at the end...
                 .authorizeRequests(r -> r
                         .antMatchers("/api/mgmt/**").hasRole("ADMIN")
                         .antMatchers("/api/**").authenticated()
@@ -53,7 +54,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterAfter(
                         jwtTokenFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(e -> e
-                        .authenticationEntryPoint((request, response, ex) -> {
+                        .authenticationEntryPoint(
+								// TODO ML: extract this to another class/method - I do not want to see such logic in configuration
+								(request, response, ex) -> {
                             String authHeader = request.getHeader("Authorization");
 
                             if (authHeader == null || authHeader.isEmpty())
@@ -76,6 +79,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(
+				// TODO ML: create a separate class which extends UserDetailsService - I do not want to see logic here
                         username -> userRepository.findByUsername(username).orElseThrow(
                                 () -> new UsernameNotFoundException(
                                         String.format("User: %s, not found", username)))

@@ -2,6 +2,7 @@ package com.example.controller;
 
 import com.example.dto.ProductRequest;
 import com.example.service.ProductMgmtService;
+// TODO ML: unused;
 import com.example.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

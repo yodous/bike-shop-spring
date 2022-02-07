@@ -10,5 +10,6 @@ public enum ShippingType {
     PICKUP_AT_THE_POINT(10),
     DELIVERY_BY_COURIER(15);
 
+	// TODO ML: final?
     private double price;
 }

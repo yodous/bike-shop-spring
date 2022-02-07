@@ -67,6 +67,7 @@ public class JwtTokenService {
 
     @Transactional
     public void enableUser(String token) {
+		// TODO ML: move the method to find the specific token into repository (or DAO), but not inside of a service with findAll()
         AccountActivationToken authToken = authTokenRepository.findAll().stream()
                 .filter(t -> t.getToken().equals(token)).findAny()
                 .orElseThrow(InvalidTokenException::new);

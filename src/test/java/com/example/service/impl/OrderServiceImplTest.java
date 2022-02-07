@@ -119,6 +119,7 @@ class OrderServiceImplTest {
 
     @Test
     void orderCartItems_shouldSucceed() {
+		// TODO ML: some left-overs; to remove?;
 //        OrderItemRequest orderItemRequest1 = new OrderItemRequest(1, 1);
 //        OrderItemRequest orderItemRequest2 = new OrderItemRequest(2, 2);
 //        OrderRequest orderRequest = new OrderRequest(List.of(orderItemRequest1, orderItemRequest2),

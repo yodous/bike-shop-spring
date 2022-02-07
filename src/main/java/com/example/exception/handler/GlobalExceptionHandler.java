@@ -8,6 +8,8 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+// TODO ML: I would not place this inside of a .exception package
+// TODO ML: hint: take a look on ResponseEntityExceptionHandler which Your handler may extend to have some pre-defined behavior for some common issues
 @ControllerAdvice
 public class GlobalExceptionHandler {
 

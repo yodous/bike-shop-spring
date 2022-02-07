@@ -25,6 +25,7 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
+			<!-- TODO ML: remove the version - You are using the spring-boot-starter-parent which picks up the same version as You are using-->
             <version>3.12.0</version>
         </dependency>
         <dependency>
@@ -33,10 +34,12 @@
             <version>1.4.2.Final</version>
         </dependency>
         <dependency>
+			<!-- TODO ML: take a look on spring-boot-starter-validation; You are adding only API but nothing will validate Your fields (hibernate-validator) -->
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
         </dependency>
         <dependency>
+			<!-- TODO: side-note, when updating to JDK17, there is an issue with old version; upgrade this one to 1.18.22 (the latest) or remove the versioning and let the spring-boot-starter-parent pick up the correct version -->
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
@@ -70,16 +73,19 @@
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
         <dependency>
+			<!-- TODO ML: duplicated entry; check Your warnings when calling `mvn install`!  -->
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>${postgresql.version}</version>
         </dependency>
         <dependency>
+			<!-- TODO ML: duplicated entry; check Your warnings when calling `mvn install`!  -->
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>${postgresql.version}</version>
         </dependency>
         <dependency>
+			<!-- TODO ML: duplicated entry; check Your warnings when calling `mvn install`!  -->
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>${postgresql.version}</version>
@@ -106,11 +112,13 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+			<!-- TODO ML: since You are using it in test and not-test, maybe just remove the entry with scope 'test'?-->
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
+			<!-- TODO ML: since Your code requires dbpostgresql, then why h2 is loaded as prod dependency? -->
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
         </dependency>

@@ -8,6 +8,7 @@ import static java.lang.Character.*;
 @Component
 public class PasswordValidator {
 
+	// TODO ML: name of the method suggests, that it will return boolean; but it's not
     public void isValid(char[] password, char[] confirmPassword) {
         containsDigit(password);
         containsLowerCaseLetter(password);

@@ -21,7 +21,9 @@ public class AuthController {
     private final AuthService authService;
     private final JwtTokenService jwtTokenService;
 
+	// TODO ML: declared checked Exception is never thrown;
     @PostMapping(value = "/perform_login")
+	// TODO ML: why marked as @Valid? I do not see anything, which could utilize it
     public ResponseEntity<AuthenticationResponse> login(@RequestBody @Valid LoginRequest request) throws JsonProcessingException {
         AuthenticationResponse response = authService.login(request);
         return ResponseEntity.ok()
@@ -32,6 +34,7 @@ public class AuthController {
     @PostMapping("/perform_signup")
     public ResponseEntity<Void> register(@RequestBody RegisterRequest registerRequest) {
         authService.register(registerRequest);
+		// TODO ML: personally I prefer `ResponseEntity.status(HttpStatus.CREATED).build()` but it doesn't matter
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 

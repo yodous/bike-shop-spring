@@ -33,14 +33,17 @@ class AuthServiceImplTest {
     private RegisterValidator registerValidator;
     @Mock
     private UserViewMapper userViewMapper;
+	// TODO ML: since You are not using it, You could theoretically not declare it; the @InjectMocks will silently pass a null to the service; This also applies to other tests
     @Mock
     private CartRepository cartRepository;
 
+	// TODO ML: personally I do not like @InjectMocks and I'm trying not to use them; I see many times, that after changing the service (adding/removing dependencies), the tests were not changed and was either failing/messy (with additional mocks); I prefer to write a constructor in the @BeforeEach where I can explicit put dependencies; This is less error prone in my humble opinion; but it's not an issue if You using it... it's just my experience with it
     @InjectMocks
     private AuthServiceImpl service;
 
     @BeforeEach
     void setup() {
+		// TODO ML: I would rather use `@ExtendWith(MockitoExtension.class)`; if You decide with openMocks() - why You don't close it in @AfterEach?; same apply to other tests
         MockitoAnnotations.openMocks(this);
     }
 

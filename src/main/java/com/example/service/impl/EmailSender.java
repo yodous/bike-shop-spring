@@ -34,6 +34,7 @@ public class EmailSender implements MessageSender {
         simpleMailMessage.setText(activationUrl);
 
         mailSender.send(simpleMailMessage);
+		// TODO ML: I would propose not to use line feeds in log entries; this can mess with any log-parsers such as kibana or splunk
         log.info("email has been sent\n" + activationUrl);
     }
 

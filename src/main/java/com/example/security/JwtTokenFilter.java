@@ -59,12 +59,16 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
+		// TODO ML: for a performance perspective, I would prepare the collection of AntPathRequestMatcher and re-use it (so it won't be re-created every time)
         return excludedUrls.stream().anyMatch(
                 url -> new AntPathRequestMatcher(url).matches(request));
     }
 
+	// TODO ML: missing javadoc - in some special case it will return empty string instead of real token
+	// TODO ML: since this is a special case, that sometimes it returns empty string, I would suggest to distinguish situation when there is no bearer token and when the bearer token is realy an empty string; maybe Optional?
     private String getTokenFromRequest(HttpServletRequest request) {
         String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+		// TODO ML: redudant assignment - simple return
         String token = "";
 
         if (header != null && header.startsWith(BEARER_HEADER))

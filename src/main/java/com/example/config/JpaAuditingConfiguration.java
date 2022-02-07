@@ -8,7 +8,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import java.time.Instant;
 import java.util.Optional;
 
+// TODO ML: does it need to be public?
 @Configuration
+// TODO ML: use constant for this string (and in other place)
 @EnableJpaAuditing(dateTimeProviderRef = "auditingDateTimeProvider")
 public class JpaAuditingConfiguration {
 
