@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import static java.util.Collections.singletonList;
 
+// TODO ML: side note: notice that You put the config class inside a 'security' package, where I was searching for it inside of the 'config' package
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor

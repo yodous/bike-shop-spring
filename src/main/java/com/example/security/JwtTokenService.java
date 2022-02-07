@@ -12,6 +12,7 @@ import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -48,10 +49,10 @@ public class JwtTokenService {
         return token;
     }
 
-    public String generateAccessToken(User user) {
+    public String generateAccessToken(UserDetails user) {
         return Jwts.builder()
                 .setSubject(user.getUsername())
-                .addClaims(Map.of("admin", user.getRole() == Role.ADMIN))
+                .addClaims(Map.of("admin", user.getAuthorities().contains(Role.ADMIN)))
                 .setIssuer(jwtIssuer)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(Instant.now()
