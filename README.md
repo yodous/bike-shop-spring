@@ -42,10 +42,10 @@
 
 ## About The Project
 
-This is first vaster project build from scratch by myself. Main goal of this repo was to ground my knowledge about
-Spring Boot and SQL. For now project is done with basic functionality and won't be developed for some time.
-You can find ui built with AngularCli upon
-this <a href="https://github.com/JFrred/eshop-frontend-angular"> link </a>
+This is my first more extensive project build from scratch by myself. Main goal of this repo was to ground my knowledge about
+Spring Boot, SQL and security. For now project is done with basic functionality and won't be developed for some time.
+You will find GUI and demo upon 
+this <a href="https://github.com/JFrred/eshop-frontend-angular"> link </a>.
 
 ### Built With
 
